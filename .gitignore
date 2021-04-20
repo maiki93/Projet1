@@ -1,0 +1,7 @@
+# eclipse configuration
+.project
+.classpath
+.settings/
+
+# others, images for instance...
+src/ressources/*.png

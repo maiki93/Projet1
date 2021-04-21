@@ -14,16 +14,18 @@ public class ArbreBinaire {
 	private int metaTailleNom;
 	private int metaTaillePrenom;
 	private int metaTailleDepartement;
-	private int metaTailleFormation; // to use
+	private int metaTailleFormation; 
 	private int tailleEnregistrement; // sum of all fields
 
 	private long nextFreePosition = 0; // variable incremented at each write of a node
 	
-	public ArbreBinaire(int metaTailleNom, int metaTaillePrenom, int metaTailleDepartement) {
+	public ArbreBinaire(int metaTailleNom, int metaTaillePrenom, 
+			int metaTailleDepartement, int metaTailleFormation) {
 		this();
 		this.metaTailleNom = metaTailleNom;
 		this.metaTaillePrenom = metaTaillePrenom;
 		this.metaTailleDepartement = metaTailleDepartement;
+		this.metaTailleFormation = metaTailleFormation;
 	}
 	
 	public ArbreBinaire() {
@@ -60,7 +62,8 @@ public class ArbreBinaire {
 	public void testReadBinFile() {
 		try {
 			readHeader();
-			System.out.println("Header: " + metaTailleNom + " " + metaTaillePrenom);
+			System.out.println("Header: " + metaTailleNom + " " + metaTaillePrenom + " "
+					+ metaTailleDepartement + " " + metaTailleFormation);
 			readOneNode(0);
 			
 		} catch (IOException e) {
@@ -69,7 +72,6 @@ public class ArbreBinaire {
 			try {
 				raf.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -159,10 +161,15 @@ public class ArbreBinaire {
 		for(int i = 0; i < bField3.length; i++ )
 			bytesPrenom[i] = bField3[i];
 		
+		byte[] bytesFormation = new byte[metaTailleFormation];
+		byte[] bField4 = stagiaire.getFormation().getBytes();
+		for(int i = 0; i < bField4.length; i++ )
+			bytesFormation[i] = bField4[i];
+		
 		raf.write( bytesNom );
 		raf.write( bytesPrenom);
 		raf.write( bytesDepartement );
-		raf.write( stagiaire.getFormation().getBytes() );
+		raf.write( bytesFormation );
 		raf.writeInt( stagiaire.getAnnee() );
 		///////////////
 		if( childLeft)
@@ -181,7 +188,7 @@ public class ArbreBinaire {
 		byte[] bNom = new byte[ metaTailleNom];
 		byte[] bPrenom = new byte[ metaTailleNom];
 		byte[] bDepartement = new byte[ metaTailleDepartement];
-		byte[] bFormation = new byte[6];
+		byte[] bFormation = new byte[ metaTailleFormation];
 		int annee;
 		raf.read( bNom );
 		raf.read( bPrenom );
@@ -206,11 +213,13 @@ public class ArbreBinaire {
 		raf.writeInt( this.metaTailleNom );
 		raf.writeInt( this.metaTaillePrenom);
 		raf.writeInt( this.metaTailleDepartement);
+		raf.writeInt( this.metaTailleFormation);
 	}
 	
 	private void readHeader() throws IOException {
 		this.metaTailleNom = raf.readInt();
 		this.metaTaillePrenom = raf.readInt();
 		this.metaTailleDepartement = raf.readInt();
+		this.metaTailleFormation = raf.readInt();
 	}
 }

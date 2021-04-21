@@ -16,11 +16,11 @@ public class TestArbreBinaire {
 		list.add( new Stagiaire("Dick", "Jagger", "83", "AL 250", 1967)  );
 		list.add( new Stagiaire("Mic", "Ma", "93","AI 109", 2021) );
 		list.add( new Stagiaire("Rick", "Jagger", "83", "AL 250", 1967)  );
-		ArbreBinaire ab = new ArbreBinaire( 10, 10, 10);
+		ArbreBinaire ab = new ArbreBinaire( 10, 10, 10, 10);
 		ab.createBinFile(list);
 		// Lit fichier
-		//System.out.println("\n=== Lecture ==");
-		//ab = new ArbreBinaire();
-		//ab.testReadBinFile();
+		System.out.println("\n=== Lecture ==");
+		ab = new ArbreBinaire();
+		ab.testReadBinFile();
 	}
 }

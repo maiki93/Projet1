@@ -3,11 +3,11 @@ package main.java;
 public class Stagiaire {
 	private String nom;
 	private String prenom;
-	private int departement;
+	private String departement;
 	private String formation;
 	private int annee;
 
-	public Stagiaire(String nom, String prenom, int departement, String formation, int annee) {
+	public Stagiaire(String nom, String prenom, String departement, String formation, int annee) {
 		super();
 		this.nom = nom;
 		this.prenom = prenom;
@@ -32,11 +32,11 @@ public class Stagiaire {
 		this.prenom = prenom;
 	}
 
-	public int getDepartement() {
+	public String getDepartement() {
 		return departement;
 	}
 
-	public void setDepartement(int departement) {
+	public void setDepartement(String departement) {
 		this.departement = departement;
 	}
 
@@ -57,11 +57,16 @@ public class Stagiaire {
 	}
 
 	@Override
+	public String toString() {
+		return nom + ";" + prenom + ";" + departement + ";" + formation + ";" + annee;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + annee;
-		result = prime * result + departement;
+		result = prime * result + ((departement == null) ? 0 : departement.hashCode());
 		result = prime * result + ((formation == null) ? 0 : formation.hashCode());
 		result = prime * result + ((nom == null) ? 0 : nom.hashCode());
 		result = prime * result + ((prenom == null) ? 0 : prenom.hashCode());
@@ -83,7 +88,11 @@ public class Stagiaire {
 		if (annee != other.annee) {
 			return false;
 		}
-		if (departement != other.departement) {
+		if (departement == null) {
+			if (other.departement != null) {
+				return false;
+			}
+		} else if (!departement.equals(other.departement)) {
 			return false;
 		}
 		if (formation == null) {
@@ -108,11 +117,6 @@ public class Stagiaire {
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return nom + ";" + prenom + ";" + departement + ";" + formation + ";" + annee;
 	}
 
 }

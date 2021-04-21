@@ -2,9 +2,9 @@ package main.java;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class StagiaireDAO {
 		try {
 			br = new BufferedReader(new InputStreamReader(
 					new FileInputStream(System.getProperty("user.dir") + "/src/main/resources/stagiaires.txt"),
-					"CP1252"));
+					StandardCharsets.UTF_8));
 			while (br.ready()) {
 				String strcompare = br.readLine();
 				if (strcompare.compareTo("*") == 0) {
@@ -45,18 +45,17 @@ public class StagiaireDAO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-
 			for (Stagiaire stagiaire : stagiairelist) {
 				compteTailleChamps(stagiaire);
 			}
+			setStagiairelist(quickSort(getStagiairelist(), 0, getStagiairelist().size()));
 		}
 
 	}
 
-	// Calcul de la taille des champs
-	private void compteTailleChamps(Stagiaire filou) {
-		String[] str = filou.toString().split(";");
-		for (int i = 0; i < filou.toString().length() - str.length; i++) {
+	private void compteTailleChamps(Stagiaire stagiaire) {
+		String[] str = stagiaire.toString().split(";");
+		for (int i = 0; i < stagiaire.toString().length() - str.length; i++) {
 
 			if (getTailleNom() < str[0].length()) {
 				setTailleNom(str[0].length());
@@ -72,6 +71,36 @@ public class StagiaireDAO {
 			}
 		}
 
+	}
+
+	static List<Stagiaire> quickSort(List<Stagiaire> tabATrier, int indiceDebut, int indiceFin) {
+		int positionPivot = 0;
+		if (((indiceFin - 1) - indiceDebut) > 0) {
+			positionPivot = partition(tabATrier, indiceDebut, indiceFin);
+		} else {
+			return (tabATrier);
+		}
+		quickSort(tabATrier, indiceDebut, positionPivot);
+		return quickSort(tabATrier, positionPivot + 1, indiceFin);
+	}
+
+	static int partition(List<Stagiaire> tabATrier, int indiceDebut, int indiceFin) {
+		int j = indiceDebut;
+		int dernier = indiceFin - 1;
+		for (int i = indiceDebut; i < dernier; i++) {
+			if (tabATrier.get(i).getNom().compareTo(tabATrier.get(dernier).getNom()) <= 0) {
+				permute(tabATrier, i, j);
+				j++;
+			}
+		}
+		permute(tabATrier, dernier, j);
+		return j;
+	}
+
+	static void permute(List<Stagiaire> tab, int ind1, int ind2) {
+		Stagiaire buffer = tab.get(ind1);
+		tab.set(ind1, tab.get(ind2));
+		tab.set(ind2, buffer);
 	}
 
 	public int getTailleNom() {
@@ -104,5 +133,21 @@ public class StagiaireDAO {
 
 	public void setTailleFormation(int tailleFormation) {
 		this.tailleFormation = tailleFormation;
+	}
+
+	public Stagiaire getStagiaire() {
+		return stagiaire;
+	}
+
+	public void setStagiaire(Stagiaire stagiaire) {
+		this.stagiaire = stagiaire;
+	}
+
+	public List<Stagiaire> getStagiairelist() {
+		return stagiairelist;
+	}
+
+	public void setStagiairelist(List<Stagiaire> stagiairelist) {
+		this.stagiairelist = stagiairelist;
 	}
 }

@@ -9,11 +9,11 @@ public class Stagiaire {
 
 	public Stagiaire(String nom, String prenom, String departement, String formation, int annee) {
 		super();
-		this.nom = nom;
-		this.prenom = prenom;
-		this.departement = departement;
-		this.formation = formation;
-		this.annee = annee;
+		setNom(nom);
+		setPrenom(prenom);
+		setDepartement(departement);
+		setFormation(formation);
+		setAnnee(annee);
 	}
 
 	public String getNom() {
@@ -21,7 +21,7 @@ public class Stagiaire {
 	}
 
 	public void setNom(String nom) {
-		this.nom = nom;
+		this.nom = nom.toUpperCase();
 	}
 
 	public String getPrenom() {

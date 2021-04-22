@@ -1,6 +1,7 @@
 package test.java;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import main.java.Stagiaire;
 import main.java.ArbreBinaire;
@@ -23,6 +24,17 @@ public class TestArbreBinaire {
 		// Lit fichier
 		System.out.println("\n=== Lecture ==");
 		ab = new ArbreBinaire();
-		ab.printOrderAlphabetique();
+		ab.printOrdreAlphabetique();
+		
+		
+		System.out.println("\n=== ReLecture ==");
+		//ab = new ArbreBinaire();
+		List<Stagiaire> listStag = null;
+		listStag = ab.getStagiaireOrdreAlphabetique();
+		System.out.println("Size of the list: " + listStag.size());
+		System.out.println("Stagiaire 0: "+ listStag.get(0).toString());
+		System.out.println("Stagiaire 600: "+ listStag.get(3).toString());
+		System.out.println("Stagiaire dernier: "+ listStag.get( listStag.size()-1).toString());
+		
 	}
 }

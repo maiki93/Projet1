@@ -87,7 +87,18 @@ public class ArbreBinaire {
 		}
 	}
 	
-	public void printOrderAlphabetique() { 
+	public List<Stagiaire> getStagiaireOrdreAlphabetique() {
+		List<Stagiaire> listStagiaires = new ArrayList<Stagiaire>();
+		try {
+			// the root node is always the first record
+			iterativeInorderTraversalFillList( 0, listStagiaires );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return listStagiaires;
+	}
+	
+	public void printOrdreAlphabetique() { 
 		try {
 			// the root node is always the first record
 			iterativeInorderTraversal( 0 );
@@ -95,6 +106,37 @@ public class ArbreBinaire {
 			e.printStackTrace();
 		}
 	}
+	
+	private void iterativeInorderTraversalFillList( long addressNode, List<Stagiaire> listToFill ) throws IOException {
+		
+		NodeStagiaire parent = readOneNode( addressNode );
+		if( parent.hasChildLeft() )
+			iterativeInorderTraversalFillList( parent.getChildLeft(), listToFill );
+		//// this part need to be more functional
+		System.out.println( parent.getStagiaire().toString() );
+		listToFill.add(parent.getStagiaire() );
+		////
+		if( parent.hasChildRight() )
+			iterativeInorderTraversalFillList( parent.getChildRight(), listToFill );
+	}
+	/*
+	private void nonIterativeInorderTraversalFillList( long addressNode, List<Stagiaire> listToFill ) throws IOException {
+		
+		NodeStagiaire parent = readOneNode( addressNode );
+		if( parent.hasChildLeft() )
+			iterativeInorderTraversal( parent.getChildLeft() );
+		//// this part need to be more functional
+		System.out.println( parent.getStagiaire().toString() );
+		Stagiaire stag = new Stagiaire( parent.getStagiaire().getNom(), 
+										parent.getStagiaire().getPrenom(), 
+										parent.getStagiaire().getDepartement(),
+										parent.getStagiaire().getFormation(),
+										parent.getStagiaire().getAnnee());
+		listToFill.add( stag );
+		////
+		if( parent.hasChildRight() )
+			iterativeInorderTraversal( parent.getChildRight() );
+	}*/
 	
 	private void iterativeInorderTraversal( long addressNode ) throws IOException {
 		

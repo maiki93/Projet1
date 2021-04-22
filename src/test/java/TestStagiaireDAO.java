@@ -15,11 +15,13 @@ public class TestStagiaireDAO {
 		
 		ArbreBinaire ab = new ArbreBinaire( stageDao.getTailleNom(), stageDao.getTaillePrenom(),
 				stageDao.getTailleDepartement(), stageDao.getTailleFormation());
-		// écrit 
+		// écrit
 		ab.createBinFile( stageDao.getStagiairelist()); 
 		// Lit fichier
 		System.out.println("\n=== Lecture ==");
-		ab = new ArbreBinaire();
-		ab.testReadBinFile();
+		//ArbreBinaire ab; 
+		ab = new ArbreBinaire(); //(40,40,40,40);
+		//ab.testReadBinFile();
+		ab.printOrderAlphabetique();
 	}
 }

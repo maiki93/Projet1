@@ -1,5 +1,6 @@
 package main.java;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -8,7 +9,6 @@ import java.util.List;
 /**
  * full name ArbreDeRechercheBinaireSurDisque
  * @author michael
- *
  */
 public class ArbreBinaire {
 	
@@ -19,12 +19,13 @@ public class ArbreBinaire {
 	private int metaTaillePrenom;
 	private int metaTailleDepartement;
 	private int metaTailleFormation; 
-	private int tailleEnregistrement; // sum of all fields
+	private final static int tailleHeader = 4*4; // always 4 integers
+	private int tailleEnregistrement; // sum of all fields, computed inside class
 	
-	private int profondeurArbre;
-
+	private int profondeurArbre; // number of level
 	private long nextFreePosition = 0; // variable incremented at each write of a node
 	
+	/** Constructeur à appeler pour la création/recréation de l'arbre sur le disque. */
 	public ArbreBinaire(int metaTailleNom, int metaTaillePrenom, 
 			int metaTailleDepartement, int metaTailleFormation) {
 		this();
@@ -32,13 +33,34 @@ public class ArbreBinaire {
 		this.metaTaillePrenom = metaTaillePrenom;
 		this.metaTailleDepartement = metaTailleDepartement;
 		this.metaTailleFormation = metaTailleFormation;
+		// sum of meta data
+		this.tailleEnregistrement =  metaTailleNom + metaTaillePrenom+ metaTailleDepartement + metaTailleFormation;
+		// plus fixed info 1 integer + 2 long for childs
+		this.tailleEnregistrement += 4 + 2*8;
+		System.out.println("taille Enregistrement: "+ tailleEnregistrement);
 	}
 	
+	/** constructeur à appeler pour la lecture, ou la modification d'un arbre existant */
 	public ArbreBinaire() {
 		this.profondeurArbre = 0;
+		// si le fichier est déjà présent les metadonnees sont lues dans le header
+		// elles seront récrasées en cas d'appel au constructeur avec arguments 
+		boolean headerAvailable = false;		
+		File fichierPrecedent = new File(WORKDIR+nomFichier);
+		if (  fichierPrecedent.exists() )
+			headerAvailable = true;
+		
 		try {
-			raf = new RandomAccessFile(WORKDIR+nomFichier,"rw");
-		} catch (FileNotFoundException e) {
+			raf = new RandomAccessFile(WORKDIR+nomFichier,"rw"); // fileNot..Exception
+			if( headerAvailable) {
+				readHeader();
+				// sum of meta data
+				this.tailleEnregistrement =  metaTailleNom + metaTaillePrenom+ metaTailleDepartement + metaTailleFormation;
+				// plus fixed info 1 integer + 2 long for childs
+				this.tailleEnregistrement += 4 + 2*8;
+				System.out.println("taille Enregistrement const default: "+ tailleEnregistrement);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -65,45 +87,45 @@ public class ArbreBinaire {
 		}
 	}
 	
-	// test function for development
-	public void testReadBinFile() {
+	public void printOrderAlphabetique() { 
 		try {
-			readHeader();
-			System.out.println("Header: " + metaTailleNom + " " + metaTaillePrenom + " "
-					+ metaTailleDepartement + " " + metaTailleFormation);
-			readOneNode(0);
-			
+			// the root node is always the first record
+			iterativeInorderTraversal( 0 );
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				raf.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
+	private void iterativeInorderTraversal( long addressNode ) throws IOException {
+		
+		NodeStagiaire parent = readOneNode( addressNode );
+		if( parent.hasChildLeft() )
+			iterativeInorderTraversal( parent.getChildLeft() );
+		//// this part need to be more functional
+		System.out.println( parent.getStagiaire().toString() );
+		////
+		if( parent.hasChildRight() )
+			iterativeInorderTraversal( parent.getChildRight() );
+	}
+	
 	private void writeAllNodesToFile(List<Stagiaire> listStagiaireTriee) throws IOException {
-		// initialze for the first execution in while : Level 0
+		// initialize for the first execution in the while loop for level 0
 		List<List<Stagiaire>> listOfListOfStagiaire= new ArrayList<List<Stagiaire>>();
 		listOfListOfStagiaire.add( listStagiaireTriee);
-		
 		int lvl = 0;
-		boolean bStillToWrite = true;
 		
-		while( bStillToWrite ) {
-			System.out.println("\n==Level "+ lvl++);
-			listOfListOfStagiaire = writeNodesAtLevel( listOfListOfStagiaire ); //, bStillToWrite );
-			
+		while( true ) {
+			//System.out.println("\n==Level "+ lvl++);
+			listOfListOfStagiaire = writeNodesAtLevel( listOfListOfStagiaire );
+			//System.out.println("listOfListOfStagiaire "+ listOfListOfStagiaire);
 			// exit the loop if there is no more nodes to write
-			System.out.println("listOfListOfStagiaire "+ listOfListOfStagiaire);
 			if( listOfListOfStagiaire.size() == 0) {
 				System.out.println("empty ListOfList nothing more treat1 :");
-				bStillToWrite = false;
+				break;
 			}
 		}
 		this.profondeurArbre = lvl;
+		System.out.println("Arbre possède " + lvl + " niveaux");
 	}
 	
 	/** Write all nodes of a level
@@ -123,11 +145,9 @@ public class ArbreBinaire {
 		List<List<Stagiaire>> newList = new ArrayList<List<Stagiaire>>();
 		// loop over the nodes of this level
 		for( List<Stagiaire> listOfStagiaire : listOfListOfStagiaireTriee) {
-			//System.out.println("In for loop listOfStagiaire.size(): " + listOfStagiaire.size());
 			bChildLeft = false;
 			bChildRight = false;
 			median = listOfStagiaire.size()/2;
-			//System.out.println("median " + median);
 			// add 0,1 or 2 new sublists aroound the node if there are childs to write to the next level
 			if ( median > 0 ) {// there is at least one element on the left
 				newList.add( listOfStagiaire.subList(0, median) );
@@ -137,7 +157,6 @@ public class ArbreBinaire {
 				newList.add( listOfStagiaire.subList(median+1, listOfStagiaire.size()) );
 				bChildRight = true;
 			}
-			//System.out.println("childs: "+ bChildLeft + " " + bChildRight);
 			writeOneNode( listOfStagiaire.get(median), bChildLeft, bChildRight );
 		}
 		return newList;
@@ -147,7 +166,7 @@ public class ArbreBinaire {
 		//System.out.println("stagiaire: " + stagiaire);
 		//System.out.println("file pointer : " + raf.getFilePointer() );
 		//System.out.println("nextFreePosition: " +  nextFreePosition);
-		
+		//System.out.println("childLeft: " + childLeft + ",childRight: " + childRight);
 		raf.write( formatStringToBytes( stagiaire.getNom(), metaTailleNom));
 		raf.write( formatStringToBytes( stagiaire.getPrenom(), metaTaillePrenom));
 		raf.write( formatStringToBytes( stagiaire.getDepartement(), metaTailleDepartement) );
@@ -157,12 +176,12 @@ public class ArbreBinaire {
 		if( childLeft)
 			raf.writeLong( ++nextFreePosition );
 		else 
-			raf.writeLong( 0 );
+			raf.writeLong( 0L );
 		///////////////
 		if( childRight)
 			raf.writeLong( ++nextFreePosition );
 		else
-			raf.writeLong( 0);
+			raf.writeLong( 0L );
 	}
 	
 	private byte[] formatStringToBytes(String champ, int tailleMax) {
@@ -175,19 +194,21 @@ public class ArbreBinaire {
 		return bytes;
 	}
 	
-	private void readOneNode( long position) throws IOException {
+	private NodeStagiaire readOneNode( long positionEnregistrement ) throws IOException {
+		// position in bytes in the file
+		long positionFile = positionEnregistrement * tailleEnregistrement + tailleHeader;
+		raf.seek(positionFile);
+		//System.out.println("readOneNode: " + positionEnregistrement + ",file pointer : " + raf.getFilePointer() );
 		
 		byte[] bNom = new byte[ metaTailleNom];
-		byte[] bPrenom = new byte[ metaTailleNom];
+		byte[] bPrenom = new byte[ metaTaillePrenom];
 		byte[] bDepartement = new byte[ metaTailleDepartement];
 		byte[] bFormation = new byte[ metaTailleFormation];
-		int annee;
 		raf.read( bNom );
 		raf.read( bPrenom );
 		raf.read( bDepartement );
 		raf.read( bFormation );
-		annee = raf.readInt();
-		
+		int annee = raf.readInt();
 		long child1 = raf.readLong();
 		long child2 = raf.readLong();
 		
@@ -197,11 +218,12 @@ public class ArbreBinaire {
 								new String(bDepartement).trim(),
 								new String(bFormation).trim(),
 								annee);
-		System.out.println("stagiaire "+ stage);
-		System.out.println("childs "+ child1 + " " + child2);
+		
+		return new NodeStagiaire(stage, child1, child2);
 	}
-	
+		
 	private void writeHeader() throws IOException {
+		raf.seek(0);
 		raf.writeInt( this.metaTailleNom );
 		raf.writeInt( this.metaTaillePrenom);
 		raf.writeInt( this.metaTailleDepartement);

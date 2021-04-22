@@ -15,7 +15,7 @@ public class TestStagiaireDAO {
 		
 		ArbreBinaire ab = new ArbreBinaire( stageDao.getTailleNom(), stageDao.getTaillePrenom(),
 				stageDao.getTailleDepartement(), stageDao.getTailleFormation());
-		ab.createBinFile( stageDao.getStagiairelist() );
+		ab.createBinFile( stageDao.getStagiairelist()); 
 		// Lit fichier
 		System.out.println("\n=== Lecture ==");
 		ab = new ArbreBinaire();

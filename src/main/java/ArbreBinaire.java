@@ -16,6 +16,8 @@ public class ArbreBinaire {
 	private int metaTailleDepartement;
 	private int metaTailleFormation; 
 	private int tailleEnregistrement; // sum of all fields
+	
+	private int profondeurArbre;
 
 	private long nextFreePosition = 0; // variable incremented at each write of a node
 	
@@ -29,6 +31,7 @@ public class ArbreBinaire {
 	}
 	
 	public ArbreBinaire() {
+		this.profondeurArbre = 0;
 		try {
 			raf = new RandomAccessFile(WORKDIR+nomFichier,"rw");
 		} catch (FileNotFoundException e) {
@@ -96,6 +99,7 @@ public class ArbreBinaire {
 				bStillToWrite = false;
 			}
 		}
+		this.profondeurArbre = lvl;
 	}
 	
 	/** Write all nodes of a level
@@ -105,8 +109,8 @@ public class ArbreBinaire {
 	 * @throws IOException
 	 */
 	private List<List<Stagiaire>> writeNodesAtLevel( List<List<Stagiaire>> listOfListOfStagiaireTriee, boolean bStillToWrite) throws IOException {
-		System.out.println("size of List of List: " + listOfListOfStagiaireTriee.size());
-		System.out.println("ListOfList "+ listOfListOfStagiaireTriee);
+		//System.out.println("size of List of List: " + listOfListOfStagiaireTriee.size());
+		//System.out.println("ListOfList "+ listOfListOfStagiaireTriee);
 		// loop over all the nodes of this level
 		int median=0;
 		boolean bChildLeft = false;
@@ -115,11 +119,11 @@ public class ArbreBinaire {
 		List<List<Stagiaire>> newList = new ArrayList<List<Stagiaire>>();
 		// loop over the nodes of this level
 		for( List<Stagiaire> listOfStagiaire : listOfListOfStagiaireTriee) {
-			System.out.println("In for loop listOfStagiaire.size(): " + listOfStagiaire.size());
+			//System.out.println("In for loop listOfStagiaire.size(): " + listOfStagiaire.size());
 			bChildLeft = false;
 			bChildRight = false;
 			median = listOfStagiaire.size()/2;
-			System.out.println("median " + median);
+			//System.out.println("median " + median);
 			// add 0,1 or 2 new sublists aroound the node if there are childs to write to the next level
 			if ( median > 0 ) {// there is at least one element on the left
 				newList.add( listOfStagiaire.subList(0, median) );
@@ -129,17 +133,16 @@ public class ArbreBinaire {
 				newList.add( listOfStagiaire.subList(median+1, listOfStagiaire.size()) );
 				bChildRight = true;
 			}
-			System.out.println("childs: "+ bChildLeft + " " + bChildRight);
+			//System.out.println("childs: "+ bChildLeft + " " + bChildRight);
 			writeOneNode( listOfStagiaire.get(median), bChildLeft, bChildRight );
 		}
 		return newList;
 	}
 	
 	private void writeOneNode( Stagiaire stagiaire, boolean childLeft, boolean childRight) throws IOException {
-		System.out.println("stagiaire: " + stagiaire);
-		
-		System.out.println("file pointer : " + raf.getFilePointer() );
-		System.out.println("nextFreePosition: " +  nextFreePosition);
+		//System.out.println("stagiaire: " + stagiaire);
+		//System.out.println("file pointer : " + raf.getFilePointer() );
+		//System.out.println("nextFreePosition: " +  nextFreePosition);
 		
 		byte[] bytesNom = new byte[metaTailleNom];
 		byte[] bField = stagiaire.getNom().getBytes(); // CharSet("Cpp1252");

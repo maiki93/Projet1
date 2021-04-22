@@ -21,7 +21,8 @@ public class TablePannel extends AnchorPane {
 		super();
 
 		dao.readTxtFichier();
-		observablesStagiaires = FXCollections.observableArrayList(dao.getStagiairelist());
+		//observablesStagiaires = FXCollections.observableArrayList(dao.getStagiairelist());
+		observablesStagiaires = FXCollections.observableArrayList(dao.getStagiaireListFromArbre());
 
 		tableView = new TableView<>(observablesStagiaires);
 

@@ -146,6 +146,11 @@ public class StagiaireDAO {
 	public List<Stagiaire> getStagiairelist() {
 		return stagiairelist;
 	}
+	
+	public List<Stagiaire> getStagiaireListFromArbre() {
+		ArbreBinaire ab = new ArbreBinaire();
+		return ab.getStagiaireOrdreAlphabetique();
+	}
 
 	public void setStagiairelist(List<Stagiaire> stagiairelist) {
 		this.stagiairelist = stagiairelist;

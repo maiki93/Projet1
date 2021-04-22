@@ -1,6 +1,6 @@
 package test.java;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 import main.java.Stagiaire;
 import main.java.StagiaireDAO;
@@ -15,6 +15,7 @@ public class TestStagiaireDAO {
 		
 		ArbreBinaire ab = new ArbreBinaire( stageDao.getTailleNom(), stageDao.getTaillePrenom(),
 				stageDao.getTailleDepartement(), stageDao.getTailleFormation());
+		// écrit 
 		ab.createBinFile( stageDao.getStagiairelist()); 
 		// Lit fichier
 		System.out.println("\n=== Lecture ==");

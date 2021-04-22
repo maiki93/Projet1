@@ -5,11 +5,15 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * full name ArbreDeRechercheBinaireSurDisque
+ * @author michael
+ *
+ */
 public class ArbreBinaire {
 	
 	private static final String WORKDIR = System.getProperty("user.dir");
-	private static String nomFichier = "arbre.bin"; 
+	private static String nomFichier = "/src/main/resources/arbre.bin"; 
 	private RandomAccessFile raf;
 	private int metaTailleNom;
 	private int metaTaillePrenom;
@@ -90,7 +94,7 @@ public class ArbreBinaire {
 		
 		while( bStillToWrite ) {
 			System.out.println("\n==Level "+ lvl++);
-			listOfListOfStagiaire = writeNodesAtLevel( listOfListOfStagiaire, bStillToWrite );
+			listOfListOfStagiaire = writeNodesAtLevel( listOfListOfStagiaire ); //, bStillToWrite );
 			
 			// exit the loop if there is no more nodes to write
 			System.out.println("listOfListOfStagiaire "+ listOfListOfStagiaire);
@@ -108,7 +112,7 @@ public class ArbreBinaire {
 	 * @return
 	 * @throws IOException
 	 */
-	private List<List<Stagiaire>> writeNodesAtLevel( List<List<Stagiaire>> listOfListOfStagiaireTriee, boolean bStillToWrite) throws IOException {
+	private List<List<Stagiaire>> writeNodesAtLevel( List<List<Stagiaire>> listOfListOfStagiaireTriee ) throws IOException {
 		//System.out.println("size of List of List: " + listOfListOfStagiaireTriee.size());
 		//System.out.println("ListOfList "+ listOfListOfStagiaireTriee);
 		// loop over all the nodes of this level
@@ -144,37 +148,12 @@ public class ArbreBinaire {
 		//System.out.println("file pointer : " + raf.getFilePointer() );
 		//System.out.println("nextFreePosition: " +  nextFreePosition);
 		
-		byte[] bytesNom = new byte[metaTailleNom];
-		byte[] bField = stagiaire.getNom().getBytes(); // CharSet("Cpp1252");
- 		// Copy the first caracters, others are initialzed to zero by default
-		for(int i = 0; i < bField.length; i++ )
-			bytesNom[i] = bField[i];
-		
-		//if( bField.length != ligneSplittee.length() )
-		//	throw new IOException("Erreur de mon encodage en Cp1252 tailleMax" 
-		//			+ tailleMax + " " + bField.length  + "!=" + ligneSplittee.length() );
-
-		byte[] bytesPrenom = new byte[metaTaillePrenom];
-		byte[] bField2 = stagiaire.getPrenom().getBytes();
-		for(int i = 0; i < bField2.length; i++ )
-			bytesPrenom[i] = bField2[i];
-		
-		byte[] bytesDepartement = new byte[metaTailleDepartement];
-		byte[] bField3 = stagiaire.getDepartement().getBytes();
-		for(int i = 0; i < bField3.length; i++ )
-			bytesPrenom[i] = bField3[i];
-		
-		byte[] bytesFormation = new byte[metaTailleFormation];
-		byte[] bField4 = stagiaire.getFormation().getBytes();
-		for(int i = 0; i < bField4.length; i++ )
-			bytesFormation[i] = bField4[i];
-		
-		raf.write( bytesNom );
-		raf.write( bytesPrenom);
-		raf.write( bytesDepartement );
-		raf.write( bytesFormation );
+		raf.write( formatStringToBytes( stagiaire.getNom(), metaTailleNom));
+		raf.write( formatStringToBytes( stagiaire.getPrenom(), metaTaillePrenom));
+		raf.write( formatStringToBytes( stagiaire.getDepartement(), metaTailleDepartement) );
+		raf.write( formatStringToBytes( stagiaire.getFormation(), metaTailleFormation) );
 		raf.writeInt( stagiaire.getAnnee() );
-		///////////////
+		/////////////// Child's position
 		if( childLeft)
 			raf.writeLong( ++nextFreePosition );
 		else 
@@ -184,6 +163,16 @@ public class ArbreBinaire {
 			raf.writeLong( ++nextFreePosition );
 		else
 			raf.writeLong( 0);
+	}
+	
+	private byte[] formatStringToBytes(String champ, int tailleMax) {
+		byte[] bytes = new byte[tailleMax];
+		byte[] field = champ.getBytes();
+		// Copy the first caracters, others are initialzed to zero by default
+		for(int i = 0; i < field.length; i++ ) // CharSet("Cpp1252");
+			bytes[i] = field[i];
+		
+		return bytes;
 	}
 	
 	private void readOneNode( long position) throws IOException {

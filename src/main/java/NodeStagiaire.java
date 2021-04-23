@@ -30,7 +30,13 @@ public class NodeStagiaire {
 	public void setStagiaire(Stagiaire stagiaire) {
 		this.stagiaire = stagiaire;
 	}
-	
+
+	public boolean hasNoChild() {
+		//if (!hasChildLeft() && !hasChildRight())
+		if( hasChildLeft() || hasChildRight() )  
+			return false;
+		return true;
+	}
 	public boolean hasChildLeft() {
 		if (childLeft == 0L) 
 			return false;

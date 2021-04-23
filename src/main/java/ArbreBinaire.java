@@ -1,11 +1,11 @@
 package main.java;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * full name ArbreDeRechercheBinaireSurDisque
  * @author michael
@@ -20,6 +20,7 @@ public class ArbreBinaire {
 	private int metaTailleDepartement;
 	private int metaTailleFormation; 
 	private final static int tailleHeader = 4*4; // always 4 integers
+	private final static int tailleFix = 4 + 2*8; // plus fixed 1 integer(annee) + 2 long for childs
 	private int tailleEnregistrement; // sum of all fields, computed inside class
 	
 	private int profondeurArbre; // number of level
@@ -44,7 +45,7 @@ public class ArbreBinaire {
 		// sum of meta data
 		this.tailleEnregistrement =  metaTailleNom + metaTaillePrenom+ metaTailleDepartement + metaTailleFormation;
 		// plus fixed info 1 integer + 2 long for childs
-		this.tailleEnregistrement += 4 + 2*8;
+		this.tailleEnregistrement += tailleFix;
 		System.out.println("taille Enregistrement: "+ tailleEnregistrement);
 	}
 	
@@ -98,7 +99,7 @@ public class ArbreBinaire {
 		List<Stagiaire> listStagiaires = new ArrayList<Stagiaire>();
 		try {
 			// the root node is always the first record
-			iterativeInorderTraversalFillList( 0, listStagiaires );
+			recursiveInorderTraversalFillList( 0, listStagiaires );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -108,34 +109,34 @@ public class ArbreBinaire {
 	public void printOrdreAlphabetique() { 
 		try {
 			// the root node is always the first record
-			iterativeInorderTraversal( 0 );
+			recursifInorderTraversal( 0 );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void iterativeInorderTraversalFillList( long addressNode, List<Stagiaire> listToFill ) throws IOException {
+	private void recursiveInorderTraversalFillList( long addressNode, List<Stagiaire> listToFill ) throws IOException {
 		
 		NodeStagiaire parent = readOneNode( addressNode );
 		if( parent.hasChildLeft() )
-			iterativeInorderTraversalFillList( parent.getChildLeft(), listToFill );
+			recursiveInorderTraversalFillList( parent.getChildLeft(), listToFill );
 		//// this part need to be more functional
 		//System.out.println( parent.getStagiaire().toString() );
 		listToFill.add(parent.getStagiaire() );
-		////
+		//// 
 		if( parent.hasChildRight() )
-			iterativeInorderTraversalFillList( parent.getChildRight(), listToFill );
+			recursiveInorderTraversalFillList( parent.getChildRight(), listToFill );
 	}
 	
-	private void iterativeInorderTraversal( long addressNode ) throws IOException {
+	private void recursifInorderTraversal( long addressNode ) throws IOException {
 		
 		NodeStagiaire parent = readOneNode( addressNode );
 		if( parent.hasChildLeft() )
-			iterativeInorderTraversal( parent.getChildLeft() );
+			recursifInorderTraversal( parent.getChildLeft() );
 		//// this part need to be more functional
 		System.out.println( parent.getStagiaire().toString() );
 		if( parent.hasChildRight() )
-			iterativeInorderTraversal( parent.getChildRight() );
+			recursifInorderTraversal( parent.getChildRight() );
 	}
 	
 	private void writeAllNodesToFile(List<Stagiaire> listStagiaireTriee) throws IOException {
@@ -159,6 +160,36 @@ public class ArbreBinaire {
 		System.out.println("Arbre possède " + lvl + " niveaux");
 	}
 	
+	public List<Stagiaire> searchForStagiaire(String name) {
+		
+		List<Stagiaire> list = null;
+		try {
+			list = iterativeSearch(name, 0);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public List<Stagiaire> iterativeSearch(String key, long adressNode ) throws IOException {
+		
+		List<Stagiaire> listFound = new ArrayList<Stagiaire>();
+		NodeStagiaire currentNode = readOneNode( adressNode );
+
+		do {
+			// duplicates allowed, still continue to the leaves
+			currentNode = readOneNode( adressNode );
+			if( currentNode.getStagiaire().getNom().compareTo( key ) == 0)
+				listFound.add( currentNode.getStagiaire() );
+			if( currentNode.getStagiaire().getNom().toUpperCase().compareTo( key.toUpperCase() ) < 0 ) {
+				adressNode = currentNode.getChildRight(); 
+			} else {
+				adressNode = currentNode.getChildLeft();
+			}
+		} while (adressNode != 0); // currentNode is a leave 
+		
+		return listFound;
+	}
 	/** Write all nodes of a level
 	 * @param listOfListOfStagiaireTriee
 	 * @param bStillToWrite

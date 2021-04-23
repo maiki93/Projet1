@@ -113,30 +113,12 @@ public class ArbreBinaire {
 		if( parent.hasChildLeft() )
 			iterativeInorderTraversalFillList( parent.getChildLeft(), listToFill );
 		//// this part need to be more functional
-		System.out.println( parent.getStagiaire().toString() );
+		//System.out.println( parent.getStagiaire().toString() );
 		listToFill.add(parent.getStagiaire() );
 		////
 		if( parent.hasChildRight() )
 			iterativeInorderTraversalFillList( parent.getChildRight(), listToFill );
 	}
-	/*
-	private void nonIterativeInorderTraversalFillList( long addressNode, List<Stagiaire> listToFill ) throws IOException {
-		
-		NodeStagiaire parent = readOneNode( addressNode );
-		if( parent.hasChildLeft() )
-			iterativeInorderTraversal( parent.getChildLeft() );
-		//// this part need to be more functional
-		System.out.println( parent.getStagiaire().toString() );
-		Stagiaire stag = new Stagiaire( parent.getStagiaire().getNom(), 
-										parent.getStagiaire().getPrenom(), 
-										parent.getStagiaire().getDepartement(),
-										parent.getStagiaire().getFormation(),
-										parent.getStagiaire().getAnnee());
-		listToFill.add( stag );
-		////
-		if( parent.hasChildRight() )
-			iterativeInorderTraversal( parent.getChildRight() );
-	}*/
 	
 	private void iterativeInorderTraversal( long addressNode ) throws IOException {
 		
@@ -145,7 +127,6 @@ public class ArbreBinaire {
 			iterativeInorderTraversal( parent.getChildLeft() );
 		//// this part need to be more functional
 		System.out.println( parent.getStagiaire().toString() );
-		////
 		if( parent.hasChildRight() )
 			iterativeInorderTraversal( parent.getChildRight() );
 	}
@@ -157,6 +138,7 @@ public class ArbreBinaire {
 		int lvl = 0;
 		
 		while( true ) {
+			lvl++;
 			//System.out.println("\n==Level "+ lvl++);
 			listOfListOfStagiaire = writeNodesAtLevel( listOfListOfStagiaire );
 			//System.out.println("listOfListOfStagiaire "+ listOfListOfStagiaire);

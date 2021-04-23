@@ -15,7 +15,128 @@ public class StagiaireDAO {
 	private int taillePrenom;
 	private int tailleDepartement;
 	private int tailleFormation;
+	
+	////////// fonctionallités de recherche
+	
+	
+	/////////
+	
+	/** Criteres de comparaison pour les filtres sont tres large.
+	 *  Cherche une substring en fait, ignore minuscule/majuscule. Sauf pour annee...
+	 *  
+	 *  Accès à l'arbre demandé à chaque fois, pourrait mettre en cache dans certaines conditions
+	 */
+	public List<Stagiaire> rechercheStagiaire( Stagiaire stagiaireTemplate, boolean global) {
+		
+		System.out.println("stagiaire template "+ stagiaireTemplate.toString());
+		System.out.println("global: "+ global);
+		List<Stagiaire> listFiltree = null;
+		
+		ArbreBinaire ab = new ArbreBinaire();
+		listFiltree = ab.getStagiaireOrdreAlphabetique();
+		
+		if (global == false ) {
+			listFiltree = filtreParNom( listFiltree, stagiaireTemplate.getNom() );
+			listFiltree = filtreParPrenom( listFiltree, stagiaireTemplate.getPrenom() );
+			listFiltree = filtreParDepartement( listFiltree, stagiaireTemplate.getDepartement() );
+			listFiltree = filtreParFormation( listFiltree, stagiaireTemplate.getFormation() );
+			listFiltree = filtreParAnnee( listFiltree, stagiaireTemplate.getAnnee() );
+			
+		// filtre global, at least one field should return true
+		} else {
+			/*
+			List<Stagiaire> tmpOneStagiaire = new ArrayList<>();
+			String critere = stagiaireTemplate.getNom();
+			
+			for( Stagiaire stage : listFiltree) {
+				tmpOneStagiaire.add(stage);
+				if( (filtreParNom( tmpOneStagiaire, critere) 
+			}
+			listFiltree = filtreParNom( listFiltree, critere );
+			listFiltree = filtreParPrenom( listFiltree, critere );
+			listFiltree = filtreParDepartement( listFiltree, critere );
+			listFiltree = filtreParFormation( listFiltree, critere );
+			try {
+				listFiltree = filtreParAnnee( listFiltree, Integer.parseInt(critere) );
+			} catch(NumberFormatException e) {
+				System.out.println("cannot parse l'annee en entier, vraiment pas méchant, voir normal execution");
+			}
+			*/
+		}
+			
+		return listFiltree;
+	}
+		
+	public List<Stagiaire> filtreParNom( List<Stagiaire> listeEntree, String nom) {
+		
+		if (nom.isBlank())
+			return listeEntree;
+		
+		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
+		for( Stagiaire stagiaire : listeEntree)
+			//if( stagiaire.getNom().equalsIgnoreCase(nom))
+			if( stagiaire.getNom().toUpperCase().indexOf( nom.toUpperCase())!= -1)
+				listeSortie.add( stagiaire );
+		
+		return listeSortie;
+	}
 
+	public List<Stagiaire> filtreParPrenom( List<Stagiaire> listeEntree, String prenom) {
+		
+		if (prenom.isBlank())
+			return listeEntree;
+		
+		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
+		for( Stagiaire stagiaire : listeEntree)
+			//if( stagiaire.getPrenom().equalsIgnoreCase(prenom))
+			if( stagiaire.getPrenom().toUpperCase().indexOf( prenom.toUpperCase())!= -1)
+				listeSortie.add( stagiaire );
+		
+		return listeSortie;
+	}
+	
+	public List<Stagiaire> filtreParDepartement( List<Stagiaire> listeEntree, String departement) {
+		
+		if( departement.isBlank())
+			return listeEntree;
+		
+		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
+		for( Stagiaire stagiaire : listeEntree)
+			//if( stagiaire.getDepartement().equalsIgnoreCase(departement))
+			if( stagiaire.getDepartement().toUpperCase().indexOf( departement.toUpperCase())!= -1)
+				listeSortie.add( stagiaire );
+		
+		return listeSortie;
+	}
+	
+	public List<Stagiaire> filtreParFormation( List<Stagiaire> listeEntree, String formation) {
+		
+		if( formation.isBlank() )
+			return listeEntree;
+					
+		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
+		for( Stagiaire stagiaire : listeEntree)
+			//if( stagiaire.getFormation().equalsIgnoreCase(formation))
+			if( stagiaire.getFormation().toUpperCase().indexOf( formation.toUpperCase())!= -1)
+				listeSortie.add( stagiaire );
+		
+		return listeSortie;
+	}
+	
+	public List<Stagiaire> filtreParAnnee( List<Stagiaire> listeEntree, int annee) {
+		
+		if( annee == 0)
+			return listeEntree;
+		
+		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
+		for( Stagiaire stagiaire : listeEntree)
+			if( stagiaire.getAnnee() == annee)  
+				listeSortie.add( stagiaire );
+		
+		return listeSortie;
+	}
+	
+	
 	public void readTxtFichier() {
 		BufferedReader br;
 		String[] stagiaireLinearray = new String[5];

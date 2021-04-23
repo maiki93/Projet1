@@ -17,6 +17,7 @@ public class TablePannel extends AnchorPane {
 	private ObservableList<Stagiaire> observablesStagiaires;
 	private TableView<Stagiaire> tableView;
 
+	@SuppressWarnings("unchecked")
 	public TablePannel() {
 		super();
 

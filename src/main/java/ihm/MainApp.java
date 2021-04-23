@@ -14,6 +14,7 @@ public class MainApp extends Application {
 		MainPannel root = new MainPannel();
 		stage.setTitle("Annuaire Eql");
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add("main/java/ihm/style.css");
 		stage.setScene(scene);
 		stage.sizeToScene();
 		stage.show();

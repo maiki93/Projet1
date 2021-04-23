@@ -36,18 +36,18 @@ public class TestStagiaireDAO {
 		System.out.println("Stagiaire dernier: "+ listStag.get( listStag.size()-1).toString());
 		
 		
-		System.out.println("\n=== Recherche ==");
+		System.out.println("\n=== Recherche par filtre \"BOUICHE\"  \"Toufik\"  global: false ====");
 		Stagiaire stageTempl1 = new Stagiaire("BOUICHE","Toufik", "", "", 0); 
 		
 		List<Stagiaire> listeFiltree = null;
 		listeFiltree = stageDao.rechercheStagiaire( stageTempl1, false);
 		affiche( listeFiltree);
 		
-		Stagiaire stageTempl2 = new Stagiaire("19","", "", "", 1); 
-		
-		//listeFiltree = null;
-		//listeFiltree = stageDao.rechercheStagiaire( stageTempl2, true);
-		//affiche( listeFiltree);
+		System.out.println("\n=== Recherche par filtre \"19\" global: true ====");
+		Stagiaire stageTempl2 = new Stagiaire( "SA","","","", 1);
+		listeFiltree = null;
+		listeFiltree = stageDao.rechercheStagiaire( stageTempl2, true);
+		affiche( listeFiltree);
 	}
 	
 	public static void affiche(List<Stagiaire> list) {

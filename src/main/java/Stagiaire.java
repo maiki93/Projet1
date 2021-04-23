@@ -1,6 +1,6 @@
 package main.java;
 
-public class Stagiaire {
+public class Stagiaire implements Comparable<Stagiaire> {
 	private String nom;
 	private String prenom;
 	private String departement;
@@ -119,4 +119,12 @@ public class Stagiaire {
 		return true;
 	}
 
+	@Override
+	public int compareTo(Stagiaire o) {
+		// code genrated by eclipse
+		// TODO Auto-generated method stub
+		// return 0;
+		//return o.getNom().toUpperCase().compareTo( this.getNom().toUpperCase());
+		return this.getNom().toUpperCase().compareTo( o.getNom().toUpperCase() );
+	}
 }

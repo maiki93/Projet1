@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class StagiaireDAO {
 	private Stagiaire stagiaire;
@@ -35,6 +38,7 @@ public class StagiaireDAO {
 		ArbreBinaire ab = new ArbreBinaire();
 		listFiltree = ab.getStagiaireOrdreAlphabetique();
 		
+		// recherche spécificque avec tous les critères, la liste passe successivement par toutes les méthodes de recherche
 		if (global == false ) {
 			listFiltree = filtreParNom( listFiltree, stagiaireTemplate.getNom() );
 			listFiltree = filtreParPrenom( listFiltree, stagiaireTemplate.getPrenom() );
@@ -42,26 +46,40 @@ public class StagiaireDAO {
 			listFiltree = filtreParFormation( listFiltree, stagiaireTemplate.getFormation() );
 			listFiltree = filtreParAnnee( listFiltree, stagiaireTemplate.getAnnee() );
 			
-		// filtre global, at least one field should return true
+		// filtre global, at least one field should return true to be included in the final liste
 		} else {
-			/*
-			List<Stagiaire> tmpOneStagiaire = new ArrayList<>();
 			String critere = stagiaireTemplate.getNom();
-			
-			for( Stagiaire stage : listFiltree) {
-				tmpOneStagiaire.add(stage);
-				if( (filtreParNom( tmpOneStagiaire, critere) 
+			System.out.println("critere: "+ critere);
+			if( critere.isBlank() ) {
+				System.err.println("ERREUR critere cannot be empty !");
 			}
-			listFiltree = filtreParNom( listFiltree, critere );
-			listFiltree = filtreParPrenom( listFiltree, critere );
-			listFiltree = filtreParDepartement( listFiltree, critere );
-			listFiltree = filtreParFormation( listFiltree, critere );
+			
+			List<Stagiaire >listFiltreeNom = filtreParNom( listFiltree, critere );
+			List<Stagiaire> listFiltreePrenom = filtreParPrenom( listFiltree, critere );
+			List<Stagiaire> listFiltreeDepartement = filtreParDepartement( listFiltree, critere );
+			List<Stagiaire> listFiltreeFormation = filtreParFormation( listFiltree, critere );
+			List<Stagiaire> listFiltreeAnnee = new ArrayList<Stagiaire>();
 			try {
-				listFiltree = filtreParAnnee( listFiltree, Integer.parseInt(critere) );
+				
+				listFiltreeAnnee = filtreParAnnee( listFiltree, Integer.parseInt(critere) );
 			} catch(NumberFormatException e) {
 				System.out.println("cannot parse l'annee en entier, vraiment pas méchant, voir normal execution");
 			}
-			*/
+			
+			System.out.println("size lists " + listFiltreeNom.size() + " " + listFiltreePrenom.size() + " " 
+					+ listFiltreeDepartement.size() + " " + listFiltreeFormation.size() + " " + listFiltreeAnnee.size() );
+			// Un Set pour supprimer les doublons
+			Set<Stagiaire> set = new TreeSet<Stagiaire>(); // need to be comparable
+			//HashSet<Stagiaire> set = new HashSet<>(); // perd l'ordre alphabétique
+			set.addAll(listFiltreeNom);
+			set.addAll(listFiltreePrenom);
+			set.addAll(listFiltreeDepartement);
+			set.addAll(listFiltreeFormation);
+			set.addAll(listFiltreeAnnee);
+			listFiltree.clear();
+			listFiltree.addAll(set);
+			
+			System.out.println("size liste finale: " + listFiltree.size());
 		}
 			
 		return listFiltree;
@@ -69,14 +87,16 @@ public class StagiaireDAO {
 		
 	public List<Stagiaire> filtreParNom( List<Stagiaire> listeEntree, String nom) {
 		
+		//boolean foundOneMatch = false;
 		if (nom.isBlank())
 			return listeEntree;
 		
 		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
 		for( Stagiaire stagiaire : listeEntree)
 			//if( stagiaire.getNom().equalsIgnoreCase(nom))
-			if( stagiaire.getNom().toUpperCase().indexOf( nom.toUpperCase())!= -1)
+			if( stagiaire.getNom().toUpperCase().indexOf( nom.toUpperCase())!= -1) {
 				listeSortie.add( stagiaire );
+			}
 		
 		return listeSortie;
 	}

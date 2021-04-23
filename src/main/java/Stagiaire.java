@@ -121,10 +121,16 @@ public class Stagiaire implements Comparable<Stagiaire> {
 
 	@Override
 	public int compareTo(Stagiaire o) {
-		// code genrated by eclipse
-		// TODO Auto-generated method stub
-		// return 0;
-		//return o.getNom().toUpperCase().compareTo( this.getNom().toUpperCase());
-		return this.getNom().toUpperCase().compareTo( o.getNom().toUpperCase() );
+		
+		if( this.getNom().toUpperCase().compareTo( o.getNom().toUpperCase()) !=0 ) 
+				return this.getNom().toUpperCase().compareTo( o.getNom().toUpperCase());
+		if( this.getPrenom().toUpperCase().compareTo( o.getPrenom().toUpperCase()) !=0 ) 
+			return this.getPrenom().toUpperCase().compareTo( o.getPrenom().toUpperCase());
+		if( this.getDepartement().toUpperCase().compareTo( o.getDepartement().toUpperCase()) !=0 ) 
+			return this.getDepartement().toUpperCase().compareTo( o.getDepartement().toUpperCase());
+		if( this.getFormation().toUpperCase().compareTo( o.getFormation().toUpperCase()) !=0 ) 
+			return this.getFormation().toUpperCase().compareTo( o.getFormation().toUpperCase());
+		
+		return ((Integer) this.getAnnee()).compareTo( o.getAnnee() ); 
 	}
 }

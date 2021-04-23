@@ -44,7 +44,7 @@ public class TestStagiaireDAO {
 		affiche( listeFiltree);
 		
 		System.out.println("\n=== Recherche par filtre \"19\" global: true ====");
-		Stagiaire stageTempl2 = new Stagiaire( "SA","","","", 1);
+		Stagiaire stageTempl2 = new Stagiaire( "BOUI","","","", 1);
 		listeFiltree = null;
 		listeFiltree = stageDao.rechercheStagiaire( stageTempl2, true);
 		affiche( listeFiltree);

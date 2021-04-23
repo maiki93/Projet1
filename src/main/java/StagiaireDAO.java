@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -30,7 +29,7 @@ public class StagiaireDAO {
 	}
 
 	/** Criteres de comparaison pour les filtres sont tres large.
-	 *  Cherche une substring en fait, ignore minuscule/majuscule. Sauf pour annee...
+	 *  Cherche une substring en fait, ignore minuscule/majuscule. Sauf pour annee... une fonction de comparaison de string serait necessaire
 	 *  
 	 *  Accès à l'arbre demandé à chaque fois, pourrait mettre en cache dans certaines conditions
 	 */
@@ -41,11 +40,21 @@ public class StagiaireDAO {
 		List<Stagiaire> listFiltree = null;
 		
 		ArbreBinaire ab = new ArbreBinaire();
-		listFiltree = ab.getStagiaireOrdreAlphabetique();
+		
+		// si recherche par Nom, optimized with structure of the binary tree
+		if( global == false && (!stagiaireTemplate.getNom().isBlank()) ) {
+			System.out.println("Use optimized tree structure to find the name");
+			listFiltree = ab.searchForStagiaire( stagiaireTemplate.getNom() );
+			System.out.println("list avec optimisation: "+ listFiltree);
+			
+		// sinon récupère la liste de tous les stagiaires
+		} else {
+			listFiltree = ab.getStagiaireOrdreAlphabetique();
+		}
 		
 		// recherche spécificque avec tous les critères, la liste passe successivement par toutes les méthodes de recherche
 		if (global == false ) {
-			listFiltree = filtreParNom( listFiltree, stagiaireTemplate.getNom() );
+			//listFiltree = filtreParNom( listFiltree, stagiaireTemplate.getNom() );
 			listFiltree = filtreParPrenom( listFiltree, stagiaireTemplate.getPrenom() );
 			listFiltree = filtreParDepartement( listFiltree, stagiaireTemplate.getDepartement() );
 			listFiltree = filtreParFormation( listFiltree, stagiaireTemplate.getFormation() );
@@ -58,35 +67,25 @@ public class StagiaireDAO {
 			if( critere.isBlank() ) {
 				System.err.println("ERREUR critere cannot be empty !");
 			}
-			
 			List<Stagiaire >listFiltreeNom = filtreParNom( listFiltree, critere );
 			List<Stagiaire> listFiltreePrenom = filtreParPrenom( listFiltree, critere );
 			List<Stagiaire> listFiltreeDepartement = filtreParDepartement( listFiltree, critere );
 			List<Stagiaire> listFiltreeFormation = filtreParFormation( listFiltree, critere );
 			List<Stagiaire> listFiltreeAnnee = new ArrayList<Stagiaire>();
 			try {
-				
 				listFiltreeAnnee = filtreParAnnee( listFiltree, Integer.parseInt(critere) );
 			} catch(NumberFormatException e) {
 				System.out.println("cannot parse l'annee en entier, vraiment pas méchant, voir normal execution");
 			}
-			
-			System.out.println("size lists " + listFiltreeNom.size() + " " + listFiltreePrenom.size() + " " 
-					+ listFiltreeDepartement.size() + " " + listFiltreeFormation.size() + " " + listFiltreeAnnee.size() );
 			// Un Set pour supprimer les doublons
 			Set<Stagiaire> set = new TreeSet<Stagiaire>(); // need to be comparable
-			//HashSet<Stagiaire> set = new HashSet<>(); // perd l'ordre alphabétique
 			set.addAll(listFiltreeNom);
 			set.addAll(listFiltreePrenom);
 			set.addAll(listFiltreeDepartement);
 			set.addAll(listFiltreeFormation);
 			set.addAll(listFiltreeAnnee);
-			listFiltree.clear();
-			listFiltree.addAll(set);
-			
-			System.out.println("size liste finale: " + listFiltree.size());
+			listFiltree = new ArrayList<Stagiaire>(set);
 		}
-			
 		return listFiltree;
 	}
 		

@@ -19,11 +19,16 @@ public class StagiaireDAO {
 	private int tailleDepartement;
 	private int tailleFormation;
 	
-	////////// fonctionallités de recherche
 	
-	
-	/////////
-	
+	public StagiaireDAO() {
+		// Verifie si l'arbre binaire existe sur le disque, sinon le reconstruit
+		if( ! ArbreBinaire.fichierExists() ) {
+			readTxtFichier();
+			ArbreBinaire ab = new ArbreBinaire( getTailleNom(), getTailleFormation(), getTailleDepartement(), getTailleFormation() );
+			ab.createBinFile( stagiairelist );
+		}
+	}
+
 	/** Criteres de comparaison pour les filtres sont tres large.
 	 *  Cherche une substring en fait, ignore minuscule/majuscule. Sauf pour annee...
 	 *  

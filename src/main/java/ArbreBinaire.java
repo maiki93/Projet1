@@ -25,6 +25,14 @@ public class ArbreBinaire {
 	private int profondeurArbre; // number of level
 	private long nextFreePosition = 0; // variable incremented at each write of a node
 	
+	
+	static public boolean fichierExists() {
+		File fichierPrecedent = new File(WORKDIR+nomFichier);
+		if (  fichierPrecedent.exists() )
+			return true;
+		return false;
+	}
+	
 	/** Constructeur à appeler pour la création/recréation de l'arbre sur le disque. */
 	public ArbreBinaire(int metaTailleNom, int metaTaillePrenom, 
 			int metaTailleDepartement, int metaTailleFormation) {
@@ -46,8 +54,7 @@ public class ArbreBinaire {
 		// si le fichier est déjà présent les metadonnees sont lues dans le header
 		// elles seront récrasées en cas d'appel au constructeur avec arguments 
 		boolean headerAvailable = false;		
-		File fichierPrecedent = new File(WORKDIR+nomFichier);
-		if (  fichierPrecedent.exists() )
+		if( ArbreBinaire.fichierExists() )
 			headerAvailable = true;
 		
 		try {

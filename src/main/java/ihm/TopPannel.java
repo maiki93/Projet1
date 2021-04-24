@@ -6,7 +6,7 @@ import java.net.MalformedURLException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
+//import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -75,12 +75,12 @@ public class TopPannel extends GridPane {
 					fAP.setAdmin(true);
 				// force refresh, but not good !!
 				//getScene().getWindow().setWidth(getScene().getWidth() + 0.001);
-				/*
-				if( fAP.isVisible() ) 
-					fAP.setVisible(false);
-				else
-					fAP.setVisible(true);
-				*/
+				
+				//if( fAP.isVisible() ) 
+				//	fAP.setVisible(false);
+				//else
+				//	fAP.setVisible(true);
+				//
 			}
 		});
 */

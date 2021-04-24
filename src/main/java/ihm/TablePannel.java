@@ -1,9 +1,8 @@
 package main.java.ihm;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
+
+import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -108,11 +107,6 @@ public class TablePannel extends AnchorPane {
 		return dao;
 	}
 	
-	TableView<Stagiaire> getTableView() {
-		return tableView;
-	}
-	 
-
 	public TableView<Stagiaire> getTableView() {
 		return tableView;
 	}

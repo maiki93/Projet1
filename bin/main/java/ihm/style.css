@@ -1,3 +1,30 @@
-#boxRecherche{
-	-fx-spacing	: 5;
+/* Remplace les couleurs par des variables  */
+#boxRecherche {
+	-fx-spacing: 5;
+}
+
+#adminBtn {
+	-fx-background-color: #873D48;
+	-fx-cursor: hand;
+}
+
+#adminBtn:hover {
+	-fx-background-color: #D9F2FF;
+}
+
+#adminBtn:pressed {
+	-fx-border-color: black;
+	-fx-border-radius: 5px;
+}
+
+#adminBox {
+	-fx-background-color: #D9F2FF;
+	-fx-translate-x: 350;
+	-fx-translate-y: 50;
+	-fx-padding: 10, 20, 10, 20;
+	-fx-background-radius: 5.0;
+}
+
+#textConnect {
+	-fx-font-size: 14px;
 }

@@ -44,7 +44,7 @@ public class StagiaireDAO {
 		// si recherche par Nom, optimized with structure of the binary tree
 		if( global == false && (!stagiaireTemplate.getNom().isBlank()) ) {
 			System.out.println("Use optimized tree structure to find the name");
-			listFiltree = ab.searchForStagiaire( stagiaireTemplate.getNom() );
+			listFiltree = ab.searchStagiaireParNom( stagiaireTemplate.getNom() );
 			System.out.println("list avec optimisation: "+ listFiltree);
 			
 		// sinon récupère la liste de tous les stagiaires
@@ -91,7 +91,6 @@ public class StagiaireDAO {
 		
 	public List<Stagiaire> filtreParNom( List<Stagiaire> listeEntree, String nom) {
 		
-		//boolean foundOneMatch = false;
 		if (nom.isBlank())
 			return listeEntree;
 		
@@ -112,7 +111,6 @@ public class StagiaireDAO {
 		
 		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
 		for( Stagiaire stagiaire : listeEntree)
-			//if( stagiaire.getPrenom().equalsIgnoreCase(prenom))
 			if( stagiaire.getPrenom().toUpperCase().indexOf( prenom.toUpperCase())!= -1)
 				listeSortie.add( stagiaire );
 		
@@ -126,7 +124,6 @@ public class StagiaireDAO {
 		
 		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
 		for( Stagiaire stagiaire : listeEntree)
-			//if( stagiaire.getDepartement().equalsIgnoreCase(departement))
 			if( stagiaire.getDepartement().toUpperCase().indexOf( departement.toUpperCase())!= -1)
 				listeSortie.add( stagiaire );
 		
@@ -140,7 +137,6 @@ public class StagiaireDAO {
 					
 		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
 		for( Stagiaire stagiaire : listeEntree)
-			//if( stagiaire.getFormation().equalsIgnoreCase(formation))
 			if( stagiaire.getFormation().toUpperCase().indexOf( formation.toUpperCase())!= -1)
 				listeSortie.add( stagiaire );
 		
@@ -217,7 +213,8 @@ public class StagiaireDAO {
 		}
 
 	}
-
+	
+	// static ??
 	static List<Stagiaire> quickSort(List<Stagiaire> tabATrier, int indiceDebut, int indiceFin) {
 		int positionPivot = 0;
 		if (((indiceFin - 1) - indiceDebut) > 0) {
@@ -251,16 +248,16 @@ public class StagiaireDAO {
 	public int getTailleNom() {
 		return tailleNom;
 	}
-
-	public void setTailleNom(int tailleNom) {
+	// should be private, intern to the class
+	private void setTailleNom(int tailleNom) {
 		this.tailleNom = tailleNom;
 	}
-
+	// private also ?
 	public int getTaillePrenom() {
 		return taillePrenom;
 	}
 
-	public void setTaillePrenom(int taillePrenom) {
+	private void setTaillePrenom(int taillePrenom) {
 		this.taillePrenom = taillePrenom;
 	}
 
@@ -268,7 +265,7 @@ public class StagiaireDAO {
 		return tailleDepartement;
 	}
 
-	public void setTailleDepartement(int tailleDepartement) {
+	private void setTailleDepartement(int tailleDepartement) {
 		this.tailleDepartement = tailleDepartement;
 	}
 
@@ -276,7 +273,7 @@ public class StagiaireDAO {
 		return tailleFormation;
 	}
 
-	public void setTailleFormation(int tailleFormation) {
+	private void setTailleFormation(int tailleFormation) {
 		this.tailleFormation = tailleFormation;
 	}
 
@@ -284,7 +281,7 @@ public class StagiaireDAO {
 		return stagiaire;
 	}
 
-	public void setStagiaire(Stagiaire stagiaire) {
+	private void setStagiaire(Stagiaire stagiaire) {
 		this.stagiaire = stagiaire;
 	}
 

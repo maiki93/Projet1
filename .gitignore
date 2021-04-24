@@ -4,7 +4,6 @@
 .settings/
 
 # others, images for instance...
-src/ressources/*.png
 # bytecode java
 **/*.class
 **/*.bin

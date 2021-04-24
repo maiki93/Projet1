@@ -19,6 +19,5 @@ public class MainApp extends Application {
 		stage.sizeToScene();
 		stage.show();
 	}
-	
 
 }

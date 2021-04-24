@@ -88,6 +88,14 @@ public class StagiaireDAO {
 		}
 		return listFiltree;
 	}
+	
+	public void addAll(List<Stagiaire> stagiaires) {
+		System.out.println("DAO: add All, must write in the tree");
+	}
+	
+	public void removeAll(List<Stagiaire> stagiaires) {
+		System.out.println("DAO: remove All, must write in the tree");
+	}
 		
 	public List<Stagiaire> filtreParNom( List<Stagiaire> listeEntree, String nom) {
 		

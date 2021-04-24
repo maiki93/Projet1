@@ -105,11 +105,11 @@ public class ArbreBinaire {
 		}
 		return listStagiaires;
 	}
-	
-	public void printOrdreAlphabetique() { 
+	// function de test surtout
+	public void printStagiaireOrdreAlphabetique() { 
 		try {
 			// the root node is always the first record
-			recursifInorderTraversal( 0 );
+			recursiveInorderTraversal( 0 );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -128,15 +128,15 @@ public class ArbreBinaire {
 			recursiveInorderTraversalFillList( parent.getChildRight(), listToFill );
 	}
 	
-	private void recursifInorderTraversal( long addressNode ) throws IOException {
+	private void recursiveInorderTraversal( long addressNode ) throws IOException {
 		
 		NodeStagiaire parent = readOneNode( addressNode );
 		if( parent.hasChildLeft() )
-			recursifInorderTraversal( parent.getChildLeft() );
+			recursiveInorderTraversal( parent.getChildLeft() );
 		//// this part need to be more functional
 		System.out.println( parent.getStagiaire().toString() );
 		if( parent.hasChildRight() )
-			recursifInorderTraversal( parent.getChildRight() );
+			recursiveInorderTraversal( parent.getChildRight() );
 	}
 	
 	private void writeAllNodesToFile(List<Stagiaire> listStagiaireTriee) throws IOException {
@@ -160,18 +160,18 @@ public class ArbreBinaire {
 		System.out.println("Arbre possède " + lvl + " niveaux");
 	}
 	
-	public List<Stagiaire> searchForStagiaire(String name) {
+	public List<Stagiaire> searchStagiaireParNom(String name) {
 		
 		List<Stagiaire> list = null;
 		try {
-			list = iterativeSearch(name, 0);
+			list = iterativeSearchByKey(name, 0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
 	
-	public List<Stagiaire> iterativeSearch(String key, long adressNode ) throws IOException {
+	public List<Stagiaire> iterativeSearchByKey(String key, long adressNode ) throws IOException {
 		
 		List<Stagiaire> listFound = new ArrayList<Stagiaire>();
 		NodeStagiaire currentNode = readOneNode( adressNode );
@@ -223,7 +223,8 @@ public class ArbreBinaire {
 		}
 		return newList;
 	}
-	
+
+	// could be implemented in NodeStagiaire ,m uch cleaner
 	private void writeOneNode( Stagiaire stagiaire, boolean childLeft, boolean childRight) throws IOException {
 		//System.out.println("stagiaire: " + stagiaire);
 		//System.out.println("file pointer : " + raf.getFilePointer() );
@@ -244,16 +245,6 @@ public class ArbreBinaire {
 			raf.writeLong( ++nextFreePosition );
 		else
 			raf.writeLong( 0L );
-	}
-	
-	private byte[] formatStringToBytes(String champ, int tailleMax) {
-		byte[] bytes = new byte[tailleMax];
-		byte[] field = champ.getBytes();
-		// Copy the first caracters, others are initialzed to zero by default
-		for(int i = 0; i < field.length; i++ ) // CharSet("Cpp1252");
-			bytes[i] = field[i];
-		
-		return bytes;
 	}
 	
 	private NodeStagiaire readOneNode( long positionEnregistrement ) throws IOException {
@@ -297,5 +288,15 @@ public class ArbreBinaire {
 		this.metaTaillePrenom = raf.readInt();
 		this.metaTailleDepartement = raf.readInt();
 		this.metaTailleFormation = raf.readInt();
+	}
+	
+	private byte[] formatStringToBytes(String champ, int tailleMax) {
+		byte[] bytes = new byte[tailleMax];
+		byte[] field = champ.getBytes();
+		// Copy the first caracters, others are initialzed to zero by default
+		for(int i = 0; i < field.length; i++ ) // CharSet("Cpp1252");
+			bytes[i] = field[i];
+		
+		return bytes;
 	}
 }

@@ -41,7 +41,7 @@ public class TestArbreBinaire {
 		
 		System.out.println("\n=== Search ==");
 		ab = new ArbreBinaire();
-		List<Stagiaire> l2 = ab.searchForStagiaire("MICK");
+		List<Stagiaire> l2 = ab.searchStagiaireParNom("MICK");
 		affiche(l2);
 	}
 	

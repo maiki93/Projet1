@@ -37,4 +37,29 @@ public class MainPannel extends BorderPane {
 	public FormAdminPannel getFormAdmin() {
 		return (FormAdminPannel)getLeft();
 	}
+
+	public FormPannel getFormPannel() {
+		return formPannel;
+	}
+
+	public void setFormPannel(FormPannel formPannel) {
+		this.formPannel = formPannel;
+	}
+
+	public TablePannel getTablePannel() {
+		return tablePannel;
+	}
+
+	public void setTablePannel(TablePannel tablePannel) {
+		this.tablePannel = tablePannel;
+	}
+
+	public TopPannel getTopPannel() {
+		return topPannel;
+	}
+
+	public void setTopPannel(TopPannel topPannel) {
+		this.topPannel = topPannel;
+	}
+
 }

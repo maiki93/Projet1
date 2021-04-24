@@ -113,4 +113,12 @@ public class TablePannel extends AnchorPane {
 	}
 	 
 
+	public TableView<Stagiaire> getTableView() {
+		return tableView;
+	}
+
+	public void setTableView(TableView<Stagiaire> tableView) {
+		this.tableView = tableView;
+	}
+
 }

@@ -1,15 +1,15 @@
 package main.java.ihm;
 
-
-
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import main.java.StagiaireDAO;
@@ -56,16 +56,20 @@ public class TablePannel extends AnchorPane {
 		AnchorPane.setRightAnchor(tableView, 5.);
 		AnchorPane.setBottomAnchor(tableView, 5.);
 		
+		TableViewSelectionModel<Stagiaire> selectModel = tableView.getSelectionModel();
+		selectModel.setSelectionMode(SelectionMode.MULTIPLE);
+		
 		tableView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<Stagiaire>() {
 			@Override
 			public void changed(ObservableValue<? extends Stagiaire> observable, Stagiaire oldValue, Stagiaire newValue) {
 				System.out.println("On item selected new value "+ newValue + " " + oldValue);
+				System.out.println("ObservableValue" + observable);
 				// often error here, not clear why...
 				if(newValue != null ) {
 					MainPannel root = (MainPannel)getScene().getRoot();
 					root.getFormAdmin().loadAStagiaire(newValue);
 					// test, in jafafxdemo
-					//formulaire.setFocusedItem(tableView.getSelectionModel().getSelectedIndex(), newValue);
+					// formulaire.setFocusedItem(tableView.getSelectionModel().getSelectedIndex(), newValue);
 				} // for test 
 				else {
 					System.out.println("new value is null");
@@ -111,8 +115,8 @@ public class TablePannel extends AnchorPane {
 		return tableView;
 	}
 
-	public void setTableView(TableView<Stagiaire> tableView) {
-		this.tableView = tableView;
-	}
+	//public void setTableView(TableView<Stagiaire> tableView) {
+	//	this.tableView = tableView;
+	//}
 
 }

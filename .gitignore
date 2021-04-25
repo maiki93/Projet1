@@ -7,3 +7,4 @@
 # bytecode java
 **/*.class
 **/*.bin
+/bin/

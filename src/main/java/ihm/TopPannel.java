@@ -50,7 +50,7 @@ public class TopPannel extends GridPane {
 			e.printStackTrace();
 		}
 
-		utilisateur = new Label("utilisateur: Invité");
+		utilisateur = new Label("Utilisateur: Invité");
 		role = new Label("Permission: Utilisateur");
 		utilisateur.setId("utilisateur");
 		role.setId("role");
@@ -60,32 +60,7 @@ public class TopPannel extends GridPane {
 		adminBtn.setPrefSize(150, 50);
 		adminBtn.setStyle("-fx-background-color:#873D48");
 
-/** Mege conflicts MIC, MIC tests here		
-		adminBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				//MainPannel root = (MainPannel) getScene().getRoot();
-				FormAdminPannel fAP = 
-						(FormAdminPannel) ((MainPannel)getScene().getRoot()).getLeft();
-				
-				if( fAP.isAdmin())
-					fAP.setAdmin(false);
-				else
-					fAP.setAdmin(true);
-				// force refresh, but not good !!
-				//getScene().getWindow().setWidth(getScene().getWidth() + 0.001);
-				
-				//if( fAP.isVisible() ) 
-				//	fAP.setVisible(false);
-				//else
-				//	fAP.setVisible(true);
-				//
-			}
-		});
-*/
 		topBox.getChildren().addAll(utilisateur, role, adminBtn);
-
 		add(topBox, 1, 0);
 
 		setPadding(new Insets(10));
@@ -115,6 +90,16 @@ public class TopPannel extends GridPane {
 			@Override
 			public void handle(ActionEvent event) {
 				MainPannel root = (MainPannel) getScene().getRoot();
+				
+				// si on est déjà admin on redevient user
+				if( root.getFormAdmin().isAdmin()) {
+					root.getFormAdmin().setAdmin(false);
+					utilisateur.setText("Utilisateur: Invité");
+					role.setText("Permission: Utilisateur");
+					adminBtn.setText("Admin");
+					return;
+				}
+				
 				if (first == true) {
 					root.getTablePannel().getChildren().add(adminBox);
 					first = false;
@@ -123,6 +108,7 @@ public class TopPannel extends GridPane {
 				mb.setRadius(5.0f);
 				mb.setAngle(5.0f);
 				root.getTablePannel().getTableView().setEffect(mb);
+				//root.setEffect(mb); this box is also blured...
 				adminBox.setVisible(true);
 			}
 		});
@@ -145,9 +131,12 @@ public class TopPannel extends GridPane {
 					//adminBtn.setVisible(false);
 					utilisateur.setText("Utilisateur: " + admin.getNom());
 					role.setText("Permission: Administrateur");
-					
-					// root = (MainPannel) getScene().getRoot();
+					adminBtn.setText("User");
 					root.getFormAdmin().setAdmin(true);
+					// close the box if correct, better to remove it ? done by first
+					adminBox.setVisible(false);
+					//root.getTablePannel().getChildren().remove(adminBox);
+					// change stroke color around the FormAdmin if admin ?
 				}
 			}
 		});

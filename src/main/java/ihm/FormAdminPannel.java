@@ -4,9 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import main.java.Stagiaire;
 
 class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
@@ -17,26 +17,23 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 	private TextField textFormation;
 	private TextField textAnnee;
 	
-	//  or could try TableView tb = (TableView) scene.lookup("#history");
+	//  or to retrieve id could try TableView tb = (TableView) scene.lookup("#history");
 	private Button btNew;
 	private Button btSave;
 	private Button btDel;
 	
-	
-	private boolean isAdmin;
+	private boolean isAdmin; // should not be in a formulaire !
 	private boolean isNewStagiaire;
-	
 	
 	FormAdminPannel(boolean isAdmin) {
 		super();
 		this.isAdmin = isAdmin;
 		createLayout();
-		
 		// Afficher l'entrée sélectionnée dans le tableau
 		// ou le premier par défaut, celui qui provient de la recherche
 		// Ecris dans TableView
-		
 	}
+	
 	
 	private void createLayout() {
 
@@ -51,32 +48,23 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 		btNew.setId("btNew");
 		btSave = new Button("Sauvegarder");
 		btSave.setId("btSave");
-		// binds expects an ObservableValue (could be ObservableAdmin ?) 
+		// binds expects an ObservableValue (could be ObservableAdmin ?)
+		// here not need yet just for layout
 		btSave.managedProperty().bind(visibleProperty());
 		btDel = new Button("Supprimer");
 		btDel.setId("btDel");
 		btDel.managedProperty().bind(visibleProperty());
-		//if( !isAdmin)
-		//btDel.setVisible(false);
+		// button states in this function
 		setAdmin(isAdmin);
-		
 		btNew.setOnAction(this);
 		btSave.setOnAction(this);
 		btDel.setOnAction(this);
-		
-		//HBox buttonBox = new HBox();
-		//buttonBox.setId("buttonsAdminForm");
-		//if( isAdmin)
-		//buttonBox.getChildren().addAll(btNew, btSave, btDel);
-		//if( !isAdmin ) {
-		//	btNew.setVisible( false );
-		//	btDel.setVisible( false );
-		//}
 		this.addRow(5, btNew, btSave, btDel);
 	}
 
 	/** Acts on an ObservableList 
 	 *  Modificiation to dao is done in @see TablePannel
+	 *  Normal user should not use Save button to modify an user
 	 */
 	@Override
 	public void handle(ActionEvent event) {
@@ -87,9 +75,13 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 		if( idBt.equals("btNew") ) {
 			System.out.println("btNew");
 			resetTextFields(); // TODO unselect entry in table
+			// clearSelection in table
+			MainPannel root = (MainPannel) getScene().getRoot();
+			TableView<Stagiaire> tblV = root.getTablePannel().getTableView();
+			tblV.getSelectionModel().clearSelection();
 			isNewStagiaire = true;
 			// save new stagiaire or valide the modification of 
-			// a previously selected one
+			// a previously selected one, USER should not be able modify
 		} else if( idBt.equals("btSave")) {
 			System.out.println("btSave isNewStagiaire "+ isNewStagiaire);
 			Stagiaire stagiaire = readTextFields();
@@ -140,7 +132,6 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 		try {
 			annee = Integer.parseInt( textAnnee.getText());
 		} catch(NumberFormatException e) {
-			//e.printStackTrace();
 			System.err.println("Error in parsing année text field");
 		}
 		Stagiaire newStagiaire = new Stagiaire( nom, prenom, dep , formation, annee);
@@ -158,13 +149,15 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 	public boolean isAdmin() {
 		return isAdmin;
 	}
-	
+	 
 	public void setAdmin(boolean adminAccess) {
 		isAdmin = adminAccess;
 		if( isAdmin) {
+			this.setVisible(true);
 			btNew.setVisible(true);
 			btDel.setVisible(true);
 		} else {
+			this.setVisible(false);
 			btNew.setVisible(false);
 			btDel.setVisible(false);
 		}

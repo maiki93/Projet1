@@ -113,7 +113,7 @@ public class ArbreBinaire {
 		if( parent.hasChildLeft() )
 			iterativeInorderTraversalFillList( parent.getChildLeft(), listToFill );
 		//// this part need to be more functional
-		System.out.println( parent.getStagiaire().toString() );
+		//System.out.println( parent.getStagiaire().toString() );
 		listToFill.add(parent.getStagiaire() );
 		////
 		if( parent.hasChildRight() )

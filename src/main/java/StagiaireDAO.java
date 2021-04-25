@@ -42,7 +42,7 @@ public class StagiaireDAO {
 		ArbreBinaire ab = new ArbreBinaire();
 		
 		// si recherche par Nom, optimized with structure of the binary tree
-		if( global == false && (!stagiaireTemplate.getNom().isBlank()) ) {
+		if( global == false && (!stagiaireTemplate.getNom().isEmpty()) ) {
 			System.out.println("Use optimized tree structure to find the name");
 			listFiltree = ab.searchStagiaireParNom( stagiaireTemplate.getNom() );
 			System.out.println("list avec optimisation: "+ listFiltree);
@@ -64,7 +64,7 @@ public class StagiaireDAO {
 		} else {
 			String critere = stagiaireTemplate.getNom();
 			System.out.println("critere: "+ critere);
-			if( critere.isBlank() ) {
+			if( critere.isEmpty() ) {
 				System.err.println("ERREUR critere cannot be empty !");
 			}
 			List<Stagiaire >listFiltreeNom = filtreParNom( listFiltree, critere );
@@ -99,7 +99,7 @@ public class StagiaireDAO {
 		
 	public List<Stagiaire> filtreParNom( List<Stagiaire> listeEntree, String nom) {
 		
-		if (nom.isBlank())
+		if (nom.isEmpty())
 			return listeEntree;
 		
 		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
@@ -114,7 +114,7 @@ public class StagiaireDAO {
 
 	public List<Stagiaire> filtreParPrenom( List<Stagiaire> listeEntree, String prenom) {
 		
-		if (prenom.isBlank())
+		if (prenom.isEmpty())
 			return listeEntree;
 		
 		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
@@ -127,7 +127,7 @@ public class StagiaireDAO {
 	
 	public List<Stagiaire> filtreParDepartement( List<Stagiaire> listeEntree, String departement) {
 		
-		if( departement.isBlank())
+		if( departement.isEmpty())
 			return listeEntree;
 		
 		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();
@@ -140,7 +140,7 @@ public class StagiaireDAO {
 	
 	public List<Stagiaire> filtreParFormation( List<Stagiaire> listeEntree, String formation) {
 		
-		if( formation.isBlank() )
+		if( formation.isEmpty() )
 			return listeEntree;
 					
 		List<Stagiaire> listeSortie = new ArrayList<Stagiaire>();

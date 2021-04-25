@@ -99,7 +99,6 @@ public class TopPannel extends GridPane {
 					adminBtn.setText("Admin");
 					return;
 				}
-				
 				if (first == true) {
 					root.getTablePannel().getChildren().add(adminBox);
 					first = false;

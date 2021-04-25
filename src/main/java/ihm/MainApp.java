@@ -18,10 +18,6 @@ public class MainApp extends Application {
 		}
 		Admin adminRoot = new Admin("root", "roote");
 		daoadmin.trytoFind(adminRoot);
-		
-		
-		
-		
 		launch(args);
 	}
 	

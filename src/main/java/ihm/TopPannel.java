@@ -140,10 +140,14 @@ public class TopPannel extends GridPane {
 					mb.setAngle(0.0f);
 					MainPannel root = (MainPannel) getScene().getRoot();
 					root.getTablePannel().getTableView().setEffect(mb);
-					adminBox.setVisible(false);
-					adminBtn.setVisible(false);
+					// MIC keep button to switch back in a way
+					//adminBox.setVisible(false);
+					//adminBtn.setVisible(false);
 					utilisateur.setText("Utilisateur: " + admin.getNom());
 					role.setText("Permission: Administrateur");
+					
+					// root = (MainPannel) getScene().getRoot();
+					root.getFormAdmin().setAdmin(true);
 				}
 			}
 		});

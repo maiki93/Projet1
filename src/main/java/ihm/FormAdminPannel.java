@@ -29,6 +29,7 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 	
 	FormAdminPannel(boolean isAdmin) {
 		super();
+		this.isAdmin = isAdmin;
 		createLayout();
 		
 		// Afficher l'entrée sélectionnée dans le tableau
@@ -55,6 +56,9 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 		btDel = new Button("Supprimer");
 		btDel.setId("btDel");
 		btDel.managedProperty().bind(visibleProperty());
+		//if( !isAdmin)
+		//btDel.setVisible(false);
+		setAdmin(isAdmin);
 		
 		btNew.setOnAction(this);
 		btSave.setOnAction(this);
@@ -158,10 +162,10 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 	public void setAdmin(boolean adminAccess) {
 		isAdmin = adminAccess;
 		if( isAdmin) {
-			btSave.setVisible(true);
+			btNew.setVisible(true);
 			btDel.setVisible(true);
 		} else {
-			btSave.setVisible(false);
+			btNew.setVisible(false);
 			btDel.setVisible(false);
 		}
 	}

@@ -10,7 +10,7 @@ public class MainPannel extends BorderPane {
 	private FormPannel formPannel = new FormPannel();
 	private TablePannel tablePannel = new TablePannel();
 	private TopPannel topPannel = new TopPannel();
-	private FormAdminPannel formAdminPannel = new FormAdminPannel(true);
+	private FormAdminPannel formAdminPannel = new FormAdminPannel(false);
 
 	public MainPannel() {
 		super();
@@ -19,10 +19,9 @@ public class MainPannel extends BorderPane {
 		setCenter(tablePannel);
 		
 		setLeft(formAdminPannel);
-		// to make it invisible and the parent and reuse the place
-		// formAdminPannel.setVisible( false );
-		//formAdminPannel.setManaged(false); // to take out from the layout
-		// formAdminPannel.managedProperty().bind(formAdminPannel.visibleProperty());
+		// to make it invisible and the parent to reuse the place
+		formAdminPannel.setVisible( false );
+		formAdminPannel.managedProperty().bind(formAdminPannel.visibleProperty());
 	}
 	
 	// MIC I would put Observable and Dao at a base level Frame easy to retrieve ?

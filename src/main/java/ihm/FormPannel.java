@@ -1,5 +1,7 @@
 package main.java.ihm;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -10,6 +12,7 @@ import javafx.scene.layout.VBox;
 
 public class FormPannel extends GridPane {
 
+	private Button addNewStagiaireBtn;
 	private Button rechercheBtn;
 	private TextField rechercheTxt;
 	private ChoiceBox<String> rechercheCb;
@@ -23,8 +26,12 @@ public class FormPannel extends GridPane {
 
 	public FormPannel() {
 		super();
-	
-
+		// test, include at the bottom because of GridPane
+		addNewStagiaireBtn = new Button("Nouv. stag.");
+		addNewStagiaireBtn.setId("newStagBtn");
+		addNewStagiaireBtn.setPrefSize(150, 50);
+		addNewStagiaireBtn.setStyle("-fx-background-color:#2589BD");
+		
 		rechercheBtn = new Button("Recherche");
 		rechercheBtn.setId("rechercheBtn");
 		rechercheBtn.setPrefSize(150, 50);
@@ -63,10 +70,27 @@ public class FormPannel extends GridPane {
 		exportPDFBtn.setPrefSize(150, 50);
 		exportPDFBtn.setStyle("-fx-background-color:#2589BD");
 		add(exportPDFBtn, 1, 3);
+		
+		add(addNewStagiaireBtn,1,4);
 
 		setVgap(20);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color:#E8EBE4");
+		
+		addNewStagiaireBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				// Formulaire doit apparaitre
+				MainPannel root = (MainPannel) getScene().getRoot();
+				if( root.getFormAdmin().isVisible()) {
+					root.getFormAdmin().setVisible(false);
+					addNewStagiaireBtn.setText("Nouv.Stag.");
+				} else {
+					root.getFormAdmin().setVisible(true);
+					addNewStagiaireBtn.setText("Fermer Form");
+				}
+			}
+		});
 
 	}
 

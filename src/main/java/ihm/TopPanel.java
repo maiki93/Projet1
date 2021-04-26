@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 import main.java.Admin;
 import main.java.AdminDAO;
 
-public class TopPannel extends GridPane {
+public class TopPanel extends GridPane {
 	private HBox topBox;
 	private HBox btnBox;
 	private VBox adminBox;
@@ -35,7 +35,7 @@ public class TopPannel extends GridPane {
 	private Button closebtn;
 	private Boolean first = true;
 
-	public TopPannel() {
+	public TopPanel() {
 		super();
 		
 		topBox = new HBox(100);
@@ -89,11 +89,11 @@ public class TopPannel extends GridPane {
 		adminBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				MainPannel root = (MainPannel) getScene().getRoot();
+				RootPanel root = (RootPanel) getScene().getRoot();
 				
 				// si on est déjà admin on redevient user
-				if( root.getFormAdmin().isAdmin()) {
-					root.getFormAdmin().setAdmin(false);
+				if( root.hasAdminRights()) {
+					root.setAdminRights(false);
 					utilisateur.setText("Utilisateur: Invité");
 					role.setText("Permission: Utilisateur");
 					adminBtn.setText("Admin");
@@ -123,15 +123,14 @@ public class TopPannel extends GridPane {
 					MotionBlur mb = new MotionBlur();
 					mb.setRadius(0.0f);
 					mb.setAngle(0.0f);
-					MainPannel root = (MainPannel) getScene().getRoot();
+					RootPanel root = (RootPanel) getScene().getRoot();
 					root.getTablePannel().getTableView().setEffect(mb);
-					// MIC keep button to switch back in a way
-					//adminBox.setVisible(false);
-					//adminBtn.setVisible(false);
+					
 					utilisateur.setText("Utilisateur: " + admin.getNom());
 					role.setText("Permission: Administrateur");
 					adminBtn.setText("User");
-					root.getFormAdmin().setAdmin(true);
+					// if true open 
+					root.setAdminRights(true);
 					// close the box if correct, better to remove it ? done by first
 					adminBox.setVisible(false);
 					//root.getTablePannel().getChildren().remove(adminBox);
@@ -145,7 +144,7 @@ public class TopPannel extends GridPane {
 				MotionBlur mb = new MotionBlur();
 				mb.setRadius(0.0f);
 				mb.setAngle(0.0f);
-				MainPannel root = (MainPannel) getScene().getRoot();
+				RootPanel root = (RootPanel) getScene().getRoot();
 				root.getTablePannel().getTableView().setEffect(mb);
 				adminBox.setVisible(false);
 			}

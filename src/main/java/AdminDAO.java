@@ -20,8 +20,8 @@ public class AdminDAO {
 		this.password = password;
 	}
 	
-	// think about ObservablebooleanValue
-	private boolean isAdmin = false;
+	// to think about ObservablebooleanValue ??
+	private boolean adminRights = false;
 
 	public AdminDAO() {
 		super();
@@ -68,13 +68,21 @@ public class AdminDAO {
 	}
 
 	public boolean isAdmin() {
-		return isAdmin;
+		return adminRights;
+	}
+	/*
+	public boolean hasAdminRights() {
+		return adminRights;
+	}
+	*/
+	
+	//public Admin getAdminRights() {
+	//	return admin;
+	//}
+	public void setAdminRights(boolean adminRights) {
+		this.adminRights = adminRights; 
 	}
 	
-	public Admin getAdmin() {
-		return admin;
-	}
-
 	public void setAdmin(Admin admin) {
 		this.admin = admin;
 	}

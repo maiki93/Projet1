@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import main.java.Stagiaire;
 import main.java.StagiaireDAO;
 
-public class FormPannel extends GridPane {
+public class RecherchePanel extends GridPane {
 
 	private Button addNewStagiaireBtn;
 	private Button rechercheBtn;
@@ -28,7 +28,7 @@ public class FormPannel extends GridPane {
 	private VBox boxRecherche;
 	private VBox boxinfos;
 
-	public FormPannel() {
+	public RecherchePanel() {
 		super();
 		
 		rechercheBtn = new Button("Recherche");
@@ -93,7 +93,7 @@ public class FormPannel extends GridPane {
 				}
 				
 				// voir UML
-				MainPannel root = (MainPannel)getScene().getRoot();
+				RootPanel root = (RootPanel)getScene().getRoot();
 				StagiaireDAO stageDao = root.getStagiaireDao();
 				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isGlobal);
 				System.out.println("listFiltree, size:" + listFiltree.size());
@@ -105,16 +105,17 @@ public class FormPannel extends GridPane {
 			
 		});
 		
+		// some could be in RootPanel : OpenFormulairePanel ? need to change text here
 		addNewStagiaireBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// Formulaire doit apparaitre
-				MainPannel root = (MainPannel) getScene().getRoot();
-				if( root.getFormAdmin().isVisible()) {
-					root.getFormAdmin().setVisible(false);
+				RootPanel root = (RootPanel) getScene().getRoot();
+				if( root.getFormulairePanel().isVisible()) {
+					root.getFormulairePanel().setVisible(false);
 					addNewStagiaireBtn.setText("Nouv.Stag.");
 				} else {
-					root.getFormAdmin().setVisible(true);
+					root.getFormulairePanel().setVisible(true);
 					addNewStagiaireBtn.setText("Fermer Form");
 				}
 			}

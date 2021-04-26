@@ -22,7 +22,7 @@ public class MainApp extends Application {
 	
 	@Override
 	public void start(Stage stage)throws Exception{
-		MainPannel root = new MainPannel();
+		RootPanel root = new RootPanel();
 		stage.setTitle("Annuaire Eql");
 		Scene scene = new Scene(root);
 		// TODO

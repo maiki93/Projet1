@@ -3,7 +3,7 @@ package main.java.ihm;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
+//import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionMode;
@@ -15,21 +15,17 @@ import javafx.scene.layout.AnchorPane;
 import main.java.StagiaireDAO;
 import main.java.Stagiaire;
 
-public class TablePannel extends AnchorPane {
+public class TablePanel extends AnchorPane {
 	
 	private TableView<Stagiaire> tableView;
 
-	// Recreer à chaque fois, peut etre un peu bourrin comme méthode. A voir si on peut se limiter à la table, voir reassigner l'observable 
+	// Recreer à chaque fois, peut etre un peu bourrin comme méthode. 
+	// A voir plus tard si on peut se limiter à la table, voir reassigner l'observable. 
 	@SuppressWarnings("unchecked")
-	public TablePannel(ObservableList<Stagiaire> observablesStagiaires) {
+	public TablePanel(ObservableList<Stagiaire> observablesStagiaires) {
 		super();
-		// arbre should be loaded at each call call of dao.getX by now
-		//dao.readTxtFichier();
-		//observablesStagiaires = FXCollections.observableArrayList(dao.getStagiairelist());
-		
 
 		tableView = new TableView<>(observablesStagiaires);
-
 		TableColumn<Stagiaire, String> colNom = new TableColumn<>("Nom");
 		colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
 
@@ -66,8 +62,8 @@ public class TablePannel extends AnchorPane {
 				System.out.println("ObservableValue" + observable);
 				// often error here, not clear why...
 				if(newValue != null ) {
-					MainPannel root = (MainPannel)getScene().getRoot();
-					root.getFormAdmin().loadAStagiaire(newValue);
+					RootPanel root = (RootPanel)getScene().getRoot();
+					root.getFormulairePanel().loadAStagiaire(newValue);
 					// test, in jafafxdemo
 					// formulaire.setFocusedItem(tableView.getSelectionModel().getSelectedIndex(), newValue);
 				} // for test 
@@ -81,7 +77,7 @@ public class TablePannel extends AnchorPane {
 			@Override
 			public void onChanged(Change<? extends Stagiaire> chgStagiaire) {
 				System.out.println("Observable list has been modified");
-				MainPannel root = (MainPannel) getScene().getRoot();
+				RootPanel root = (RootPanel) getScene().getRoot();
 				StagiaireDAO dao = root.getStagiaireDao();
 				
 				while(chgStagiaire.next()) {
@@ -106,20 +102,8 @@ public class TablePannel extends AnchorPane {
 		});
 	}
 	
-	//ObservableList<Stagiaire> getObservable() {
-	//	return observablesStagiaires;
-	//}
-	
-	//StagiaireDAO getDao() {
-	//	return dao;
-	//}
-	
 	public TableView<Stagiaire> getTableView() {
 		return tableView;
 	}
-
-	//public void setTableView(TableView<Stagiaire> tableView) {
-	//	this.tableView = tableView;
-	//}
 
 }

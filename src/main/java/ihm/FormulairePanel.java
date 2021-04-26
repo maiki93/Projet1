@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import main.java.Stagiaire;
 
-class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
+class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 	
 	private TextField textNom;
 	private TextField textPrenom;
@@ -22,12 +22,11 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 	private Button btSave;
 	private Button btDel;
 	
-	private boolean isAdmin; // should not be in a formulaire !
+	//private boolean isAdmin; // should not be in a formulaire !
 	private boolean isNewStagiaire;
 	
-	FormAdminPannel(boolean isAdmin) {
+	FormulairePanel() {
 		super();
-		this.isAdmin = isAdmin;
 		createLayout();
 		// Afficher l'entrée sélectionnée dans le tableau
 		// ou le premier par défaut, celui qui provient de la recherche
@@ -55,7 +54,7 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 		btDel.setId("btDel");
 		btDel.managedProperty().bind(visibleProperty());
 		// button states in this function
-		setAdmin(isAdmin);
+		//setAdmin(isAdmin);
 		btNew.setOnAction(this);
 		btSave.setOnAction(this);
 		btDel.setOnAction(this);
@@ -75,10 +74,11 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 		if( idBt.equals("btNew") ) {
 			System.out.println("btNew");
 			resetTextFields(); // TODO unselect entry in table
-			// clearSelection in table
-			MainPannel root = (MainPannel) getScene().getRoot();
+			
+			// clearSelection in table, could be a function
+			RootPanel root = (RootPanel) getScene().getRoot();
 			//TableView<Stagiaire> tblV = ((TablePannel) root.getTablePannel()).getTableView(); ??
-			TablePannel tblPan = root.getTablePannel();
+			TablePanel tblPan = root.getTablePannel();
 			TableView<Stagiaire> tblV = tblPan.getTableView(); 
 			tblV.getSelectionModel().clearSelection();
 			isNewStagiaire = true;
@@ -93,7 +93,7 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 		} else if( idBt.equals("btDel")) {
 			System.out.println("btDel ");
 			Stagiaire stagiaire = readTextFields();
-			MainPannel root = (MainPannel) getScene().getRoot();
+			RootPanel root = (RootPanel) getScene().getRoot();
 			root.getObservable().remove(stagiaire);
 		}
 	}
@@ -147,14 +147,9 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 		textFormation.setText("");
 		textAnnee.setText("");
 	}
-	
-	public boolean isAdmin() {
-		return isAdmin;
-	}
 	 
-	public void setAdmin(boolean adminAccess) {
-		isAdmin = adminAccess;
-		if( isAdmin) {
+	public void setFormWithRights(boolean adminAccess) {
+		if( adminAccess) {
 			this.setVisible(true);
 			btNew.setVisible(true);
 			btDel.setVisible(true);

@@ -27,6 +27,7 @@ public class TestStagiaireDAO {
 		//ab.testReadBinFile();
 		//ab.printOrdreAlphabetique();
 		
+		
 		List<Stagiaire> listStag = null;
 		//listStag = ab.getStagiaireOrdreAlphabetique();
 		listStag = stageDao.getStagiaireListFromArbre();

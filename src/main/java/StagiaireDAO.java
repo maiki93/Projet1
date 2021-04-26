@@ -17,6 +17,7 @@ public class StagiaireDAO {
 	private int taillePrenom;
 	private int tailleDepartement;
 	private int tailleFormation;
+	private ArbreBinaire ab;
 	
 	
 	public StagiaireDAO() {
@@ -298,11 +299,19 @@ public class StagiaireDAO {
 	}
 	
 	public List<Stagiaire> getStagiaireListFromArbre() {
-		ArbreBinaire ab = new ArbreBinaire();
+		 ab= new ArbreBinaire();
 		return ab.getStagiaireOrdreAlphabetique();
 	}
 
 	public void setStagiairelist(List<Stagiaire> stagiairelist) {
 		this.stagiairelist = stagiairelist;
+	}
+
+	public ArbreBinaire getAb() {
+		return ab;
+	}
+
+	public void setAb(ArbreBinaire ab) {
+		this.ab = ab;
 	}
 }

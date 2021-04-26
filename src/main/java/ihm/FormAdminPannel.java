@@ -77,7 +77,9 @@ class FormAdminPannel extends GridPane implements EventHandler<ActionEvent> {
 			resetTextFields(); // TODO unselect entry in table
 			// clearSelection in table
 			MainPannel root = (MainPannel) getScene().getRoot();
-			TableView<Stagiaire> tblV = root.getTablePannel().getTableView();
+			//TableView<Stagiaire> tblV = ((TablePannel) root.getTablePannel()).getTableView(); ??
+			TablePannel tblPan = root.getTablePannel();
+			TableView<Stagiaire> tblV = tblPan.getTableView(); 
 			tblV.getSelectionModel().clearSelection();
 			isNewStagiaire = true;
 			// save new stagiaire or valide the modification of 

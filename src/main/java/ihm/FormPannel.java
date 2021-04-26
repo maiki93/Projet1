@@ -1,5 +1,7 @@
 package main.java.ihm;
 
+import java.util.List;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -9,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import main.java.Stagiaire;
+import main.java.StagiaireDAO;
 
 public class FormPannel extends GridPane {
 
@@ -26,11 +30,6 @@ public class FormPannel extends GridPane {
 
 	public FormPannel() {
 		super();
-		// test, include at the bottom because of GridPane
-		addNewStagiaireBtn = new Button("Nouv. stag.");
-		addNewStagiaireBtn.setId("newStagBtn");
-		addNewStagiaireBtn.setPrefSize(150, 50);
-		addNewStagiaireBtn.setStyle("-fx-background-color:#2589BD");
 		
 		rechercheBtn = new Button("Recherche");
 		rechercheBtn.setId("rechercheBtn");
@@ -51,6 +50,7 @@ public class FormPannel extends GridPane {
 		boxRecherche.getChildren().addAll( rechercheBtn, rechercheTxt, rechercheCb);
 		add(boxRecherche, 1, 1);
 
+		// Info coming from the result of the search ? or comming from the observableList
 		infosLabel = new Label("Infos");
 		infosLabel.setId("infosLabel");
 		totalEtudiantLabel = new Label("Total d'étudiants: 1300");
@@ -71,11 +71,39 @@ public class FormPannel extends GridPane {
 		exportPDFBtn.setStyle("-fx-background-color:#2589BD");
 		add(exportPDFBtn, 1, 3);
 		
+		addNewStagiaireBtn = new Button("Nouv. stag.");
+		addNewStagiaireBtn.setId("newStagBtn");
+		addNewStagiaireBtn.setPrefSize(150, 50);
+		addNewStagiaireBtn.setStyle("-fx-background-color:#2589BD");
 		add(addNewStagiaireBtn,1,4);
 
 		setVgap(20);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color:#E8EBE4");
+		
+		rechercheBtn.setOnAction( new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				boolean isGlobal = false;
+				Stagiaire stagiaireTemplate = createTemplateForSearch();
+				// is recherche specific ? or global, depends on the ComboxBox "Tout"
+				if(rechercheCb.getSelectionModel().getSelectedItem() == "Tout" ) {
+					//nom = text; 
+					isGlobal = true;
+				}
+				
+				// voir UML
+				MainPannel root = (MainPannel)getScene().getRoot();
+				StagiaireDAO stageDao = root.getStagiaireDao();
+				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isGlobal);
+				System.out.println("listFiltree, size:" + listFiltree.size());
+				// update Main Panel
+				root.setNewRecherche( listFiltree);
+				// reset la recherche
+				
+			}
+			
+		});
 		
 		addNewStagiaireBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -92,6 +120,23 @@ public class FormPannel extends GridPane {
 			}
 		});
 
+	}
+	
+	private Stagiaire createTemplateForSearch() {
+		// Read the text fields available
+		String text = rechercheTxt.getText();
+		String textCb = rechercheCb.getSelectionModel().getSelectedItem();
+		System.out.println("createTemplate "+ text + " " + textCb);
+		String nom = "";
+		String prenom="";
+		String departement="";
+		String formation="";
+		int annee=0;
+		if(textCb == "Tout" ) {
+			nom = text;
+		}
+		Stagiaire tplt = new Stagiaire(nom, prenom, departement, formation, annee );
+		return tplt;
 	}
 
 }

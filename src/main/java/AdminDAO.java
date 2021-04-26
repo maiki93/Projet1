@@ -19,6 +19,9 @@ public class AdminDAO {
 		this.name = name;
 		this.password = password;
 	}
+	
+	// think about ObservablebooleanValue
+	private boolean isAdmin = false;
 
 	public AdminDAO() {
 		super();
@@ -64,6 +67,10 @@ public class AdminDAO {
 		return false;
 	}
 
+	public boolean isAdmin() {
+		return isAdmin;
+	}
+	
 	public Admin getAdmin() {
 		return admin;
 	}

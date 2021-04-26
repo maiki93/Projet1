@@ -16,17 +16,17 @@ import main.java.StagiaireDAO;
 import main.java.Stagiaire;
 
 public class TablePannel extends AnchorPane {
-	private StagiaireDAO dao = new StagiaireDAO();
-	private ObservableList<Stagiaire> observablesStagiaires;
+	
 	private TableView<Stagiaire> tableView;
 
+	// Recreer à chaque fois, peut etre un peu bourrin comme méthode. A voir si on peut se limiter à la table, voir reassigner l'observable 
 	@SuppressWarnings("unchecked")
-	public TablePannel() {
+	public TablePannel(ObservableList<Stagiaire> observablesStagiaires) {
 		super();
 		// arbre should be loaded at each call call of dao.getX by now
 		//dao.readTxtFichier();
 		//observablesStagiaires = FXCollections.observableArrayList(dao.getStagiairelist());
-		observablesStagiaires = FXCollections.observableArrayList(dao.getStagiaireListFromArbre());
+		
 
 		tableView = new TableView<>(observablesStagiaires);
 
@@ -81,6 +81,9 @@ public class TablePannel extends AnchorPane {
 			@Override
 			public void onChanged(Change<? extends Stagiaire> chgStagiaire) {
 				System.out.println("Observable list has been modified");
+				MainPannel root = (MainPannel) getScene().getRoot();
+				StagiaireDAO dao = root.getStagiaireDao();
+				
 				while(chgStagiaire.next()) {
 					if( chgStagiaire.wasUpdated()) {
 						System.out.println("ChgStagiare was updated()");
@@ -103,13 +106,13 @@ public class TablePannel extends AnchorPane {
 		});
 	}
 	
-	ObservableList<Stagiaire> getObservable() {
-		return observablesStagiaires;
-	}
+	//ObservableList<Stagiaire> getObservable() {
+	//	return observablesStagiaires;
+	//}
 	
-	StagiaireDAO getDao() {
-		return dao;
-	}
+	//StagiaireDAO getDao() {
+	//	return dao;
+	//}
 	
 	public TableView<Stagiaire> getTableView() {
 		return tableView;

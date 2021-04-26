@@ -226,7 +226,14 @@ public class ArbreBinaire {
 			bChildLeft = false;
 			bChildRight = false;
 			median = listOfStagiaire.size() / 2;
-			// add 0,1 or 2 new sublists aroound the node if there are childs to write to
+			
+			// Deal with duplicates, no duplicates should be on the right
+			// not a problem if median is the last one : 
+			// - 1. It is maybe at the left of a duplicate
+			if( median < listOfStagiaire.size()-1 ) 
+				median = checkErrorMedian( listOfStagiaire, median);
+			
+			// add 0,1 or 2 new sublists around the node if there are childs to write to
 			// the next level
 			if (median > 0) {// there is at least one element on the left
 				newList.add(listOfStagiaire.subList(0, median));
@@ -240,8 +247,44 @@ public class ArbreBinaire {
 		}
 		return newList;
 	}
+	
+	// Check for bug in the construction, some duplicates are put at the right of the median
+	// all duplicates should be at the left !!
+	private int checkErrorMedian(List<Stagiaire> listOfStagiaire, int median) throws IOException {
+		
+		String nameMedian = listOfStagiaire.get(median).getNom();
+		String nameMedianPlusOne = listOfStagiaire.get(median+1).getNom();
+		
+		// try to correct
+		int newMedian = median;
+		// Should be only equal, never >
+		if( nameMedian.compareTo(nameMedianPlusOne) >= 0) {
+			System.out.println("ERROR nameMedian: " + nameMedian + ", median=" + median);
+			System.out.println("name median+1: " + nameMedianPlusOne);
+			//throw new IOException("ERROR in median : " + nameMedian + " " + nameMedianPlusOne );
+			return newMedian = correctMedian(listOfStagiaire, median);
+		}
+		// no need to change the median
+		return newMedian;
+	}
+	
+	private int correctMedian(List<Stagiaire> listOfStagiaire, int median) throws IOException {
+		// median must be incremented to get all duplicates on its left
+		// or arrive at the boundary, it is fine
+		int incrementMedian = median + 1; 
+		String medianName = listOfStagiaire.get(median).getNom();
+		String medianNamePlusOne = listOfStagiaire.get(median+1).getNom();
+		// condition si size of the list
+		while( (medianName.compareTo(medianNamePlusOne) == 0) &&
+			   ( incrementMedian < listOfStagiaire.size()-1 ) )  {
+			incrementMedian++;
+			medianNamePlusOne = listOfStagiaire.get(incrementMedian).getNom();
+		}
+		System.out.println("Found correct median : "+ (int)(incrementMedian) );
+		return incrementMedian;
+	}
 
-	// could be implemented in NodeStagiaire ,m uch cleaner
+	// could be implemented in NodeStagiaire ,much cleaner
 	private void writeOneNode(Stagiaire stagiaire, boolean childLeft, boolean childRight) throws IOException {
 		// System.out.println("stagiaire: " + stagiaire);
 		// System.out.println("file pointer : " + raf.getFilePointer() );
@@ -315,7 +358,7 @@ public class ArbreBinaire {
 	}
 
 	public NodeStagiaire addStagiaire(Stagiaire stagiaire) throws IOException {
-		List<Stagiaire> listeStagiaire = getStagiaireOrdreAlphabetique();
+		//List<Stagiaire> listeStagiaire = getStagiaireOrdreAlphabetique();
 		NodeStagiaire root = readOneNode(0);
 		NodeStagiaire ns = findParentStagiaire(stagiaire, root);
 		return ns;

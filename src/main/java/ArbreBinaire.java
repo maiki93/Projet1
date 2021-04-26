@@ -179,6 +179,7 @@ public class ArbreBinaire {
 		return list;
 	}
 
+	// Case equal go the left child
 	public List<Stagiaire> iterativeSearchByKey(String key, long adressNode) throws IOException {
 
 		List<Stagiaire> listFound = new ArrayList<Stagiaire>();

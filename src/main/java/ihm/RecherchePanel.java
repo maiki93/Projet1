@@ -1,7 +1,11 @@
 package main.java.ihm;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,6 +31,10 @@ public class RecherchePanel extends GridPane {
 	private Button exportPDFBtn;
 	private VBox boxRecherche;
 	private VBox boxinfos;
+	
+	private VBox boxCriteriaRecherche;
+	private boolean isRechercheGlobal;
+	private Map<String,String> mapCritere = new HashMap<>();
 
 	public RecherchePanel() {
 		super();
@@ -42,15 +50,20 @@ public class RecherchePanel extends GridPane {
 		rechercheCb = new ChoiceBox<>();
 		rechercheCb.setId("rechercheCb");
 		rechercheCb.getItems().addAll("Tout", "Nom", "Prénom", "Département", "Formation", "Année");
-		rechercheCb.getSelectionModel().select("Tout");
+		rechercheCb.getSelectionModel().select("Nom");
 		rechercheCb.setStyle("-fx-alignment: CENTER");
 
 		boxRecherche = new VBox(100);
 		boxRecherche.setId("boxRecherche");
 		boxRecherche.getChildren().addAll( rechercheBtn, rechercheTxt, rechercheCb);
-		add(boxRecherche, 1, 1);
+		add(boxRecherche,1,1);
+		
+		// selection de la recheche, contains the selected criteria
+		boxCriteriaRecherche = new VBox(10);
+		add(boxCriteriaRecherche, 1,2);
+		
 
-		// Info coming from the result of the search ? or comming from the observableList
+		// Info coming from the result of the search ? or comming from the observableList ?
 		infosLabel = new Label("Infos");
 		infosLabel.setId("infosLabel");
 		totalEtudiantLabel = new Label("Total d'étudiants: 1300");
@@ -60,22 +73,22 @@ public class RecherchePanel extends GridPane {
 		typeRechercheLabel = new Label("Type de recherche: Tout");
 		typeRechercheLabel.setId("typeRechercheLabel");
 
-		boxinfos = new VBox(100);
+		boxinfos = new VBox(10);
 		boxinfos.setId("boxinfos");
 		boxinfos.getChildren().addAll(infosLabel, totalEtudiantLabel, elementTrouverLabel);
-		add(boxinfos, 1, 2);
+		add(boxinfos, 1, 3);
 
 		exportPDFBtn = new Button("Export PDF");
 		exportPDFBtn.setId("exportPDFBtn");
 		exportPDFBtn.setPrefSize(150, 50);
 		exportPDFBtn.setStyle("-fx-background-color:#2589BD");
-		add(exportPDFBtn, 1, 3);
+		add(exportPDFBtn, 1, 4);
 		
 		addNewStagiaireBtn = new Button("Nouv. stag.");
 		addNewStagiaireBtn.setId("newStagBtn");
 		addNewStagiaireBtn.setPrefSize(150, 50);
 		addNewStagiaireBtn.setStyle("-fx-background-color:#2589BD");
-		add(addNewStagiaireBtn,1,4);
+		add(addNewStagiaireBtn,1,5);
 
 		setVgap(20);
 		setPadding(new Insets(5));
@@ -84,23 +97,18 @@ public class RecherchePanel extends GridPane {
 		rechercheBtn.setOnAction( new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				boolean isGlobal = false;
+				// set isRechercheGlobal si "Tout" est présent dans la liste de critère
 				Stagiaire stagiaireTemplate = createTemplateForSearch();
-				// is recherche specific ? or global, depends on the ComboxBox "Tout"
-				if(rechercheCb.getSelectionModel().getSelectedItem() == "Tout" ) {
-					//nom = text; 
-					isGlobal = true;
-				}
 				
 				// voir UML
 				RootPanel root = (RootPanel)getScene().getRoot();
 				StagiaireDAO stageDao = root.getStagiaireDao();
-				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isGlobal);
+				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isRechercheGlobal);
 				System.out.println("listFiltree, size:" + listFiltree.size());
-				// update Main Panel
+				// update other panels
 				root.setNewRecherche( listFiltree);
 				// reset la recherche
-				
+				clearCritereRecherche();
 			}
 			
 		});
@@ -120,24 +128,76 @@ public class RecherchePanel extends GridPane {
 				}
 			}
 		});
+		
+		rechercheTxt.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				System.out.println("rechercgeTxt focus " + observable);
+				System.out.println("values: "+ oldValue +","+ newValue);
+				System.out.println("Recherche Text: "+ rechercheTxt.getText());
+				// we lost the focus
+				if( newValue == false) {
+					System.out.println("New value");
+					String value = rechercheTxt.getText();
+					String critere = rechercheCb.getSelectionModel().getSelectedItem();
+					System.out.println("critere, value " + critere + "," + value);
+					addCritere(value, critere);
+				// we gain the focus, nothing to do
+				} else {
+					System.out.println("Old Value");
+				}
+			}
+		});
+			
+
+	}
+	
+	private void addCritere(String value, String critere) {
+		mapCritere.put(critere, value);
+		Label lblCritere = new Label(critere + ":" + value);
+		boxCriteriaRecherche.getChildren().add(lblCritere);
+		
 	}
 	
 	private Stagiaire createTemplateForSearch() {
 		// Read the text fields available
-		String text = rechercheTxt.getText();
-		String textCb = rechercheCb.getSelectionModel().getSelectedItem();
-		System.out.println("createTemplate "+ text + " " + textCb);
-		String nom = "";
-		String prenom="";
-		String departement="";
-		String formation="";
-		int annee=0;
-		if(textCb == "Tout" ) {
-			nom = text;
+		//String text = rechercheTxt.getText();
+		//String textCb = rechercheCb.getSelectionModel().getSelectedItem();
+		//System.out.println("createTemplate "+ text + " " + textCb);
+		String nom = (mapCritere.get("Nom") != null) ? mapCritere.get("Nom") : "";  
+		String prenom= ( mapCritere.get("Prenom") != null) ? mapCritere.get("Prenom") : "";
+		String departement = (mapCritere.get("Departement") != null) ? mapCritere.get("Departement") : "";
+		String formation= (mapCritere.get("Formation") != null) ? mapCritere.get("Departement") : "";
+		String anneeStr = (mapCritere.get("annee") != null) ? mapCritere.get("Departement") : "" ;
+		int annee;
+		//System.out.println("Nom: " + nom);
+		//System.out.println("Prenom: " + prenom);
+		
+		// test for global
+		String demandeGlobale = (mapCritere.get("Tout") != null) ? mapCritere.get("Tout") : "" ;
+		if( !demandeGlobale.isEmpty() ) {
+			System.out.println("demande globale");
+			isRechercheGlobal = true;
+			nom = demandeGlobale;
+		}
+		
+		try {
+			annee = Integer.parseInt(anneeStr);
+		} catch(NumberFormatException e) {
+			System.out.println("Number exception avec année, pas grave");
+			annee = 0;
 		}
 		Stagiaire tplt = new Stagiaire(nom, prenom, departement, formation, annee );
 		return tplt;
+	}
+	
+	
+	private void clearCritereRecherche() {
+		mapCritere.clear();
+		boxCriteriaRecherche.getChildren().clear();
+		rechercheCb.getSelectionModel().select("Nom");
+		isRechercheGlobal = false;
 	}
 
 }

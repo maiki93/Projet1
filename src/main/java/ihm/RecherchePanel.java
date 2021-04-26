@@ -62,7 +62,6 @@ public class RecherchePanel extends GridPane {
 		boxCriteriaRecherche = new VBox(10);
 		add(boxCriteriaRecherche, 1,2);
 		
-
 		// Info coming from the result of the search ? or comming from the observableList ?
 		infosLabel = new Label("Infos");
 		infosLabel.setId("infosLabel");
@@ -110,7 +109,6 @@ public class RecherchePanel extends GridPane {
 				// reset la recherche
 				clearCritereRecherche();
 			}
-			
 		});
 		
 		// some could be in RootPanel : OpenFormulairePanel ? need to change text here

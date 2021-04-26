@@ -179,21 +179,23 @@ public class ArbreBinaire {
 		return list;
 	}
 
-	// Case equal go the left child
+	// Case equal go the left child, order of duplicates is inversed in putting to the left
 	public List<Stagiaire> iterativeSearchByKey(String key, long adressNode) throws IOException {
 
 		List<Stagiaire> listFound = new ArrayList<Stagiaire>();
-		NodeStagiaire currentNode = readOneNode(adressNode);
+		NodeStagiaire currentNode = null;
 
 		do {
 			// duplicates allowed, still continue to the leaves
 			currentNode = readOneNode(adressNode);
-			if (currentNode.getStagiaire().getNom().compareTo(key) == 0)
+			if (currentNode.getStagiaire().getNom().toUpperCase().compareTo(key.toUpperCase()) == 0)
 				listFound.add(currentNode.getStagiaire());
-			if (currentNode.getStagiaire().getNom().toUpperCase().compareTo(key.toUpperCase()) < 0) {
-				adressNode = currentNode.getChildRight();
-			} else {
+			// <=> key <= current.nom, go to left 
+			if (currentNode.getStagiaire().getNom().toUpperCase().compareTo(key.toUpperCase()) >= 0) {
 				adressNode = currentNode.getChildLeft();
+			// key> nom should go to right
+			} else {
+				adressNode = currentNode.getChildRight();
 			}
 		} while (adressNode != 0); // currentNode is a leave
 

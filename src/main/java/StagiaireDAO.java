@@ -19,7 +19,6 @@ public class StagiaireDAO {
 	private int tailleFormation;
 	private ArbreBinaire ab;
 	
-	
 	public StagiaireDAO() {
 		// Verifie si l'arbre binaire existe sur le disque, sinon le reconstruit
 		if( ! ArbreBinaire.fichierExists() ) {
@@ -248,7 +247,8 @@ public class StagiaireDAO {
 		int j = indiceDebut;
 		int dernier = indiceFin - 1;
 		for (int i = indiceDebut; i < dernier; i++) {
-			if (tabATrier.get(i).getNom().compareTo(tabATrier.get(dernier).getNom()) <= 0) {
+			//if (tabATrier.get(i).getNom().compareTo(tabATrier.get(dernier).getNom()) <= 0) {
+			if (tabATrier.get(i).compareTo(tabATrier.get(dernier)) <= 0) {
 				permute(tabATrier, i, j);
 				j++;
 			}

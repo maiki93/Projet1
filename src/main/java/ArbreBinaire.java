@@ -313,11 +313,8 @@ public class ArbreBinaire {
 
 	public NodeStagiaire addStagiaire(Stagiaire stagiaire) throws IOException {
 		List<Stagiaire> listeStagiaire = getStagiaireOrdreAlphabetique();
-		listeStagiaire.size();// nombre d'enregistrement
 		NodeStagiaire root = readOneNode(0);
 		NodeStagiaire ns = findParentStagiaire(stagiaire, root);
-		System.out.println();
-		System.out.println("add Stagiaire noeud parent:" + ns);
 		return ns;
 	}
 
@@ -355,14 +352,14 @@ public class ArbreBinaire {
 		} else if (root.getChildRight() == 0 && root.getStagiaire().compareTo(stagiaire) < 0) {
 			System.out.println("arbre de droite pour : " + stagiaire.getNom());
 			System.out.println("parent du stagiaire: " + root.getStagiaire().getNom());
-			long pos = raf.length();
 			System.out.println("arbre de gauche pour : " + stagiaire.getNom());
 			System.out.println("rapport: " + root.getStagiaire().getNom());
 			System.out.println(this.tailleEnregistrement);
 			System.out.println(raf.getFilePointer());
 			System.out.println("taille header: " + this.tailleHeader);
-			System.out.println("taille du fichier: " + pos);
 			System.out.println("parent position: " + this.ParentPosition);
+			long pos = raf.length();
+			System.out.println("taille du fichier: " + pos);
 			long positionFile = (pos - tailleHeader) / tailleEnregistrement;
 			NodeStagiaire stagiaireParentNode = new NodeStagiaire(root.getStagiaire(), root.getChildLeft(),
 					positionFile);

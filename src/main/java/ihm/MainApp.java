@@ -15,18 +15,6 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 	public static void main(String[] args) {
-
-		Stagiaire stagiaire = new Stagiaire("alonzo", "paul", "94", "eql ai109", 2020);
-		// StagiaireDAO dao = new StagiaireDAO();
-		ArbreBinaire ab = new ArbreBinaire();
-//		try {
-//			System.out.println("test de text: " + ab.addStagiaire(stagiaire));
-//
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	
 		launch(args);
 	}
 

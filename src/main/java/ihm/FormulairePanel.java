@@ -87,6 +87,9 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		} else if( idBt.equals("btSave")) {
 			System.out.println("btSave isNewStagiaire "+ isNewStagiaire);
 			Stagiaire stagiaire = readTextFields();
+			System.out.println("new stagiare "+ stagiaire);
+			RootPanel root = (RootPanel) getScene().getRoot();
+			root.getObservable().add(stagiaire);
 			// here more complexe
 			
 		// supprime  

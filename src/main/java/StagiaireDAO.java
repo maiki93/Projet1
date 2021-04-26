@@ -92,10 +92,19 @@ public class StagiaireDAO {
 	
 	public void addAll(List<Stagiaire> stagiaires) {
 		System.out.println("DAO: add All, must write in the tree");
+		ArbreBinaire ab = new ArbreBinaire();
+		try {
+			ab.addStagiaire(stagiaires.get(0));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void removeAll(List<Stagiaire> stagiaires) {
 		System.out.println("DAO: remove All, must write in the tree");
+		ArbreBinaire ab = new ArbreBinaire();
+		
 	}
 		
 	public List<Stagiaire> filtreParNom( List<Stagiaire> listeEntree, String nom) {

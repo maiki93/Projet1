@@ -1,5 +1,6 @@
 package main.java.ihm;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Date;
@@ -24,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import main.java.Stagiaire;
 import main.java.StagiaireDAO;
 
@@ -106,12 +108,15 @@ public class RecherchePanel extends GridPane {
 		exportPDFBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				//donner le choix de l'emplacement
+				DirectoryChooser directoryChooser = new DirectoryChooser();
 				//donner le choix du nom
 
 				RootPanel root = (RootPanel) getScene().getRoot();
+				File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
 				List<Stagiaire> ListeStagiaire = root.getObservable();
-				String fileName = "C:\\TP\\test"+new Date().getTime()+".pdf";
+				
+				String fileName = selectedDirectory.toString()+"\\export_"+new Date().getTime()+".pdf";
+				System.out.println(fileName);
 				Document document = new Document();
 				try {
 					PdfWriter.getInstance(document, new FileOutputStream(fileName));

@@ -16,6 +16,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import main.java.Admin;
 import main.java.AdminDAO;
 
@@ -33,11 +35,15 @@ public class TopPanel extends GridPane {
 	private TextField passwordtxt;
 	private Button connectBtn;
 	private Button closebtn;
+	private Button documentationBtn;
 	private Boolean first = true;
+	private Boolean docopen = true;
+	private WebView browser;
+	private WebEngine webEngine;
 
 	public TopPanel() {
 		super();
-		
+
 		topBox = new HBox(100);
 		topBox.setId("topBox");
 
@@ -60,7 +66,12 @@ public class TopPanel extends GridPane {
 		adminBtn.setPrefSize(150, 50);
 		adminBtn.setStyle("-fx-background-color:#873D48");
 
-		topBox.getChildren().addAll(utilisateur, role, adminBtn);
+		documentationBtn = new Button("Documentation");
+		documentationBtn.setId("adminBtn");
+		documentationBtn.setPrefSize(150, 50);
+		documentationBtn.setStyle("-fx-background-color:#FF9B71");
+
+		topBox.getChildren().addAll(utilisateur, role, adminBtn, documentationBtn);
 		add(topBox, 1, 0);
 
 		setPadding(new Insets(10));
@@ -90,9 +101,9 @@ public class TopPanel extends GridPane {
 			@Override
 			public void handle(ActionEvent event) {
 				RootPanel root = (RootPanel) getScene().getRoot();
-				
+
 				// si on est déjà admin on redevient user
-				if( root.hasAdminRights()) {
+				if (root.hasAdminRights()) {
 					root.setAdminRights(false);
 					utilisateur.setText("Utilisateur: Invité");
 					role.setText("Permission: Utilisateur");
@@ -107,7 +118,7 @@ public class TopPanel extends GridPane {
 				mb.setRadius(5.0f);
 				mb.setAngle(5.0f);
 				root.getTablePannel().getTableView().setEffect(mb);
-				//root.setEffect(mb); this box is also blured...
+				// root.setEffect(mb); this box is also blured...
 				adminBox.setVisible(true);
 			}
 		});
@@ -125,15 +136,15 @@ public class TopPanel extends GridPane {
 					mb.setAngle(0.0f);
 					RootPanel root = (RootPanel) getScene().getRoot();
 					root.getTablePannel().getTableView().setEffect(mb);
-					
+
 					utilisateur.setText("Utilisateur: " + admin.getNom());
 					role.setText("Permission: Administrateur");
 					adminBtn.setText("User");
-					// if true open 
+					// if true open
 					root.setAdminRights(true);
 					// close the box if correct, better to remove it ? done by first
 					adminBox.setVisible(false);
-					//root.getTablePannel().getChildren().remove(adminBox);
+					// root.getTablePannel().getChildren().remove(adminBox);
 					// change stroke color around the FormAdmin if admin ?
 				}
 			}
@@ -149,6 +160,26 @@ public class TopPanel extends GridPane {
 				adminBox.setVisible(false);
 			}
 		});
+		documentationBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				RootPanel root = (RootPanel) getScene().getRoot();
+				if (docopen) {
+					System.out.println(docopen);
+					docopen = false;
+					browser = new WebView();
+					webEngine = browser.getEngine();
+					webEngine.load("https://gracious-morse-4690f0.netlify.app/#consultation");
+					// mettre la webview
+					root.setCenter(browser);
+				} else {
+					docopen = true;
+					root.setCenter(root.getTablePannel());
+
+				}
+			}
+		});
+
 	}
 
 }

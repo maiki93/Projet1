@@ -50,7 +50,7 @@ public class RootPanel extends BorderPane {
 		//System.out.println("Size of dao ");
 		////////////////////////////////////////
 		
-		ObservableList<Stagiaire> observablesStagiaires = FXCollections.observableArrayList(listFiltree);
+		observablesStagiaires = FXCollections.observableArrayList(listFiltree);
 		tablePannel = new TablePanel(observablesStagiaires);
 		setCenter(tablePannel);
 	}

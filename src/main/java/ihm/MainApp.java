@@ -17,7 +17,6 @@ public class MainApp extends Application {
 		daoadmin.trytoFind(adminRoot);
 		*/
 		launch(args);
-	
 	}
 	
 	@Override

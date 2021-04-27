@@ -51,16 +51,16 @@ public class NodeStagiaire {
 			return false;
 		return true;
 	}
-	/**
+	
 	public void setChildLeft(long childLeft) {
 		this.childLeft = childLeft;
-	}*/
+	}
 	
 	public long getChildRight() {
 		return childRight;
 	}
-	/**
+	
 	public void setChildRight(long childRight) {
 		this.childRight = childRight;
-	}*/
+	}
 }

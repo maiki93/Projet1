@@ -58,6 +58,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		btNew.setOnAction(this);
 		btSave.setOnAction(this);
 		btDel.setOnAction(this);
+		this.setId("pannelLeft");
 		this.addRow(5, btNew, btSave, btDel);
 	}
 

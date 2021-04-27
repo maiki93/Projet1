@@ -1,8 +1,17 @@
 package main.java.ihm;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -31,14 +40,14 @@ public class RecherchePanel extends GridPane {
 	private Button exportPDFBtn;
 	private VBox boxRecherche;
 	private VBox boxinfos;
-	
+
 	private VBox boxCriteriaRecherche;
 	private boolean isRechercheGlobal;
-	private Map<String,String> mapCritere = new HashMap<>();
+	private Map<String, String> mapCritere = new HashMap<>();
 
 	public RecherchePanel() {
 		super();
-		
+
 		rechercheBtn = new Button("Recherche");
 		rechercheBtn.setId("rechercheBtn");
 		rechercheBtn.setPrefSize(150, 50);
@@ -55,14 +64,15 @@ public class RecherchePanel extends GridPane {
 
 		boxRecherche = new VBox(100);
 		boxRecherche.setId("boxRecherche");
-		boxRecherche.getChildren().addAll( rechercheBtn, rechercheTxt, rechercheCb);
-		add(boxRecherche,1,1);
-		
+		boxRecherche.getChildren().addAll(rechercheBtn, rechercheTxt, rechercheCb);
+		add(boxRecherche, 1, 1);
+
 		// selection de la recheche, contains the selected criteria
 		boxCriteriaRecherche = new VBox(10);
-		add(boxCriteriaRecherche, 1,2);
-		
-		// Info coming from the result of the search ? or comming from the observableList ?
+		add(boxCriteriaRecherche, 1, 2);
+
+		// Info coming from the result of the search ? or comming from the
+		// observableList ?
 		infosLabel = new Label("Infos");
 		infosLabel.setId("infosLabel");
 		totalEtudiantLabel = new Label("Total d'étudiants: 1300");
@@ -82,42 +92,70 @@ public class RecherchePanel extends GridPane {
 		exportPDFBtn.setPrefSize(150, 50);
 		exportPDFBtn.setStyle("-fx-background-color:#2589BD");
 		add(exportPDFBtn, 1, 4);
-		
+
 		addNewStagiaireBtn = new Button("Nouv. stag.");
 		addNewStagiaireBtn.setId("newStagBtn");
 		addNewStagiaireBtn.setPrefSize(150, 50);
 		addNewStagiaireBtn.setStyle("-fx-background-color:#2589BD");
-		add(addNewStagiaireBtn,1,5);
+		add(addNewStagiaireBtn, 1, 5);
 
 		setVgap(20);
 		setPadding(new Insets(5));
 		setStyle("-fx-background-color:#E8EBE4");
-		
-		rechercheBtn.setOnAction( new EventHandler<ActionEvent>() {
+
+		exportPDFBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				//donner le choix de l'emplacement
+				//donner le choix du nom
+
+				RootPanel root = (RootPanel) getScene().getRoot();
+				List<Stagiaire> ListeStagiaire = root.getObservable();
+				String fileName = "C:\\TP\\test"+new Date().getTime()+".pdf";
+				Document document = new Document();
+				try {
+					PdfWriter.getInstance(document, new FileOutputStream(fileName));
+					document.open();
+					for (Stagiaire stagiaire : ListeStagiaire) {
+						Paragraph para = new Paragraph(stagiaire.toString());
+						document.add(para);
+					}
+					document.close();
+				} catch (FileNotFoundException | DocumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+			}
+		});
+
+		rechercheBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// set isRechercheGlobal si "Tout" est présent dans la liste de critère
 				Stagiaire stagiaireTemplate = createTemplateForSearch();
-				
+
 				// voir UML
-				RootPanel root = (RootPanel)getScene().getRoot();
+				RootPanel root = (RootPanel) getScene().getRoot();
 				StagiaireDAO stageDao = root.getStagiaireDao();
 				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isRechercheGlobal);
 				System.out.println("listFiltree, size:" + listFiltree.size());
 				// update other panels
-				root.setNewRecherche( listFiltree);
+				root.setNewRecherche(listFiltree);
 				// reset la recherche
+				
 				clearCritereRecherche();
 			}
 		});
-		
+
 		// some could be in RootPanel : OpenFormulairePanel ? need to change text here
 		addNewStagiaireBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// Formulaire doit apparaitre
 				RootPanel root = (RootPanel) getScene().getRoot();
-				if( root.getFormulairePanel().isVisible()) {
+				if (root.getFormulairePanel().isVisible()) {
 					root.getFormulairePanel().setVisible(false);
 					addNewStagiaireBtn.setText("Nouv.Stag.");
 				} else {
@@ -126,72 +164,71 @@ public class RecherchePanel extends GridPane {
 				}
 			}
 		});
-		
+
 		rechercheTxt.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				System.out.println("rechercgeTxt focus " + observable);
-				System.out.println("values: "+ oldValue +","+ newValue);
-				System.out.println("Recherche Text: "+ rechercheTxt.getText());
+				System.out.println("values: " + oldValue + "," + newValue);
+				System.out.println("Recherche Text: " + rechercheTxt.getText());
 				// we lost the focus
-				if( newValue == false) {
+				if (newValue == false) {
 					System.out.println("New value");
 					String value = rechercheTxt.getText();
 					String critere = rechercheCb.getSelectionModel().getSelectedItem();
 					System.out.println("critere, value " + critere + "," + value);
 					addCritere(value, critere);
-				// we gain the focus, nothing to do
+					// we gain the focus, nothing to do
 				} else {
 					System.out.println("Old Value");
 				}
 			}
 		});
-			
 
 	}
-	
+
 	private void addCritere(String value, String critere) {
 		mapCritere.put(critere, value);
 		Label lblCritere = new Label(critere + ":" + value);
 		boxCriteriaRecherche.getChildren().add(lblCritere);
-		
+
 	}
-	
+
 	private Stagiaire createTemplateForSearch() {
 		// Read the text fields available
-		//String text = rechercheTxt.getText();
-		//String textCb = rechercheCb.getSelectionModel().getSelectedItem();
-		//System.out.println("createTemplate "+ text + " " + textCb);
-		String nom = (mapCritere.get("Nom") != null) ? mapCritere.get("Nom") : "";  
-		String prenom= ( mapCritere.get("Prenom") != null) ? mapCritere.get("Prenom") : "";
+		// String text = rechercheTxt.getText();
+		// String textCb = rechercheCb.getSelectionModel().getSelectedItem();
+		// System.out.println("createTemplate "+ text + " " + textCb);
+		String nom = (mapCritere.get("Nom") != null) ? mapCritere.get("Nom") : "";
+		String prenom = (mapCritere.get("Prenom") != null) ? mapCritere.get("Prenom") : "";
 		String departement = (mapCritere.get("Departement") != null) ? mapCritere.get("Departement") : "";
-		String formation= (mapCritere.get("Formation") != null) ? mapCritere.get("Departement") : "";
-		String anneeStr = (mapCritere.get("annee") != null) ? mapCritere.get("Departement") : "" ;
+		String formation = (mapCritere.get("Formation") != null) ? mapCritere.get("Departement") : "";
+		String anneeStr = (mapCritere.get("annee") != null) ? mapCritere.get("Departement") : "";
 		int annee;
-		//System.out.println("Nom: " + nom);
-		//System.out.println("Prenom: " + prenom);
-		
+		// System.out.println("Nom: " + nom);
+		// System.out.println("Prenom: " + prenom);
+
 		// test for global
-		String demandeGlobale = (mapCritere.get("Tout") != null) ? mapCritere.get("Tout") : "" ;
-		if( !demandeGlobale.isEmpty() ) {
+		String demandeGlobale = (mapCritere.get("Tout") != null) ? mapCritere.get("Tout") : "";
+		if (!demandeGlobale.isEmpty()) {
 			System.out.println("demande globale");
 			isRechercheGlobal = true;
 			nom = demandeGlobale;
 		}
-		
+
 		try {
 			annee = Integer.parseInt(anneeStr);
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			System.out.println("Number exception avec année, pas grave");
 			annee = 0;
 		}
-		Stagiaire tplt = new Stagiaire(nom, prenom, departement, formation, annee );
+		Stagiaire tplt = new Stagiaire(nom, prenom, departement, formation, annee);
 		return tplt;
 	}
-	
-	
+
 	private void clearCritereRecherche() {
+		rechercheTxt.clear();
 		mapCritere.clear();
 		boxCriteriaRecherche.getChildren().clear();
 		rechercheCb.getSelectionModel().select("Nom");

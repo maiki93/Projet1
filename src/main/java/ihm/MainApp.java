@@ -18,7 +18,7 @@ public class MainApp extends Application {
 		*/
 		launch(args);
 	}
-
+	
 	@Override
 	public void start(Stage stage)throws Exception{
 		RootPanel root = new RootPanel();

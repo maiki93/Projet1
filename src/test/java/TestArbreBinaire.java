@@ -1,5 +1,6 @@
 package test.java;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import main.java.NodeStagiaire;
 
 public class TestArbreBinaire {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		ArrayList<Stagiaire> list = new ArrayList<Stagiaire>();
 		list.add( new Stagiaire("Aaul", "Ca", "75", "AI 109", 2021) );
@@ -54,6 +55,14 @@ public class TestArbreBinaire {
 		//List<Stagiaire> l2 = ab.searchStagiaireParNom("MICK");
 		List<Stagiaire> l2 = ab.searchStagiaireParNom("MICK"); //("Bic");
 		affiche(l2);
+		
+		
+		System.out.println("\n==== Insertion =====");
+		Stagiaire s1 = new Stagiaire("AAAA","B","C","D",2021);
+		ab.addStagiaire(s1);
+		
+		List<Stagiaire> l3 = ab.searchStagiaireParNom("AAAA");
+		
 	}
 	
 	public static void affiche(List<Stagiaire> list) {

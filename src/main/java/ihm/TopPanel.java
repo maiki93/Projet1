@@ -13,15 +13,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.MotionBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import main.java.Admin;
 import main.java.AdminDAO;
 
-public class TopPanel extends GridPane {
+public class TopPanel extends HBox {
 	private HBox topBox;
 	private HBox btnBox;
 	private VBox adminBox;
@@ -57,37 +59,38 @@ public class TopPanel extends GridPane {
 		}
 
 		utilisateur = new Label("Utilisateur: Invité");
-		role = new Label("Permission: Utilisateur");
 		utilisateur.setId("utilisateur");
+		utilisateur.setFont(new Font("Delicious",16));
+		role = new Label("Permission: Utilisateur");
 		role.setId("role");
+		role.setFont(new Font("Delicious",16));
+
 
 		adminBtn = new Button("Admin");
+		adminBtn.setFont(Font.font("Lato",14));
+		adminBtn.setPrefSize(150, 25);
 		adminBtn.setId("adminBtn");
-		adminBtn.setPrefSize(150, 50);
-		adminBtn.setStyle("-fx-background-color:#873D48");
+
 
 		documentationBtn = new Button("Documentation");
-		documentationBtn.setId("adminBtn");
-		documentationBtn.setPrefSize(150, 50);
-		documentationBtn.setStyle("-fx-background-color:#FF9B71");
+		adminBtn.setFont(new Font("Lato",14));
+		documentationBtn.setPrefSize(150, 25);
+		documentationBtn.setId("documentationBtn");
 
-		topBox.getChildren().addAll(utilisateur, role, adminBtn, documentationBtn);
-		add(topBox, 1, 0);
 
-		setPadding(new Insets(10));
-		setStyle("-fx-background-color:#E8EBE4");
-
+		//adminBox
 		nomlabel = new Label("Nom: ");
 		nomlabel.setId("textConnect");
 		nomtxt = new TextField();
-		nomtxt.setId("textConnect");
 		passwordlabel = new Label("Mot de passe: ");
 		passwordlabel.setId("textConnect");
 		passwordtxt = new TextField();
-		passwordtxt.setId("textConnect");
+		
 
 		connectBtn = new Button("Connexion");
+		connectBtn.setId("btnConnect");
 		closebtn = new Button("Annuler");
+		closebtn.setId("btnConnect");
 
 		btnBox = new HBox(10);
 		btnBox.setId("btnBox");
@@ -96,6 +99,10 @@ public class TopPanel extends GridPane {
 		adminBox = new VBox(10);
 		adminBox.setId("adminBox");
 		adminBox.getChildren().addAll(nomlabel, nomtxt, passwordlabel, passwordtxt, btnBox);
+		
+		setPadding(new Insets(10));
+		setId("topPannel");
+		getChildren().addAll(topBox, utilisateur, role, adminBtn, documentationBtn);
 
 		adminBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

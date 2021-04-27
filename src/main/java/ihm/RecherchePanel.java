@@ -42,6 +42,7 @@ public class RecherchePanel extends GridPane {
 	private Button exportPDFBtn;
 	private VBox boxRecherche;
 	private VBox boxinfos;
+	private VBox boxbtnpdf;
 
 	private VBox boxCriteriaRecherche;
 	private boolean isRechercheGlobal;
@@ -52,21 +53,20 @@ public class RecherchePanel extends GridPane {
 
 		rechercheBtn = new Button("Recherche");
 		rechercheBtn.setId("rechercheBtn");
-		rechercheBtn.setPrefSize(150, 50);
-		rechercheBtn.setStyle("-fx-background-color:#2589BD");
+		rechercheBtn.setPrefSize(150, 25);
 
 		rechercheTxt = new TextField();
 		rechercheTxt.setId("rechercheTxt");
 
 		rechercheCb = new ChoiceBox<>();
-		rechercheCb.setId("rechercheCb");
 		rechercheCb.getItems().addAll("Tout", "Nom", "Prénom", "Département", "Formation", "Année");
 		rechercheCb.getSelectionModel().select("Nom");
-		rechercheCb.setStyle("-fx-alignment: CENTER");
+		rechercheCb.setId("rechercheCb");
 
-		boxRecherche = new VBox(100);
+		boxRecherche = new VBox(150);
 		boxRecherche.setId("boxRecherche");
-		boxRecherche.getChildren().addAll(rechercheBtn, rechercheTxt, rechercheCb);
+
+		boxRecherche.getChildren().addAll( rechercheTxt, rechercheCb, rechercheBtn);
 		add(boxRecherche, 1, 1);
 
 		// selection de la recheche, contains the selected criteria
@@ -91,19 +91,19 @@ public class RecherchePanel extends GridPane {
 
 		exportPDFBtn = new Button("Export PDF");
 		exportPDFBtn.setId("exportPDFBtn");
-		exportPDFBtn.setPrefSize(150, 50);
-		exportPDFBtn.setStyle("-fx-background-color:#2589BD");
-		add(exportPDFBtn, 1, 4);
+		exportPDFBtn.setPrefSize(150, 25);
 
 		addNewStagiaireBtn = new Button("Nouv. stag.");
 		addNewStagiaireBtn.setId("newStagBtn");
-		addNewStagiaireBtn.setPrefSize(150, 50);
-		addNewStagiaireBtn.setStyle("-fx-background-color:#2589BD");
-		add(addNewStagiaireBtn, 1, 5);
-
-		setVgap(20);
+		addNewStagiaireBtn.setPrefSize(150, 25);
+		
+		boxbtnpdf= new VBox(10);
+		boxbtnpdf.setId("boxbtnpdf");
+		boxbtnpdf.getChildren().addAll(exportPDFBtn, addNewStagiaireBtn);
+		add(boxbtnpdf, 1, 4);
+		
+		setId("boxright");
 		setPadding(new Insets(5));
-		setStyle("-fx-background-color:#E8EBE4");
 
 		exportPDFBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

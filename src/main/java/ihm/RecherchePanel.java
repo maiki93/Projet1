@@ -3,15 +3,20 @@ package main.java.ihm;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.CMYKColor;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import javafx.beans.value.ChangeListener;
@@ -48,6 +53,8 @@ public class RecherchePanel extends GridPane {
 	private boolean isRechercheGlobal;
 	private Map<String, String> mapCritere = new HashMap<>();
 
+	public static final String FONT = "main/resources/Poppins-Regular.ttf";
+
 	public RecherchePanel() {
 		super();
 
@@ -66,7 +73,7 @@ public class RecherchePanel extends GridPane {
 		boxRecherche = new VBox(150);
 		boxRecherche.setId("boxRecherche");
 
-		boxRecherche.getChildren().addAll( rechercheTxt, rechercheCb, rechercheBtn);
+		boxRecherche.getChildren().addAll(rechercheTxt, rechercheCb, rechercheBtn);
 		add(boxRecherche, 1, 1);
 
 		// selection de la recheche, contains the selected criteria
@@ -75,11 +82,13 @@ public class RecherchePanel extends GridPane {
 
 		// Info coming from the result of the search ? or comming from the
 		// observableList ?
+
+		
 		infosLabel = new Label("Infos");
 		infosLabel.setId("infosLabel");
-		totalEtudiantLabel = new Label("Total d'étudiants: 1300");
+		totalEtudiantLabel = new Label("Total d'étudiants: ");
 		totalEtudiantLabel.setId("totalEtudiantLabel");
-		elementTrouverLabel = new Label("Eléments filtrer: 1300");
+		elementTrouverLabel = new Label("Eléments filtrer: non");
 		elementTrouverLabel.setId("elementTrouverLabel");
 		typeRechercheLabel = new Label("Type de recherche: Tout");
 		typeRechercheLabel.setId("typeRechercheLabel");
@@ -96,12 +105,12 @@ public class RecherchePanel extends GridPane {
 		addNewStagiaireBtn = new Button("Nouv. stag.");
 		addNewStagiaireBtn.setId("newStagBtn");
 		addNewStagiaireBtn.setPrefSize(150, 25);
-		
-		boxbtnpdf= new VBox(10);
+
+		boxbtnpdf = new VBox(10);
 		boxbtnpdf.setId("boxbtnpdf");
 		boxbtnpdf.getChildren().addAll(exportPDFBtn, addNewStagiaireBtn);
 		add(boxbtnpdf, 1, 4);
-		
+
 		setId("boxright");
 		setPadding(new Insets(5));
 
@@ -109,29 +118,49 @@ public class RecherchePanel extends GridPane {
 			@Override
 			public void handle(ActionEvent arg0) {
 				DirectoryChooser directoryChooser = new DirectoryChooser();
-				//donner le choix du nom
+				// donner le choix du nom
 
 				RootPanel root = (RootPanel) getScene().getRoot();
 				File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
 				List<Stagiaire> ListeStagiaire = root.getObservable();
-				
-				String fileName = selectedDirectory.toString()+"\\export_"+new Date().getTime()+".pdf";
+
+				String fileName = selectedDirectory.toString() + "\\export_" + new Date().getTime() + ".pdf";
 				System.out.println(fileName);
 				Document document = new Document();
 				try {
 					PdfWriter.getInstance(document, new FileOutputStream(fileName));
 					document.open();
+					CMYKColor bColor = new CMYKColor(84, 36, 0, 5);
+					BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+					Font f = new Font(bf, 22, Font.NORMAL, bColor);
+					Paragraph para = new Paragraph("Annuaire EQL ", f);
+					para.setSpacingAfter(30);
+					para.setAlignment(Element.ALIGN_CENTER);
+					PdfPTable table = new PdfPTable(5);
+					table.addCell("Nom");
+					table.addCell("Prénom");
+					table.addCell("Departement");
+					table.addCell("Formation");
+					table.addCell("Année");
+
 					for (Stagiaire stagiaire : ListeStagiaire) {
-						Paragraph para = new Paragraph(stagiaire.toString());
-						document.add(para);
+						table.addCell(stagiaire.getNom());
+						table.addCell(stagiaire.getPrenom());
+						table.addCell(stagiaire.getDepartement());
+						table.addCell(stagiaire.getFormation());
+						table.addCell(Integer.toString(stagiaire.getAnnee()));
 					}
+					document.add(para);
+					document.add(table);
 					document.close();
 				} catch (FileNotFoundException | DocumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				
-				
+
 			}
 		});
 
@@ -144,12 +173,15 @@ public class RecherchePanel extends GridPane {
 				// voir UML
 				RootPanel root = (RootPanel) getScene().getRoot();
 				StagiaireDAO stageDao = root.getStagiaireDao();
+				List<Stagiaire> listAll = root.getObservable();
 				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isRechercheGlobal);
 				System.out.println("listFiltree, size:" + listFiltree.size());
+				elementTrouverLabel.setText("Eléments filtrer: "+listFiltree.size());
+				totalEtudiantLabel.setText("Eléments total: "+listAll.size());
 				// update other panels
 				root.setNewRecherche(listFiltree);
 				// reset la recherche
-				
+
 				clearCritereRecherche();
 			}
 		});
@@ -238,6 +270,14 @@ public class RecherchePanel extends GridPane {
 		boxCriteriaRecherche.getChildren().clear();
 		rechercheCb.getSelectionModel().select("Nom");
 		isRechercheGlobal = false;
+	}
+
+	public Label getTotalEtudiantLabel() {
+		return totalEtudiantLabel;
+	}
+
+	public void setTotalEtudiantLabel(Label totalEtudiantLabel) {
+		this.totalEtudiantLabel = totalEtudiantLabel;
 	}
 
 }

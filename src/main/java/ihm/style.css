@@ -87,7 +87,7 @@
 	-fx-background-color: -text-color-black;
 	-fx-translate-x: 30em;
 	-fx-translate-y: 50;
-	-fx-padding: 10, 20, 10, 20;
+	-fx-padding: 10 10 10 10;
 	-fx-background-radius: 5.0;
 }
 

@@ -104,11 +104,14 @@ public class TablePanel extends AnchorPane {
 						System.out.println("ChgStagiare was added()");
 						List<? extends Stagiaire> lstag = chgStagiaire.getAddedSubList();
 						dao.addAll( (List<Stagiaire>) lstag);
+						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
 						
 					} else if( chgStagiaire.wasRemoved() ) {
 						System.out.println("ChgStagiare was removed()");
 						List<? extends Stagiaire> lstag = chgStagiaire.getRemoved();
 						dao.removeAll( (List<Stagiaire>)lstag );
+						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
+
 					}
 				}
 			}

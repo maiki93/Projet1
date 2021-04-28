@@ -1,5 +1,6 @@
 package main.java.ihm;
 
+import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -87,6 +88,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			isNewStagiaire = true;
 			// save new stagiaire or valide the modification of 
 			// a previously selected one, USER should not be able modify
+
 		} else if( idBt.equals("btSave")) {
 			System.out.println("btSave isNewStagiaire "+ isNewStagiaire);
 			Stagiaire stagiaire = readTextFields();

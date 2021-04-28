@@ -28,10 +28,11 @@ public class RootPanel extends BorderPane {
 		observablesStagiaires = FXCollections.observableArrayList(dao.getStagiaireListFromArbre());
 		System.out.println("Size of observablesStagiaires: " + observablesStagiaires.size());
 		tablePannel = new TablePanel(observablesStagiaires);
+		rechPanel.getTotalEtudiantLabel().setText("Eléments total: "+dao.getStagiaireListFromArbre().size());
 		
 		setTop(topPanel);
-		setRight(rechPanel);
 		setCenter(tablePannel);
+		setRight(rechPanel);
 		
 		setLeft(formPanel);
 		// to make it invisible and the parent to reuse the place

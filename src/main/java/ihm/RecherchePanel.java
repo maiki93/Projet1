@@ -6,16 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.CMYKColor;
@@ -85,11 +82,13 @@ public class RecherchePanel extends GridPane {
 
 		// Info coming from the result of the search ? or comming from the
 		// observableList ?
+
+		
 		infosLabel = new Label("Infos");
 		infosLabel.setId("infosLabel");
-		totalEtudiantLabel = new Label("Total d'étudiants: 1300");
+		totalEtudiantLabel = new Label("Total d'étudiants: ");
 		totalEtudiantLabel.setId("totalEtudiantLabel");
-		elementTrouverLabel = new Label("Eléments filtrer: 1300");
+		elementTrouverLabel = new Label("Eléments filtrer: non");
 		elementTrouverLabel.setId("elementTrouverLabel");
 		typeRechercheLabel = new Label("Type de recherche: Tout");
 		typeRechercheLabel.setId("typeRechercheLabel");
@@ -174,8 +173,11 @@ public class RecherchePanel extends GridPane {
 				// voir UML
 				RootPanel root = (RootPanel) getScene().getRoot();
 				StagiaireDAO stageDao = root.getStagiaireDao();
+				List<Stagiaire> listAll = root.getObservable();
 				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isRechercheGlobal);
 				System.out.println("listFiltree, size:" + listFiltree.size());
+				elementTrouverLabel.setText("Eléments filtrer: "+listFiltree.size());
+				totalEtudiantLabel.setText("Eléments total: "+listAll.size());
 				// update other panels
 				root.setNewRecherche(listFiltree);
 				// reset la recherche
@@ -268,6 +270,14 @@ public class RecherchePanel extends GridPane {
 		boxCriteriaRecherche.getChildren().clear();
 		rechercheCb.getSelectionModel().select("Nom");
 		isRechercheGlobal = false;
+	}
+
+	public Label getTotalEtudiantLabel() {
+		return totalEtudiantLabel;
+	}
+
+	public void setTotalEtudiantLabel(Label totalEtudiantLabel) {
+		this.totalEtudiantLabel = totalEtudiantLabel;
 	}
 
 }

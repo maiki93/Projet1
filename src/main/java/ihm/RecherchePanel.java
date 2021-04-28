@@ -177,7 +177,6 @@ public class RecherchePanel extends GridPane {
 				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isRechercheGlobal);
 				System.out.println("listFiltree, size:" + listFiltree.size());
 				elementTrouverLabel.setText("Eléments filtrer: "+listFiltree.size());
-				totalEtudiantLabel.setText("Eléments total: "+listAll.size());
 				// update other panels
 				root.setNewRecherche(listFiltree);
 				// reset la recherche

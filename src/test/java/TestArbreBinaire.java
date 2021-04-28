@@ -23,7 +23,9 @@ public class TestArbreBinaire {
 		//list.add( new Stagiaire("MiCa", "Ma", "93","AI 109", 2021) );
 		list.add( new Stagiaire("MiCK", "Mae", "93","AI 109", 2021) );
 		list.add( new Stagiaire("MiCk", "Mat", "93","AI 119", 2021) );
-		//list.add( new Stagiaire("Rick", "Jagger", "83", "AL 250", 1967) );
+		
+		
+		list.add( new Stagiaire("Rick", "Jagger", "83", "AL 250", 1967) );
 		
 		//Stagiaire Ma = new Stagiaire( "MiCK", "Ma", "93","AI 109", 2021);
 		//Stagiaire Mat = new Stagiaire( "MiCK", "Mat", "93","AI 109", 2021);

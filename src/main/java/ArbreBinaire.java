@@ -488,7 +488,7 @@ public class ArbreBinaire {
 			System.out.println("2 children");
 			//nodeParent = not used anymore
 			
-			//// search the node with max value on the left, 
+			// search the node with max value on the left, 
 			// default the first one on the left
 			nodeChild = readOneNode( nodeCurrent.getChildLeft() );
 			long posNodeMax = findMaxInSubtree( nodeChild /*, nodeMax*/ );
@@ -515,28 +515,39 @@ public class ArbreBinaire {
 			
 		} else if( nodeCurrent.hasChildLeft() ) {
 			System.out.println("current has 1 child left");
+			long positionToWrite = tailleHeader;
 			long childPosition = nodeCurrent.getChildLeft();
-			// we have to indicate the new childs'position of the parentNode
-			if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
-				nodeParent.setChildLeft( childPosition );
-			else
-				nodeParent.setChildRight( childPosition );
 			
-			reWriteOneNode(nodeParent,posHistory.get(posHistory.size()-1).getKey());
+			if( !posHistory.isEmpty() ) { 
+				// we have to indicate the new children position of the parentNode
+				changeChildrenOfParentNode(nodeParent, posHistory, childPosition);
+				positionToWrite = posHistory.get(posHistory.size()-1).getKey();
+				reWriteOneNode(nodeParent,positionToWrite);
+			// case of root, must rewrite the child at the first position to keep root as the first record and keep accessible
+			} else {
+				// Must rewrite at the record 0 the firstChild
+				nodeParent = readOneNode( nodeCurrent.getChildLeft());
+				reWriteOneNode( nodeParent, positionToWrite );
+			}
 			
 		} else if( nodeCurrent.hasChildRight() ) {
 			System.out.println("1child right");
+			long positionToWrite = tailleHeader;
 			long childPosition = nodeCurrent.getChildRight();
-			// we have to indicate the childs position of the rewrite
 			
-			if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
-				nodeParent.setChildLeft( childPosition );
-			else
-				nodeParent.setChildRight( childPosition );
+			if( !posHistory.isEmpty() ) { 
+				// we have to indicate the children position of the parentNode
+				changeChildrenOfParentNode(nodeParent, posHistory, childPosition);
+				positionToWrite = posHistory.get(posHistory.size()-1).getKey();
+				reWriteOneNode(nodeParent; positionToWrite);
+			// case of root, must rewrite the child at the first position to keep root as the first record and keep accessible
+			} else {
+				// Must rewrite at the record 0 the firstChild
+				nodeParent = readOneNode( nodeCurrent.getChildRight());
+				reWriteOneNode( nodeParent, positionToWrite );
+			}
 			
-			reWriteOneNode(nodeParent,posHistory.get(posHistory.size()-1).getKey());
-			
-		// no child
+		// no child, case root ??
 		} else {
 			System.out.println("0 child");
 			// remonter au parent et lui effacer son lien gauche ou droite
@@ -578,6 +589,17 @@ public class ArbreBinaire {
 		System.out.println("at posFile " + pos);
 		reWriteOneNode(node, pos);	
 	}*/
+
+	public void changeChildrenOfParentNode(NodeStagiaire nodeParent, List<Map.Entry<Long, Boolean>> posHistory,
+			long childPosition) {
+		
+		if( ! posHistory.isEmpty()) { // no history we are on the root node of the tree
+			if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
+				nodeParent.setChildLeft( childPosition );
+			else // true is right
+				nodeParent.setChildRight( childPosition );
+		}
+	}
 	
 	// node with  maximum value in the subtree on the left 
 	// return a Node or a Enrgestrement Number or File position ?

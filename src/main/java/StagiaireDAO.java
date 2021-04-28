@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -46,7 +45,7 @@ public class StagiaireDAO {
 		if( global == false && (!stagiaireTemplate.getNom().isEmpty()) ) {
 			System.out.println("Use optimized tree structure to find the name");
 			listFiltree = ab.searchStagiaireParNom( stagiaireTemplate.getNom() );
-			System.out.println("list avec optimisation: "+ listFiltree);
+			//System.out.println("list avec optimisation: "+ listFiltree);
 			
 		// sinon récupère la liste de tous les stagiaires
 		} else {
@@ -91,7 +90,7 @@ public class StagiaireDAO {
 	}
 	
 	public void addAll(List<Stagiaire> stagiaires) {
-		System.out.println("DAO: add All, must write in the tree");
+		System.out.println("DAO: addAll, write to the tree");
 		ArbreBinaire ab = new ArbreBinaire();
 		try {
 			ab.addStagiaire(stagiaires.get(0));
@@ -101,16 +100,16 @@ public class StagiaireDAO {
 		}
 	}
 	
-	public void removeAll(List<Stagiaire> stagiaires) {
-		System.out.println("DAO: remove All, write in the tree: " + stagiaires.size() + " à supprimer" );
+	public boolean removeAll(List<Stagiaire> stagiaires) {
+		System.out.println("DAO: removeAll, write in the tree: " + stagiaires.size() + " à supprimer" );
+		ArbreBinaire ab = new ArbreBinaire();
 		try {
-			ArbreBinaire ab = new ArbreBinaire();
-			ab.removeStagiaire(stagiaires.get(0));
+			return ab.removeStagiaire(stagiaires.get(0));
 		} catch(IOException e) {
 			e.printStackTrace();
 			System.out.println("Erreur in suppression");
 		}
-		
+		return false;
 	}
 		
 	public List<Stagiaire> filtreParNom( List<Stagiaire> listeEntree, String nom) {

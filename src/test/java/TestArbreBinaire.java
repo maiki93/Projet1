@@ -21,9 +21,13 @@ public class TestArbreBinaire {
 		list.add( new Stagiaire("MiCK", "Ma", "93","AI 109", 2021) );
 		//list.add( new Stagiaire("MiCK", "Mab", "93","AI 109", 2021) );
 		//list.add( new Stagiaire("MiCa", "Ma", "93","AI 109", 2021) );
-		list.add( new Stagiaire("MiCK", "Mae", "93","AI 109", 2021) );
-		list.add( new Stagiaire("MiCk", "Mat", "93","AI 119", 2021) );
-		//list.add( new Stagiaire("Rick", "Jagger", "83", "AL 250", 1967) );
+		//list.add( new Stagiaire("MiCK", "Mae", "93","AI 109", 2021) );
+		//list.add( new Stagiaire("MiCk", "Mat", "93","AI 119", 2021) );
+		
+		
+		list.add( new Stagiaire("Rick", "Jagger", "83", "AL 250", 1967) );
+		list.add( new Stagiaire("Rick2", "Jagger", "83", "AL 250", 1967) );
+		list.add( new Stagiaire("Rick3", "Jagger", "83", "AL 250", 1967) );
 		
 		//Stagiaire Ma = new Stagiaire( "MiCK", "Ma", "93","AI 109", 2021);
 		//Stagiaire Mat = new Stagiaire( "MiCK", "Mat", "93","AI 109", 2021);
@@ -69,16 +73,18 @@ public class TestArbreBinaire {
 		affiche(listStag);
 		 */
 		
+	/*
 		System.out.println("\n==== Remove One leave =====");
 		//Stagiaire s1 = new Stagiaire("AAAA","B","C","D",2021);
 		// not exactly the same
 		//Stagiaire s2 = new Stagiaire("AAUL","B","C","D",2021);
 		/// exactly the same
-		//Stagiaire s2 = new Stagiaire("Aaul", "Ca", "75", "AI 109", 2021);
+		Stagiaire s2 = new Stagiaire("Aaul", "Ca", "75", "AI 109", 2021);
 		//Stagiaire s2 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
-		//ab.removeStagiaire(s2);
-		//listStag = ab.getStagiaireOrdreAlphabetique();
-		//affiche(listStag);
+		ab.removeStagiaire(s2);
+		listStag = ab.getStagiaireOrdreAlphabetique();
+		affiche(listStag);
+	*/
 /*		
 		System.out.println("\n==== Remove with One child =====");
 		Stagiaire s3 = new Stagiaire("Bic", "Ca", "75", "AI 109", 2021);
@@ -88,22 +94,26 @@ public class TestArbreBinaire {
 		listStag = ab.getStagiaireOrdreAlphabetique();
 		affiche(listStag);
 */	
-/*
+
 		System.out.println("\n==== Remove with Two child =====");
-		Stagiaire s4 = new Stagiaire("Dick", "Jagger", "83", "AL 250", 2021);
+		//Stagiaire s4 = new Stagiaire("Dick", "Jagger", "83", "AL 250", 2021);
 		//Stagiaire s3 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
 		//Stagiaire s3 = new Stagiaire("MiCK", "Mab", "93","AI 109", 2021) );
+		Stagiaire s4 = new Stagiaire("Bic", "Ca", "75", "AI 109", 2021);
 		ab.removeStagiaire(s4);
 		listStag = ab.getStagiaireOrdreAlphabetique();
 		affiche(listStag);
-*/
-/*
+
+		
 		System.out.println("\n==== Remove Root node =====");
-		Stagiaire s5 = new Stagiaire("MiCk", "Mat", "93","AI 119", 2021);
+		//Stagiaire s5 = new Stagiaire("MiCk", "Mattt", "93","AI 119", 2021);
+		
+		//Stagiaire s5 = new Stagiaire("Bic", "Ca", "75", "AI 109", 2021);
+		//Stagiaire s5 = new Stagiaire("Dick", "Jagger", "83", "AL 250", 2021);
+		Stagiaire s5 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
 		ab.removeStagiaire(s5);
 		listStag = ab.getStagiaireOrdreAlphabetique();
-		affiche(listStag);
-*/
+		affiche(listStag);		
 	}
 	
 	public static void affiche(List<Stagiaire> list) {

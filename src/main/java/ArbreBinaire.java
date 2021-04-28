@@ -262,8 +262,8 @@ public class ArbreBinaire {
 		int newMedian = median;
 		// Should be only equal, never >
 		if( nameMedian.compareTo(nameMedianPlusOne) >= 0) {
-			System.out.println("ERROR nameMedian: " + nameMedian + ", median=" + median);
-			System.out.println("name median+1: " + nameMedianPlusOne);
+			//System.out.println("ERROR nameMedian: " + nameMedian + ", median=" + median);
+			//System.out.println("name median+1: " + nameMedianPlusOne);
 			//throw new IOException("ERROR in median : " + nameMedian + " " + nameMedianPlusOne );
 			return newMedian = correctMedian(listOfStagiaire, median);
 		}
@@ -283,10 +283,244 @@ public class ArbreBinaire {
 			incrementMedian++;
 			medianNamePlusOne = listOfStagiaire.get(incrementMedian).getNom();
 		}
-		System.out.println("Found correct median : "+ (int)(incrementMedian) );
+		//System.out.println("Found correct median : "+ (int)(incrementMedian) );
 		return incrementMedian;
 	}
 
+	public NodeStagiaire addStagiaire(Stagiaire stagiaire) throws IOException {
+		NodeStagiaire root = readOneNode(0);
+		NodeStagiaire ns = findParentStagiaire(stagiaire, root);
+		return ns;
+	}
+
+	public NodeStagiaire findParentStagiaire(Stagiaire stagiaire, NodeStagiaire root) throws IOException {
+		/*
+		System.out.println("Find parent stagiaire pour ajouter");
+		System.out.println(root.getStagiaire().compareTo(stagiaire));
+		System.out.println(root.getStagiaire());
+		System.out.println("Enfant gauche" + root.getChildLeft());
+		System.out.println("Enfant droite" + root.getChildRight());
+		*/
+		// cas egale a gauche
+		// attention au recalcul de la taille des champs
+
+		if (root.getStagiaire().compareTo(stagiaire) <= 0 && root.getChildRight() != 0) {
+			this.ParentPosition = root.getChildRight();
+			findParentStagiaire(stagiaire, readOneNode(root.getChildRight()));
+		} else if (root.getStagiaire().compareTo(stagiaire) > 0 && root.getChildLeft() != 0) {
+			this.ParentPosition = root.getChildLeft();
+			findParentStagiaire(stagiaire, readOneNode(root.getChildLeft()));
+		} else if (root.getStagiaire().compareTo(stagiaire) > 0 && root.getChildLeft() == 0) {
+			long pos = raf.length();
+			/*
+			System.out.println("*** Arbre de gauche pour : " + stagiaire.getNom());
+			System.out.println("Taille enregistrement: " + this.tailleEnregistrement);
+			System.out.println("Taille header: " + this.tailleHeader);
+			System.out.println("Taille du fichier: " + pos);
+			System.out.println("Parent de ce stagiaire: " + root.getStagiaire().getNom());
+			System.out.println("Position du pointeur: "+raf.getFilePointer());
+			System.out.println("Parent position: " + this.ParentPosition);
+			System.out.println("Enfant gauche" + root.getChildLeft());
+			System.out.println("Enfant droite" + root.getChildRight());
+			*/
+
+			long positionFile = (pos - tailleHeader) / tailleEnregistrement;
+			NodeStagiaire stagiaireParentNode = new NodeStagiaire(root.getStagiaire(), positionFile,
+					root.getChildRight());
+			//System.out.println("Position file: " + positionFile);
+			reWriteOneNode(stagiaireParentNode, raf.getFilePointer() - this.tailleEnregistrement);
+			NodeStagiaire stagiaireChildNode = new NodeStagiaire(stagiaire, 0L, 0L);
+			//System.out.println("----------------------------- gauche");
+			reWriteOneNode(stagiaireChildNode, pos);
+			return root;
+		} else if (root.getStagiaire().compareTo(stagiaire) <= 0 && root.getChildRight() == 0) {
+			/*
+			System.out.println("** Arbre de droite pour : " + stagiaire.getNom());
+			System.out.println("taille enregistrement: " + this.tailleEnregistrement);
+			System.out.println("taille header: " + this.tailleHeader);
+			System.out.println("parent du stagiaire: " + root.getStagiaire().getNom());
+			System.out.println("rapport: " + root.getStagiaire().getNom());
+			System.out.println("Positionnement du pointeur: " + raf.getFilePointer());
+			System.out.println("parent position: " + this.ParentPosition);
+			System.out.println("Enfant gauche" + root.getChildLeft());
+			System.out.println("Enfant droite" + root.getChildRight());
+			*/
+
+			long pos = raf.length();
+			//System.out.println("taille du fichier: " + pos);
+			long positionFile = (pos - tailleHeader) / tailleEnregistrement;
+			NodeStagiaire stagiaireParentNode = new NodeStagiaire(root.getStagiaire(), root.getChildLeft(),
+					positionFile);
+			//System.out.println("position file: " + positionFile);
+			reWriteOneNode(stagiaireParentNode, raf.getFilePointer() - this.tailleEnregistrement);
+			NodeStagiaire stagiaireChildNode = new NodeStagiaire(stagiaire, 0L, 0L);
+			System.out.println();
+			//System.out.println("----------------------------- droite");
+			reWriteOneNode(stagiaireChildNode, pos);
+			return root;
+		}/*else {
+			System.out.println("aucun traitement ------------------------");
+		}*/
+		return null;
+	}
+	
+	///////////////////////////////////////////////
+	// Exact Stagiaire to remove, should not have duplicates
+	public boolean removeStagiaire( Stagiaire stagiaire) throws IOException {
+		System.out.println("Stagiaire to remove: "+ stagiaire);
+		
+		boolean retour =false;
+		NodeStagiaire dummy = null;
+		// not really needed a List, convenient for debug
+		List< Map.Entry<Long, Boolean>> positionFileHistory = new ArrayList<>();
+		NodeStagiaire root = readOneNode( 0 );
+		try {
+			retour = binaryTreeDelete(root , dummy, positionFileHistory, stagiaire);
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.err.println("ERROR dans la suppression de "+ stagiaire);
+			return false;
+		}
+		System.out.println("retour from binaryTreeDelete: "+ retour);
+		return retour;
+	}
+	
+	private boolean binaryTreeDelete(NodeStagiaire nodeCurrent ,NodeStagiaire nodeParent, List<Map.Entry<Long, Boolean>> posHistory, Stagiaire stagiaireToRemove) throws IOException {
+		
+		boolean retour = false;
+		NodeStagiaire nodeChild = null;
+		// First part only way to reconstruct the history : it should be positioned at the end of the current
+		// Second part : should always be the position in file of the current node in the second part of the function
+		long posFileCurrent = raf.getFilePointer(); /* -tailleEnregistrement to be at the start of the record*/
+		
+		if( stagiaireToRemove.compareTo( nodeCurrent.getStagiaire()) < 0) {
+			// should test it exists , error if the entry does not exist
+			// save before the reading, we'll have the start of the record
+			posHistory.add(Pair.of( raf.getFilePointer()-tailleEnregistrement, false) );
+			// should test it exists ?
+			nodeChild = readOneNode( nodeCurrent.getChildLeft() );
+			retour =  binaryTreeDelete( nodeChild , nodeCurrent, posHistory, stagiaireToRemove );
+			return retour;
+		}
+		// key > nodeCurrent.key, go to the right
+		if( stagiaireToRemove.compareTo(nodeCurrent.getStagiaire()) > 0) {
+			posHistory.add( Pair.of( raf.getFilePointer()-tailleEnregistrement, true) ); // true is right
+			nodeChild = readOneNode( nodeCurrent.getChildRight() );
+			retour = binaryTreeDelete( nodeChild, nodeCurrent, posHistory, stagiaireToRemove );
+			return retour;
+		}
+		///////////// deletetion of key
+		//System.out.println("On est au node current: "+ nodeCurrent);
+		//System.out.println("Parent:  "+ nodeParent);
+		//System.out.println("position history: " + posHistory);
+		
+		// 2 childs, 2 choices find maximum in the left subtree
+		if( nodeCurrent.hasChildLeft() && nodeCurrent.hasChildRight()) {
+			//System.out.println("2 children");
+			//nodeParent = not used anymore
+			NodeStagiaire maxChild = null;
+			
+			// search the node with max value on the left, 
+			// default the first one on the left
+			nodeChild = readOneNode( nodeCurrent.getChildLeft() );
+			// nodeChild is not updated as parameter ?? need to return
+			maxChild = findMaxInSubtree( nodeChild );
+			// maxChild contains the next stagiaire to be deleted by recursivity, save it
+			stagiaireToRemove = maxChild.getStagiaire();
+			// node with max value will take the place of the deleted one (current), update of its children
+			// maxChild sera le prochain nodeParent
+			maxChild.setChildLeft(nodeCurrent.getChildLeft());
+			maxChild.setChildRight(nodeCurrent.getChildRight());
+			reWriteOneNode(maxChild, posFileCurrent - tailleEnregistrement );
+			
+			// and now delete the node with max values in the subtree, recreate history : always a left child
+			posHistory = new ArrayList<>();
+			posHistory.add( Pair.of(posFileCurrent - tailleEnregistrement, false)); //false is left
+			
+			// RAF should be positioned at the end of the parent for entering in the recursive function
+			nodeChild = readOneNode(maxChild.getChildLeft());
+			retour = binaryTreeDelete( nodeChild, maxChild, posHistory, stagiaireToRemove);
+			
+		} else if( nodeCurrent.hasChildLeft() ) {
+			//System.out.println("current has 1 child left");
+			long positionToWrite = tailleHeader;
+			long childPosition = nodeCurrent.getChildLeft();
+			
+			if( !posHistory.isEmpty() ) { 
+				// we have to indicate the new children position of the parentNode
+				changeChildrenOfParentNode(nodeParent, posHistory, childPosition);
+				positionToWrite = posHistory.get(posHistory.size()-1).getKey();
+				reWriteOneNode(nodeParent,positionToWrite);
+			// case of root, must rewrite the child at the first position 
+			// to keep a new root as the first record and and the tree accessible
+			} else {
+				nodeParent = readOneNode( nodeCurrent.getChildLeft());
+				reWriteOneNode( nodeParent, positionToWrite );
+			}
+			retour = true;
+			
+		} else if( nodeCurrent.hasChildRight() ) {
+			//System.out.println("1 child right");
+			long positionToWrite = tailleHeader;
+			long childPosition = nodeCurrent.getChildRight();
+			
+			if( !posHistory.isEmpty() ) { 
+				// we have to indicate the children position of the parentNode
+				changeChildrenOfParentNode(nodeParent, posHistory, childPosition);
+				positionToWrite = posHistory.get(posHistory.size()-1).getKey();
+				reWriteOneNode(nodeParent, positionToWrite);
+			// case of root, must rewrite the child at the first position to keep root as the first record and keep accessible
+			} else {
+				nodeParent = readOneNode( nodeCurrent.getChildRight());
+				reWriteOneNode( nodeParent, positionToWrite );
+			}
+			retour = true;
+			
+		// no child, case root to take into account ??
+		} else {
+			//System.out.println("0 child");
+			System.out.println("posHistory " + posHistory);
+			long positionToWrite = tailleHeader;
+			// remonter au parent et lui effacer son lien gauche ou droite
+			changeChildrenOfParentNode( nodeParent, posHistory, 0);
+			positionToWrite = posHistory.get(posHistory.size()-1).getKey();
+			reWriteOneNode( nodeParent, positionToWrite);
+			retour = true;
+		}
+		//System.out.println("Retour binary_tree: " + nodeCurrent );
+		return retour;
+	}
+	
+	public void changeChildrenOfParentNode(NodeStagiaire nodeParent, List<Map.Entry<Long, Boolean>> posHistory,
+			long childPosition) {
+		// should not be the root node, checked before
+		//if( ! posHistory.isEmpty()) { // no history we are on the root node of the tree
+		if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
+			nodeParent.setChildLeft( childPosition );
+		else // true is right
+			nodeParent.setChildRight( childPosition );
+	}
+	
+	// node with  maximum value in the subtree 
+	private NodeStagiaire findMaxInSubtree(NodeStagiaire currentNode) throws IOException {
+		// max always on the right
+		while( currentNode.hasChildRight() ) {
+			currentNode = readOneNode( currentNode.getChildRight() );
+		} 
+		return currentNode;
+	}
+
+	private void reWriteOneNode(NodeStagiaire nodeStagiaire, long positionwrite) throws IOException {
+		raf.seek(positionwrite);
+		raf.write(formatStringToBytes(nodeStagiaire.getStagiaire().getNom(), metaTailleNom));
+		raf.write(formatStringToBytes(nodeStagiaire.getStagiaire().getPrenom(), metaTaillePrenom));
+		raf.write(formatStringToBytes(nodeStagiaire.getStagiaire().getDepartement(), metaTailleDepartement));
+		raf.write(formatStringToBytes(nodeStagiaire.getStagiaire().getFormation(), metaTailleFormation));
+		raf.writeInt(nodeStagiaire.getStagiaire().getAnnee());
+		raf.writeLong(nodeStagiaire.getChildLeft());
+		raf.writeLong(nodeStagiaire.getChildRight());
+	}
+	
 	// could be implemented in NodeStagiaire ,much cleaner
 	private void writeOneNode(Stagiaire stagiaire, boolean childLeft, boolean childRight) throws IOException {
 		// System.out.println("stagiaire: " + stagiaire);
@@ -314,8 +548,6 @@ public class ArbreBinaire {
 		// position in bytes in the file
 		long positionFile = positionEnregistrement * tailleEnregistrement + tailleHeader;
 		raf.seek(positionFile);
-		//System.out.println("readOneNode: " + positionEnregistrement + ",file pointer: " + raf.getFilePointer() );
-
 		byte[] bNom = new byte[metaTailleNom];
 		byte[] bPrenom = new byte[metaTaillePrenom];
 		byte[] bDepartement = new byte[metaTailleDepartement];
@@ -351,263 +583,11 @@ public class ArbreBinaire {
 
 	private byte[] formatStringToBytes(String champ, int tailleMax) {
 		byte[] bytes = new byte[tailleMax];
-		byte[] field = champ.getBytes();
+		byte[] field = champ.getBytes(); // .CharSet("Cpp1252") si probleme d'encodage
 		// Copy the first caracters, others are initialzed to zero by default
 		for (int i = 0; i < field.length; i++) // CharSet("Cpp1252");
 			bytes[i] = field[i];
-
 		return bytes;
-	}
-
-	public NodeStagiaire addStagiaire(Stagiaire stagiaire) throws IOException {
-		//List<Stagiaire> listeStagiaire = getStagiaireOrdreAlphabetique();
-		NodeStagiaire root = readOneNode(0);
-		NodeStagiaire ns = findParentStagiaire(stagiaire, root);
-		return ns;
-	}
-
-	public NodeStagiaire findParentStagiaire(Stagiaire stagiaire, NodeStagiaire root) throws IOException {
-		System.out.println("Find parent stagiaire pour ecrire");
-		System.out.println(root.getStagiaire().compareTo(stagiaire));
-		System.out.println(root.getStagiaire());
-		System.out.println("Enfant gauche" + root.getChildLeft());
-		System.out.println("Enfant droite" + root.getChildRight());
-		// cas egale a gauche
-		// attention au recalcul de la taille des champs
-
-		if (root.getStagiaire().compareTo(stagiaire) <= 0 && root.getChildRight() != 0) {
-			this.ParentPosition = root.getChildRight();
-			findParentStagiaire(stagiaire, readOneNode(root.getChildRight()));
-		} else if (root.getStagiaire().compareTo(stagiaire) > 0 && root.getChildLeft() != 0) {
-			this.ParentPosition = root.getChildLeft();
-			findParentStagiaire(stagiaire, readOneNode(root.getChildLeft()));
-		} else if (root.getStagiaire().compareTo(stagiaire) > 0 && root.getChildLeft() == 0) {
-			long pos = raf.length();
-			System.out.println("*** Arbre de gauche pour : " + stagiaire.getNom());
-			System.out.println("Taille enregistrement: " + this.tailleEnregistrement);
-			System.out.println("Taille header: " + this.tailleHeader);
-			System.out.println("Taille du fichier: " + pos);
-			System.out.println("Parent de ce stagiaire: " + root.getStagiaire().getNom());
-			System.out.println("Position du pointeur: "+raf.getFilePointer());
-			System.out.println("Parent position: " + this.ParentPosition);
-			System.out.println("Enfant gauche" + root.getChildLeft());
-			System.out.println("Enfant droite" + root.getChildRight());
-
-			long positionFile = (pos - tailleHeader) / tailleEnregistrement;
-			NodeStagiaire stagiaireParentNode = new NodeStagiaire(root.getStagiaire(), positionFile,
-					root.getChildRight());
-			System.out.println("Position file: " + positionFile);
-			reWriteOneNode(stagiaireParentNode, raf.getFilePointer() - this.tailleEnregistrement);
-			NodeStagiaire stagiaireChildNode = new NodeStagiaire(stagiaire, 0L, 0L);
-			System.out.println("----------------------------- gauche");
-			reWriteOneNode(stagiaireChildNode, pos);
-			return root;
-		} else if (root.getStagiaire().compareTo(stagiaire) <= 0 && root.getChildRight() == 0) {
-			System.out.println("** Arbre de droite pour : " + stagiaire.getNom());
-			System.out.println("taille enregistrement: " + this.tailleEnregistrement);
-			System.out.println("taille header: " + this.tailleHeader);
-			System.out.println("parent du stagiaire: " + root.getStagiaire().getNom());
-			System.out.println("rapport: " + root.getStagiaire().getNom());
-			System.out.println("Positionnement du pointeur: " + raf.getFilePointer());
-			System.out.println("parent position: " + this.ParentPosition);
-			System.out.println("Enfant gauche" + root.getChildLeft());
-			System.out.println("Enfant droite" + root.getChildRight());
-
-			long pos = raf.length();
-			System.out.println("taille du fichier: " + pos);
-			long positionFile = (pos - tailleHeader) / tailleEnregistrement;
-			NodeStagiaire stagiaireParentNode = new NodeStagiaire(root.getStagiaire(), root.getChildLeft(),
-					positionFile);
-			System.out.println("position file: " + positionFile);
-			reWriteOneNode(stagiaireParentNode, raf.getFilePointer() - this.tailleEnregistrement);
-			NodeStagiaire stagiaireChildNode = new NodeStagiaire(stagiaire, 0L, 0L);
-			System.out.println();
-			System.out.println("----------------------------- droite");
-			reWriteOneNode(stagiaireChildNode, pos);
-			return root;
-		}else {
-			System.out.println("aucun traitement ------------------------");
-		}
-		return null;
-	}
-	
-	///////////////////////////////////////////////
-	// Exact Stagiaire to remove, should not have duplicates
-	public boolean removeStagiaire( Stagiaire stagiaire) throws IOException {
-		System.out.println("Stagiaire to remove: "+ stagiaire);
-		
-		NodeStagiaire memory = null;
-		//long posGP = 0;
-		//List<Long> positionFileHistory = new ArrayList<>();
-		List< Map.Entry<Long, Boolean>> positionFileHistory = new ArrayList<>();
-		NodeStagiaire root = readOneNode( 0 );
-		//positionFileHistory.add((long)tailleHeader);
-		//positionFileHistory.add(Pair.of( (long)tailleHeader, false) );
-		
-		binaryTreeDelete(root , memory, positionFileHistory, stagiaire);
-		return true;
-	}
-	
-	private boolean /*NodeStagiaire*/ binaryTreeDelete(NodeStagiaire nodeCurrent ,NodeStagiaire nodeParent, List<Map.Entry<Long, Boolean>> posHistory, Stagiaire stagiaireToRemove) throws IOException {
-		
-		NodeStagiaire nodeChild = null;
-		// Should always be the position in file of the last current node after the first part
-		long posFileCurrent = raf.getFilePointer(); /* -tailleEnregistrement -taille to be  the start of the record*/
-		
-		if( stagiaireToRemove.compareTo( nodeCurrent.getStagiaire()) < 0) {
-			// should test it exists , error if the entry does not exist
-			//posHistory.add( raf.getFilePointer()); 
-			// save before the reading, we'll have the start of the record
-			posHistory.add(Pair.of( raf.getFilePointer()-tailleEnregistrement, false) );
-			nodeChild = readOneNode( nodeCurrent.getChildLeft() );
-			// memorize 
-			binaryTreeDelete( nodeChild , nodeCurrent, posHistory, stagiaireToRemove );
-			return false;
-		}
-		// key > nodeCurrent.key, go to the right
-		if( stagiaireToRemove.compareTo(nodeCurrent.getStagiaire()) > 0) {
-			// should test it exists
-			//posHistory.add( raf.getFilePointer() ); // 
-			posHistory.add( Pair.of( raf.getFilePointer()-tailleEnregistrement, true) ); // true is right
-			nodeChild = readOneNode( nodeCurrent.getChildRight() );
-			
-			/*nodeRetour =*/ binaryTreeDelete( nodeChild, nodeCurrent, posHistory, stagiaireToRemove );
-			return false;
-		}
-		///////////// deletetion of key
-		System.out.println("deletetion of key");
-		
-		System.out.println("On est au node current: "+ nodeCurrent);
-		//System.out.println("avec node child(left or right?) " + nodeChild);
-		System.out.println("Parent:  "+ nodeParent);
-		System.out.println("position history: " + posHistory);
-		System.out.println("getFilePointeur " + raf.getFilePointer());
-		
-		// 2 childs, 2 choices find maximum in the left subtree
-		if( nodeCurrent.hasChildLeft() && nodeCurrent.hasChildRight()) {
-			System.out.println("2 children");
-			//nodeParent = not used anymore
-			
-			//// search the node with max value on the left, 
-			// default the first one on the left
-			nodeChild = readOneNode( nodeCurrent.getChildLeft() );
-			long posNodeMax = findMaxInSubtree( nodeChild /*, nodeMax*/ );
-			// nodeChild contains now the next stagiaire to be deleted by recursivity
-			stagiaireToRemove = nodeChild.getStagiaire();
-			
-			// node with max value takes the place of the deleted one (current)
-			// with value max, and children of the previous
-			nodeChild.setChildLeft(nodeCurrent.getChildLeft());
-			nodeChild.setChildRight(nodeCurrent.getChildRight());
-			reWriteOneNode(nodeChild, posFileCurrent - tailleEnregistrement );
-			
-			// and now delete the node with max values
-			posHistory = new ArrayList<>();
-			//posHistory.add( Pair.of( raf.getFilePointer()-tailleEnregistrement, true) ); // true is right
-			posHistory.add( Pair.of(posFileCurrent - tailleEnregistrement, false));
-			// nodeCurrent.getChild "BIC"
-			//nodeParent =
-			// current with new parameter becomes the parent
-			nodeCurrent = nodeChild;
-			nodeChild = readOneNode(nodeCurrent.getChildLeft());
-			binaryTreeDelete( nodeChild, nodeCurrent, posHistory, stagiaireToRemove);
-			//removeStagiaire( nodeMax.getStagiaire() );
-			
-		} else if( nodeCurrent.hasChildLeft() ) {
-			System.out.println("current has 1 child left");
-			long childPosition = nodeCurrent.getChildLeft();
-			// we have to indicate the new childs'position of the parentNode
-			if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
-				nodeParent.setChildLeft( childPosition );
-			else
-				nodeParent.setChildRight( childPosition );
-			
-			reWriteOneNode(nodeParent,posHistory.get(posHistory.size()-1).getKey());
-			
-		} else if( nodeCurrent.hasChildRight() ) {
-			System.out.println("1child right");
-			long childPosition = nodeCurrent.getChildRight();
-			// we have to indicate the childs position of the rewrite
-			
-			if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
-				nodeParent.setChildLeft( childPosition );
-			else
-				nodeParent.setChildRight( childPosition );
-			
-			reWriteOneNode(nodeParent,posHistory.get(posHistory.size()-1).getKey());
-			
-		// no child
-		} else {
-			System.out.println("0 child");
-			// remonter au parent et lui effacer son lien gauche ou droite
-			if( ! posHistory.get(posHistory.size()-1).getValue() )
-				nodeParent.setChildLeft(0L);
-			else
-				nodeParent.setChildLeft(0L);
-			reWriteOneNode(nodeParent,posHistory.get(posHistory.size()-1).getKey());
-			//replaceNodeInParent( nodeParent, posHistory.get(posHistory.size()-1) );
-		}
-		
-		System.out.println("Retour binary_tree: " + nodeCurrent );
-		//return nodeCurrent;
-		return true;
-	}
-	/*
-	//private void replaceNodeInParent( NodeStagiaire node, long positionFile ) throws IOException {
-	private void replaceNodeInParent( NodeStagiaire node, Map.Entry<Long, Boolean> positionFile ) throws IOException {
-		System.out.println("entry replaceNodeInParent pos: "+ positionFile);
-		System.out.println("node to write :" + node);
-		
-		// child can be modified before
-		long pos = positionFile.getKey();
-		//boolean child = positionFile.getValue();
-		//raf.seek(positionFile);
-		// test if at the good position
-		long positionEnregistrement = (pos - tailleHeader)/tailleEnregistrement;
-		System.out.println("position enregistrement "+ positionEnregistrement);
-		//NodeStagiaire test = readOneNode(positionEnregistrement);
-		//System.out.println("stage test: " + test);
-		
-		// modify the child info
-		//if( !child ) // child false it is a left-handed child 
-		//	node.setChildLeft(0L);
-		//else
-		//	node.setChildRight(0L);
-		
-		System.out.println("node to rewrite: " + node);
-		System.out.println("at posFile " + pos);
-		reWriteOneNode(node, pos);	
-	}*/
-	
-	// node with  maximum value in the subtree on the left 
-	// return a Node or a Enrgestrement Number or File position ?
-	// always extreme left of the subtree
-	private long findMaxInSubtree(NodeStagiaire currentNode /*, NodeStagiaire nodeMax*/) throws IOException {
-
-		long positionMax = raf.getFilePointer() - tailleEnregistrement;
-		System.out.println("currentNode first left " + currentNode);		
-		//nodeMax = new NodeStagiaire( currentNode.getStagiaire(), currentNode.getChildLeft(), currentNode.getChildRight());
-		
-		while( currentNode.hasChildRight() ) {
-			positionMax = raf.getFilePointer();
-			currentNode = readOneNode( currentNode.getChildLeft() );
-		} 
-		//while( currentNode.hasChildLeft() );
-		//System.out.println("findMax : " + nodeMax);
-		System.out.println("Node current " + currentNode);
-		System.out.println("positionMax :" + positionMax); // not needed
-		return positionMax;
-	}
-
-	private void reWriteOneNode(NodeStagiaire nodeStagiaire, long positionwrite) throws IOException {
-		raf.seek(positionwrite);
-		raf.write(formatStringToBytes(nodeStagiaire.getStagiaire().getNom(), metaTailleNom));
-		raf.write(formatStringToBytes(nodeStagiaire.getStagiaire().getPrenom(), metaTaillePrenom));
-		raf.write(formatStringToBytes(nodeStagiaire.getStagiaire().getDepartement(), metaTailleDepartement));
-		raf.write(formatStringToBytes(nodeStagiaire.getStagiaire().getFormation(), metaTailleFormation));
-		raf.writeInt(nodeStagiaire.getStagiaire().getAnnee());
-		raf.writeLong(nodeStagiaire.getChildLeft());
-		raf.writeLong(nodeStagiaire.getChildRight());
 	}
 
 }

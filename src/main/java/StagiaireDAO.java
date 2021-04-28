@@ -102,8 +102,14 @@ public class StagiaireDAO {
 	}
 	
 	public void removeAll(List<Stagiaire> stagiaires) {
-		System.out.println("DAO: remove All, must write in the tree");
-		ArbreBinaire ab = new ArbreBinaire();
+		System.out.println("DAO: remove All, write in the tree: " + stagiaires.size() + " à supprimer" );
+		try {
+			ArbreBinaire ab = new ArbreBinaire();
+			ab.removeStagiaire(stagiaires.get(0));
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.out.println("Erreur in suppression");
+		}
 		
 	}
 		

@@ -88,6 +88,7 @@ public class TestArbreBinaire {
 		listStag = ab.getStagiaireOrdreAlphabetique();
 		affiche(listStag);
 */	
+/*
 		System.out.println("\n==== Remove with Two child =====");
 		Stagiaire s4 = new Stagiaire("Dick", "Jagger", "83", "AL 250", 2021);
 		//Stagiaire s3 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
@@ -95,6 +96,14 @@ public class TestArbreBinaire {
 		ab.removeStagiaire(s4);
 		listStag = ab.getStagiaireOrdreAlphabetique();
 		affiche(listStag);
+*/
+/*
+		System.out.println("\n==== Remove Root node =====");
+		Stagiaire s5 = new Stagiaire("MiCk", "Mat", "93","AI 119", 2021);
+		ab.removeStagiaire(s5);
+		listStag = ab.getStagiaireOrdreAlphabetique();
+		affiche(listStag);
+*/
 	}
 	
 	public static void affiche(List<Stagiaire> list) {

@@ -516,7 +516,7 @@ public class ArbreBinaire {
 		} else if( nodeCurrent.hasChildLeft() ) {
 			System.out.println("current has 1 child left");
 			long childPosition = nodeCurrent.getChildLeft();
-			// we have to indicate the childs position of the rewrite
+			// we have to indicate the new childs'position of the parentNode
 			if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
 				nodeParent.setChildLeft( childPosition );
 			else
@@ -528,6 +528,7 @@ public class ArbreBinaire {
 			System.out.println("1child right");
 			long childPosition = nodeCurrent.getChildRight();
 			// we have to indicate the childs position of the rewrite
+			
 			if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
 				nodeParent.setChildLeft( childPosition );
 			else

@@ -123,48 +123,52 @@ public class RecherchePanel extends GridPane {
 				DirectoryChooser directoryChooser = new DirectoryChooser();
 				RootPanel root = (RootPanel) getScene().getRoot();
 				File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
-				List<Stagiaire> ListeStagiaire = root.getObservable();
 
-				root.getFormulairePanel().setVisible(false);
-				
-				
-				String fileName = selectedDirectory.toString() + "\\export_" + new Date().getTime() + ".pdf";
-				System.out.println(fileName);
-				Document document = new Document();
-				try {
-					PdfWriter.getInstance(document, new FileOutputStream(fileName));
-					document.open();
-					CMYKColor bColor = new CMYKColor(84, 36, 0, 5);
-					BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-					Font f = new Font(bf, 22, Font.NORMAL, bColor);
-					Paragraph para = new Paragraph("Annuaire EQL ", f);
-					para.setSpacingAfter(30);
-					para.setAlignment(Element.ALIGN_CENTER);
-					PdfPTable table = new PdfPTable(5);
-					table.addCell("Nom");
-					table.addCell("Prénom");
-					table.addCell("Departement");
-					table.addCell("Formation");
-					table.addCell("Année");
+				if (selectedDirectory == null) {
+					// No Directory selected
+				} else {
+					System.out.println(selectedDirectory.getAbsolutePath());
+					List<Stagiaire> ListeStagiaire = root.getObservable();
+					root.getFormulairePanel().setVisible(false);
 
-					for (Stagiaire stagiaire : ListeStagiaire) {
-						table.addCell(stagiaire.getNom());
-						table.addCell(stagiaire.getPrenom());
-						table.addCell(stagiaire.getDepartement());
-						table.addCell(stagiaire.getFormation());
-						table.addCell(Integer.toString(stagiaire.getAnnee()));
+					// https://stackoverflow.com/questions/28268767/pressing-cancel-after-showing-filechooser-causes-nullpointerexception
+					String fileName = selectedDirectory.toString() + "\\export_" + new Date().getTime() + ".pdf";
+					System.out.println(fileName);
+					Document document = new Document();
+					try {
+						PdfWriter.getInstance(document, new FileOutputStream(fileName));
+						document.open();
+						CMYKColor bColor = new CMYKColor(84, 36, 0, 5);
+						BaseFont bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+						Font f = new Font(bf, 22, Font.NORMAL, bColor);
+						Paragraph para = new Paragraph("Annuaire EQL ", f);
+						para.setSpacingAfter(30);
+						para.setAlignment(Element.ALIGN_CENTER);
+						PdfPTable table = new PdfPTable(5);
+						table.addCell("Nom");
+						table.addCell("Prénom");
+						table.addCell("Departement");
+						table.addCell("Formation");
+						table.addCell("Année");
+
+						for (Stagiaire stagiaire : ListeStagiaire) {
+							table.addCell(stagiaire.getNom());
+							table.addCell(stagiaire.getPrenom());
+							table.addCell(stagiaire.getDepartement());
+							table.addCell(stagiaire.getFormation());
+							table.addCell(Integer.toString(stagiaire.getAnnee()));
+						}
+						document.add(para);
+						document.add(table);
+						document.close();
+					} catch (FileNotFoundException | DocumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					document.add(para);
-					document.add(table);
-					document.close();
-				} catch (FileNotFoundException | DocumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
-
 			}
 		});
 

@@ -1,5 +1,7 @@
 package main.java.ihm;
 
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -90,7 +92,13 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			Stagiaire stagiaire = readTextFields();
 			System.out.println("new stagiare "+ stagiaire);
 			RootPanel root = (RootPanel) getScene().getRoot();
+			
+			//SortedList<Stagiaire> sorted = new SortedList<Stagiaire>(root.getObservable());
+			//sorted.add(stagiaire, Comparator.);
 			root.getObservable().add(stagiaire);
+			
+			//root.getObservable().sort(null);
+			//root.getSortedObservable().add(stagiaire);
 			// here more complexe
 			
 		// supprime  
@@ -119,6 +127,10 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		addRow( rowNb, lbl, tf);
 		return tf;
 	}
+	
+	//private void insertStagiaireToObservable(ObservableList<Stagiaire> list, Stagiaire stagiaire) {
+	//	list.sorted()
+	//}
 	
 	public void loadAStagiaire(Stagiaire stagiaire) {
 		textNom.setText( stagiaire.getNom());

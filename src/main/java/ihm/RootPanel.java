@@ -4,6 +4,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.layout.BorderPane;
 import main.java.AdminDAO;
 import main.java.Stagiaire;
@@ -13,6 +14,7 @@ public class RootPanel extends BorderPane {
 
 	private StagiaireDAO dao = new StagiaireDAO();
 	private ObservableList<Stagiaire> observablesStagiaires;
+	private SortedList<Stagiaire> sortedObservablesStagiaires;
 	
 	private RecherchePanel rechPanel = new RecherchePanel();
 	private TablePanel tablePannel; // = new TablePannel();
@@ -26,8 +28,13 @@ public class RootPanel extends BorderPane {
 		super();
 		// defaut at start-up,  get the full list of stagiaires
 		observablesStagiaires = FXCollections.observableArrayList(dao.getStagiaireListFromArbre());
+		//observablesStagiaires = FXCollections.observableList(dao.getStagiaireListFromArbre());
+		//sortedObservablesStagiaires = new SortedList<Stagiaire>(observablesStagiaires);
+		
 		System.out.println("Size of observablesStagiaires: " + observablesStagiaires.size());
-		tablePannel = new TablePanel(observablesStagiaires);
+		// send both, hopefully one to delete, or create the second in the file
+		tablePannel = new TablePanel(observablesStagiaires); //sortedObservablesStagiaires);
+		
 		rechPanel.getTotalEtudiantLabel().setText("Eléments total: "+dao.getStagiaireListFromArbre().size());
 		
 		setTop(topPanel);
@@ -60,6 +67,10 @@ public class RootPanel extends BorderPane {
 	public ObservableList<Stagiaire> getObservable() {
 		//return ( (TablePannel)getCenter() ).getObservable();
 		return observablesStagiaires;
+	}
+	
+	public SortedList<Stagiaire> getSortedObservable() {
+		return sortedObservablesStagiaires;
 	}
 	
 	public StagiaireDAO getStagiaireDao() {

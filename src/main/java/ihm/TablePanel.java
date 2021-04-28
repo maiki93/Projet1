@@ -1,11 +1,13 @@
 package main.java.ihm;
 
+import java.util.Comparator;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 //import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -14,18 +16,25 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import main.java.StagiaireDAO;
 import main.java.Stagiaire;
+import main.java.StagiaireComparator;
 
 public class TablePanel extends AnchorPane {
 	
 	private TableView<Stagiaire> tableView;
+	
+	SortedList<Stagiaire> sortedObservablesStagiaires;
 
 	// Recreer à chaque fois, peut etre un peu bourrin comme méthode. 
 	// A voir plus tard si on peut se limiter à la table, voir reassigner l'observable. 
 	@SuppressWarnings("unchecked")
 	public TablePanel(ObservableList<Stagiaire> observablesStagiaires) {
 		super();
+		// Data are sorted in a wrapper around the observable
+		Comparator<? super Stagiaire> stagiaireComparator = new StagiaireComparator();
+		sortedObservablesStagiaires = new SortedList<Stagiaire>(observablesStagiaires, stagiaireComparator);
 
-		tableView = new TableView<>(observablesStagiaires);
+		tableView = new TableView<>(sortedObservablesStagiaires);
+		
 		TableColumn<Stagiaire, String> colNom = new TableColumn<>("Nom");
 		colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
 
@@ -41,6 +50,8 @@ public class TablePanel extends AnchorPane {
 
 		TableColumn<Stagiaire, Integer> colAnnee = new TableColumn<>("Année");
 		colAnnee.setCellValueFactory(new PropertyValueFactory<>("annee"));
+		
+		//tableView.getSortOr
 
 		tableView.getColumns().addAll(colNom, colPrenom, colDepartement, colFormation, colAnnee);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -73,6 +84,8 @@ public class TablePanel extends AnchorPane {
 			}});
 		
 		// Listener on Observable, when it is modified we can update the dao
+		// both seem working, sorted or direct Observable
+		//sortedObservablesStagiaires.addListener(new ListChangeListener<Stagiaire>() {
 		observablesStagiaires.addListener(new ListChangeListener<Stagiaire>() {
 			@Override
 			public void onChanged(Change<? extends Stagiaire> chgStagiaire) {

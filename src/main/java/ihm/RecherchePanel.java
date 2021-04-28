@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.soap.Node;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -29,6 +31,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import main.java.Stagiaire;
@@ -54,6 +57,7 @@ public class RecherchePanel extends GridPane {
 	private Map<String, String> mapCritere = new HashMap<>();
 
 	public static final String FONT = "main/resources/Poppins-Regular.ttf";
+	public int idBoxCritere;
 
 	public RecherchePanel() {
 		super();
@@ -73,7 +77,7 @@ public class RecherchePanel extends GridPane {
 		boxRecherche = new VBox(150);
 		boxRecherche.setId("boxRecherche");
 
-		boxRecherche.getChildren().addAll(rechercheTxt, rechercheCb, rechercheBtn);
+		boxRecherche.getChildren().addAll(rechercheCb, rechercheTxt, rechercheBtn);
 		add(boxRecherche, 1, 1);
 
 		// selection de la recheche, contains the selected criteria
@@ -83,7 +87,6 @@ public class RecherchePanel extends GridPane {
 		// Info coming from the result of the search ? or comming from the
 		// observableList ?
 
-		
 		infosLabel = new Label("Infos");
 		infosLabel.setId("infosLabel");
 		totalEtudiantLabel = new Label("Total d'étudiants: ");
@@ -176,7 +179,7 @@ public class RecherchePanel extends GridPane {
 				List<Stagiaire> listAll = root.getObservable();
 				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isRechercheGlobal);
 				System.out.println("listFiltree, size:" + listFiltree.size());
-				elementTrouverLabel.setText("Eléments filtrer: "+listFiltree.size());
+				elementTrouverLabel.setText("Eléments filtrer: " + listFiltree.size());
 				// update other panels
 				root.setNewRecherche(listFiltree);
 				// reset la recherche
@@ -218,7 +221,6 @@ public class RecherchePanel extends GridPane {
 					// we gain the focus, nothing to do
 				} else {
 					System.out.println("Old Value");
-					clearCritereRecherche();
 				}
 			}
 		});
@@ -226,9 +228,44 @@ public class RecherchePanel extends GridPane {
 	}
 
 	private void addCritere(String value, String critere) {
+		// variable id ++
+
+		Button supprCritereBtn;
+		idBoxCritere++;
+		HBox hb = new HBox(150);
+		supprCritereBtn = new Button("supprCritereBtn");
+		supprCritereBtn.setId("X");
+		supprCritereBtn.setPrefSize(5, 5);
+		// ajoute id
+		hb.setId("boxcritere" + idBoxCritere);
 		mapCritere.put(critere, value);
 		Label lblCritere = new Label(critere + ":" + value);
-		boxCriteriaRecherche.getChildren().add(lblCritere);
+		// ajoute label critere
+		hb.getChildren().add(lblCritere);
+		hb.getChildren().add(supprCritereBtn);
+		// change lbl par box
+		boxCriteriaRecherche.getChildren().add(hb);
+		supprCritereBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				List<javafx.scene.Node> child = boxCriteriaRecherche.getChildren();
+				String idparent = supprCritereBtn.getParent().getId();
+				System.out.println("in");
+				if (child.size() > 0) {
+
+					for (javafx.scene.Node node : child) {
+						String id = node.getId();
+						if (id.compareTo(idparent) == 0) {
+							child.remove(node);
+						}
+						System.out.println("id: " + id);
+						System.out.println("idparent: " + idparent);
+					}
+
+					System.out.println("out");
+				}
+			}
+		});
 
 	}
 
@@ -270,6 +307,7 @@ public class RecherchePanel extends GridPane {
 		boxCriteriaRecherche.getChildren().clear();
 		rechercheCb.getSelectionModel().select("Nom");
 		isRechercheGlobal = false;
+		idBoxCritere = 0;
 	}
 
 	public Label getTotalEtudiantLabel() {

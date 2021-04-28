@@ -105,7 +105,7 @@ public class RecherchePanel extends GridPane {
 		exportPDFBtn.setId("exportPDFBtn");
 		exportPDFBtn.setPrefSize(150, 25);
 
-		addNewStagiaireBtn = new Button("Nouv. stag.");
+		addNewStagiaireBtn = new Button("Fermer");
 		addNewStagiaireBtn.setId("newStagBtn");
 		addNewStagiaireBtn.setPrefSize(150, 25);
 
@@ -125,6 +125,9 @@ public class RecherchePanel extends GridPane {
 				File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
 				List<Stagiaire> ListeStagiaire = root.getObservable();
 
+				root.getFormulairePanel().setVisible(false);
+				
+				
 				String fileName = selectedDirectory.toString() + "\\export_" + new Date().getTime() + ".pdf";
 				System.out.println(fileName);
 				Document document = new Document();
@@ -226,29 +229,23 @@ public class RecherchePanel extends GridPane {
 	}
 
 	private void addCritere(String value, String critere) {
-		// variable id ++
-		System.out.println("add value : "+ value+ "  critere :  "+critere);
 		Button supprCritereBtn;
 		idBoxCritere++;
 		HBox hb = new HBox(150);
 		supprCritereBtn = new Button("supprCritereBtn");
 		supprCritereBtn.setId("X");
 		supprCritereBtn.setPrefSize(5, 5);
-		// ajoute id
 		hb.setId("boxcritere" + idBoxCritere);
 		mapCritere.put(critere, value);
 		Label lblCritere = new Label(critere + ":" + value);
-		// ajoute label critere
 		hb.getChildren().add(lblCritere);
 		hb.getChildren().add(supprCritereBtn);
-		// change lbl par box
 		boxCriteriaRecherche.getChildren().add(hb);
 		supprCritereBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
 				List<javafx.scene.Node> child = boxCriteriaRecherche.getChildren();
 				String idparent = supprCritereBtn.getParent().getId();
-				System.out.println("in");
 				if (child.size() > 0) {
 
 					for (javafx.scene.Node node : child) {
@@ -256,11 +253,7 @@ public class RecherchePanel extends GridPane {
 						if (id.compareTo(idparent) == 0) {
 							child.remove(node);
 						}
-						System.out.println("id: " + id);
-						System.out.println("idparent: " + idparent);
 					}
-
-					System.out.println("out");
 				}
 			}
 		});
@@ -276,17 +269,16 @@ public class RecherchePanel extends GridPane {
 		String prenom = (mapCritere.get("Prénom") != null) ? mapCritere.get("Prénom") : "";
 		String departement = (mapCritere.get("Département") != null) ? mapCritere.get("Département") : "";
 		String formation = (mapCritere.get("Formation") != null) ? mapCritere.get("Formation") : "";
-		System.out.println("formation : "+formation);
+		System.out.println("formation : " + formation);
 		String anneeStr = (mapCritere.get("Année") != null) ? mapCritere.get("Année") : "";
 		int annee;
 		// System.out.println("Nom: " + nom);
 		// System.out.println("Prenom: " + prenom);
-		
 
 		// test for global
 		String demandeGlobale = (mapCritere.get("Tout") != null) ? mapCritere.get("Tout") : "";
 		if (!demandeGlobale.isEmpty()) {
-			System.out.println("demande globale : "+demandeGlobale);
+			System.out.println("demande globale : " + demandeGlobale);
 			isRechercheGlobal = true;
 			nom = demandeGlobale;
 		}

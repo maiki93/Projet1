@@ -46,7 +46,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		textAnnee = addEntry("Année",4);
 		
 		// boutons
-		btNew = new Button("Nouv.Stagiaire");
+		btNew = new Button("Fermer");
 		btNew.setId("btNew");
 		btSave = new Button("Sauvegarder");
 		btSave.setId("btSave");
@@ -168,11 +168,9 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 	 
 	public void setFormWithRights(boolean adminAccess) {
 		if( adminAccess) {
-			this.setVisible(true);
 			btNew.setVisible(true);
 			btDel.setVisible(true);
 		} else {
-			this.setVisible(false);
 			btNew.setVisible(false);
 			btDel.setVisible(false);
 		}

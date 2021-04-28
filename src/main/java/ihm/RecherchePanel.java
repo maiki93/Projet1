@@ -180,7 +180,7 @@ public class RecherchePanel extends GridPane {
 				// update other panels
 				root.setNewRecherche(listFiltree);
 				// reset la recherche
-
+				System.out.println("____________test-__________________");
 				clearCritereRecherche();
 			}
 		});
@@ -218,6 +218,7 @@ public class RecherchePanel extends GridPane {
 					// we gain the focus, nothing to do
 				} else {
 					System.out.println("Old Value");
+					clearCritereRecherche();
 				}
 			}
 		});

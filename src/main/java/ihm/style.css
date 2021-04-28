@@ -1,30 +1,139 @@
 /* Remplace les couleurs par des variables  */
-#boxRecherche {
-	-fx-spacing: 5;
+@font-face {
+	font-family: Delicious;
+	src: url('../../resources/Poppins-Regular.ttf');
+}
+
+@font-face {
+	font-family: Lato;
+	src: url('../../resources/Lato-Regular.ttf');
+}
+
+.root {
+	-bg-color-light: #F4F6F4;
+	-text-color-black: #2D3047;
+	-color-primary: #279AF1;
+	-color-secondary: #FF9B71;
+}
+
+.label {
+	-fx-text-fill: -text-color-black;
+	_fx-font: 14 Lato;
+}
+
+.text-field {
+	-fx-text-fill: -text-color-black;
+}
+
+.button {
+	-fx-background-color: -color-primary;
+	-fx-cursor: hand;
+	_fx-font: 14 Delicious;
+	-fx-text-fill: -bg-color-light;
+}
+
+.button:hover {
+	-fx-background-color: -text-color-black;
+	-fx-text-fill: -bg-color-light;
+}
+
+.button:pressed {
+	-fx-border-color: -text-color-black;
+	-fx-border-radius: 5px;
+}
+
+#topPannel {
+	-fx-background-color: -bg-color-light;
+	-fx-spacing: 5em;
+	-fx-padding: 20, 20, 20, 20;
+	-fx-font-size: 1em;
+	-fx-alignment: CENTER;
 }
 
 #adminBtn {
-	-fx-background-color: #873D48;
+	-fx-background-color: -color-primary;
 	-fx-cursor: hand;
+	_fx-font: 14 Lato;
+	-fx-text-fill: -bg-color-light;
 }
 
 #adminBtn:hover {
-	-fx-background-color: #D9F2FF;
+	-fx-background-color: -text-color-black;
 }
 
 #adminBtn:pressed {
-	-fx-border-color: black;
+	-fx-border-color: -text-color-black;
+	-fx-border-radius: 5px;
+}
+
+#documentationBtn {
+	-fx-background-color: -color-primary;
+	-fx-cursor: hand;
+	-fx-font-size: 14px;
+	-fx-text-fill: -bg-color-light;
+	_fx-font: 14 Lato;
+}
+
+#documentationBtn:hover {
+	-fx-background-color: -text-color-black;
+}
+
+#documentationBtn:pressed {
+	-fx-border-color: -text-color-black;
 	-fx-border-radius: 5px;
 }
 
 #adminBox {
-	-fx-background-color: #D9F2FF;
-	-fx-translate-x: 350;
+	-fx-background-color: -text-color-black;
+	-fx-translate-x: 30em;
 	-fx-translate-y: 50;
 	-fx-padding: 10, 20, 10, 20;
 	-fx-background-radius: 5.0;
 }
 
 #textConnect {
+	-fx-text-fill: -bg-color-light;
+}
+
+#btnConnect:hover {
+	-fx-border-color: -bg-color-light;
+	-fx-border-radius: 20px;
+}
+
+/*--------------- pannel de droite -------------*/
+#boxRecherche {
+	-fx-alignment: CENTER;
+	-fx-spacing: 30;
+}
+
+#rechercheCb {
+	-fx-pref-width: 150;
+}
+
+#boxinfos {
+	-fx-spacing: 20;
 	-fx-font-size: 14px;
+	-fx-padding: 10 10 90 10;
+	-fx-alignment: CENTER;
+}
+
+#boxbtnpdf {
+	-fx-alignment: CENTER;
+}
+
+#infosLabel {
+	-fx-font-size: 20px;
+	_fx-font: 22 Lato;
+}
+
+#boxright {
+	-fx-vgap: 10;
+	-fx-alignment: CENTER;
+}
+
+/*--------------- pannel de droite -------------*/
+#pannelLeft {
+	-fx-vgap: 20;
+/* 	-fx-alignment: CENTER; */
+	-fx-padding: 40 0 0 50;
 }

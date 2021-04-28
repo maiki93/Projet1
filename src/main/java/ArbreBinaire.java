@@ -517,7 +517,6 @@ public class ArbreBinaire {
 			System.out.println("current has 1 child left");
 			long childPosition = nodeCurrent.getChildLeft();
 			// we have to indicate the new childs'position of the parentNode
-			if( pos)
 			if( ! posHistory.get(posHistory.size()-1).getValue() ) // false is left
 				nodeParent.setChildLeft( childPosition );
 			else

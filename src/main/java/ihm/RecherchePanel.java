@@ -121,8 +121,6 @@ public class RecherchePanel extends GridPane {
 			@Override
 			public void handle(ActionEvent arg0) {
 				DirectoryChooser directoryChooser = new DirectoryChooser();
-				// donner le choix du nom
-
 				RootPanel root = (RootPanel) getScene().getRoot();
 				File selectedDirectory = directoryChooser.showDialog(root.getScene().getWindow());
 				List<Stagiaire> ListeStagiaire = root.getObservable();
@@ -229,7 +227,7 @@ public class RecherchePanel extends GridPane {
 
 	private void addCritere(String value, String critere) {
 		// variable id ++
-
+		System.out.println("add value : "+ value+ "  critere :  "+critere);
 		Button supprCritereBtn;
 		idBoxCritere++;
 		HBox hb = new HBox(150);
@@ -275,18 +273,20 @@ public class RecherchePanel extends GridPane {
 		// String textCb = rechercheCb.getSelectionModel().getSelectedItem();
 		// System.out.println("createTemplate "+ text + " " + textCb);
 		String nom = (mapCritere.get("Nom") != null) ? mapCritere.get("Nom") : "";
-		String prenom = (mapCritere.get("Prenom") != null) ? mapCritere.get("Prenom") : "";
-		String departement = (mapCritere.get("Departement") != null) ? mapCritere.get("Departement") : "";
-		String formation = (mapCritere.get("Formation") != null) ? mapCritere.get("Departement") : "";
-		String anneeStr = (mapCritere.get("annee") != null) ? mapCritere.get("Departement") : "";
+		String prenom = (mapCritere.get("Prénom") != null) ? mapCritere.get("Prénom") : "";
+		String departement = (mapCritere.get("Département") != null) ? mapCritere.get("Département") : "";
+		String formation = (mapCritere.get("Formation") != null) ? mapCritere.get("Formation") : "";
+		System.out.println("formation : "+formation);
+		String anneeStr = (mapCritere.get("Année") != null) ? mapCritere.get("Année") : "";
 		int annee;
 		// System.out.println("Nom: " + nom);
 		// System.out.println("Prenom: " + prenom);
+		
 
 		// test for global
 		String demandeGlobale = (mapCritere.get("Tout") != null) ? mapCritere.get("Tout") : "";
 		if (!demandeGlobale.isEmpty()) {
-			System.out.println("demande globale");
+			System.out.println("demande globale : "+demandeGlobale);
 			isRechercheGlobal = true;
 			nom = demandeGlobale;
 		}

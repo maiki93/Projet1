@@ -113,7 +113,7 @@ public class TestArbreBinaire {
 		Stagiaire s5 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
 		ab.removeStagiaire(s5);
 */		
-		System.out.println("\n==== Inser homonyme Root node =====");
+		System.out.println("\n==== Inser homonyme name =====");
 		//Stagiaire s5 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
 		Stagiaire s6 = new Stagiaire("MiCk", "Mat", "93","AI 119", 2021);
 		ab.addStagiaire(s6);

@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.soap.Node;
-
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -162,10 +160,8 @@ public class RecherchePanel extends GridPane {
 						document.add(table);
 						document.close();
 					} catch (FileNotFoundException | DocumentException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -181,7 +177,6 @@ public class RecherchePanel extends GridPane {
 				// voir UML
 				RootPanel root = (RootPanel) getScene().getRoot();
 				StagiaireDAO stageDao = root.getStagiaireDao();
-				List<Stagiaire> listAll = root.getObservable();
 				List<Stagiaire> listFiltree = stageDao.rechercheStagiaire(stagiaireTemplate, isRechercheGlobal);
 				System.out.println("listFiltree, size:" + listFiltree.size());
 				elementTrouverLabel.setText("Eléments filtrer: " + listFiltree.size());

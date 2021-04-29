@@ -191,8 +191,12 @@ public class ArbreBinaire {
 		do {
 			// duplicates allowed, still continue to the leaves
 			currentNode = readOneNode(adressNode);
-			if (currentNode.getStagiaire().getNom().toUpperCase().compareTo(key.toUpperCase()) == 0)
+			System.out.println(currentNode);
+			if (currentNode.getStagiaire().getNom().toUpperCase().compareTo(key.toUpperCase()) == 0) {
 				listFound.add(currentNode.getStagiaire());
+				System.out.println("trouver : "+ key);
+				System.out.println(currentNode.getStagiaire().getNom().toUpperCase().compareTo(key.toUpperCase()) == 0);				
+			}
 			// <=> key <= current.nom, go to left 
 			if (currentNode.getStagiaire().getNom().toUpperCase().compareTo(key.toUpperCase()) >= 0) {
 				adressNode = currentNode.getChildLeft();
@@ -304,13 +308,21 @@ public class ArbreBinaire {
 		// cas egale a gauche
 		// attention au recalcul de la taille des champs
 
-		if (root.getStagiaire().compareTo(stagiaire) <= 0 && root.getChildRight() != 0) {
+		if (root.getStagiaire().compareTo(stagiaire) < 0 && root.getChildRight() != 0) {
 			this.ParentPosition = root.getChildRight();
+<<<<<<< 9f8c62f6c50a1d006f809ba0edb6adf69efbe60c
 			findParentStagiaire_paul(stagiaire, readOneNode(root.getChildRight()));
 		} else if (root.getStagiaire().compareTo(stagiaire) > 0 && root.getChildLeft() != 0) {
 			this.ParentPosition = root.getChildLeft();
 			findParentStagiaire_paul(stagiaire, readOneNode(root.getChildLeft()));
 		} else if (root.getStagiaire().compareTo(stagiaire) > 0 && root.getChildLeft() == 0) {
+=======
+			findParentStagiaire(stagiaire, readOneNode(root.getChildRight()));
+		} else if (root.getStagiaire().compareTo(stagiaire) >= 0 && root.getChildLeft() != 0) {
+			this.ParentPosition = root.getChildLeft();
+			findParentStagiaire(stagiaire, readOneNode(root.getChildLeft()));
+		} else if (root.getStagiaire().compareTo(stagiaire) >=	 0 && root.getChildLeft() == 0) {
+>>>>>>> update write stagiaire
 			long pos = raf.length();
 			/*
 			System.out.println("*** Arbre de gauche pour : " + stagiaire.getNom());
@@ -333,7 +345,7 @@ public class ArbreBinaire {
 			//System.out.println("----------------------------- gauche");
 			reWriteOneNode(stagiaireChildNode, pos);
 			return root;
-		} else if (root.getStagiaire().compareTo(stagiaire) <= 0 && root.getChildRight() == 0) {
+		} else if (root.getStagiaire().compareTo(stagiaire) < 0 && root.getChildRight() == 0) {
 			/*
 			System.out.println("** Arbre de droite pour : " + stagiaire.getNom());
 			System.out.println("taille enregistrement: " + this.tailleEnregistrement);

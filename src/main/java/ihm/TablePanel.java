@@ -97,39 +97,49 @@ public class TablePanel extends AnchorPane {
 				while(chgStagiaire.next()) {
 					if( chgStagiaire.wasUpdated()) {
 						System.out.println("ChgStagiare was updated()================");
-						return;
-						
+						break;
+
 					} else if( chgStagiaire.wasReplaced()) {
-							System.out.println("ChgStagiare was replaced()=====================");
-							System.out.println("chgStagiaire: " + chgStagiaire);
-							List<? extends Stagiaire> lstag = chgStagiaire.getAddedSubList();
-							List<? extends Stagiaire> lstag2 = chgStagiaire.getRemoved();
-							//System.out.println("lstag: " + lstag);
-							//System.out.println("lstag2: " + lstag2);
-							System.out.println(lstag);
-							dao.replaceStagiaire( lstag.get(0), lstag2.get(0) ); 
-							return;
-						
+						System.out.println("ChgStagiare was replaced()=====================");
+						System.out.println("chgStagiaire: " + chgStagiaire);
+						List<? extends Stagiaire> lstag = chgStagiaire.getAddedSubList();
+						List<? extends Stagiaire> lstag2 = chgStagiaire.getRemoved();
+						//System.out.println("lstag: " + lstag);
+						//System.out.println("lstag2: " + lstag2);
+						//System.out.println(lstag);
+						int posView = ((chgStagiaire.getFrom()-1) >=0) ? (chgStagiaire.getFrom()-1) : 0;
+						tableView.getSelectionModel().select(chgStagiaire.getFrom());
+						tableView.scrollTo(posView);
+						tableView.layout();
+						dao.replaceStagiaire( lstag.get(0), lstag2.get(0) ); 
+						break;
+
 					} else if( chgStagiaire.wasAdded() ) {
 						System.out.println("ChgStagiare was added()");
 						System.out.println("chgStagiaire: " + chgStagiaire);
 						List<? extends Stagiaire> lstag = chgStagiaire.getAddedSubList();
 						modifiedStagiaire = lstag.get(0);
-						tableView.getSelectionModel().select(modifiedStagiaire);
+
+						int posView = ((chgStagiaire.getFrom()-1) >=0) ? (chgStagiaire.getFrom()-1) : 0;
+						tableView.getSelectionModel().select(chgStagiaire.getFrom());
+						tableView.scrollTo(posView);
+						tableView.layout();
 						dao.addAll( (List<Stagiaire>) lstag);
 						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
-						return;
-						
+						break;
+
 					} else if( chgStagiaire.wasRemoved() ) {
-						System.out.println("ChgStagiare was removed()");
+						System.out.println("ChgStagiaire was removed()");
+						root.getFormulairePanel().resetTextFields();
+						tableView.getSelectionModel().clearSelection();
 						List<? extends Stagiaire> lstag = chgStagiaire.getRemoved();
 						dao.removeAll( (List<Stagiaire>)lstag );
 						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
-						return;
-						
-					} else {
+						break;
+
+					}/* else {
 						System.err.println("========== Nothing IT IS BAD ! ============");
-					}
+					}*/
 				}
 			}
 		});

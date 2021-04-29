@@ -56,8 +56,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		btNew.setId("btNew");
 		btSave = new Button("Sauvegarder");
 		btSave.setId("btSave");
-		// binds expects an ObservableValue (could be ObservableAdmin ?)
-		// here not need yet just for layout
+		// binds expects an ObservableValue (could be ObservableAdmin ?) here not need yet just for layout
 		btSave.managedProperty().bind(visibleProperty());
 		btDel = new Button("Supprimer");
 		btDel.setId("btDel");
@@ -90,7 +89,6 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			TablePanel tblPan = root.getTablePannel();
 			TableView<Stagiaire> tblV = tblPan.getTableView(); 
 			tblV.getSelectionModel().clearSelection();
-			isNewStagiaire = true;
 			// save new stagiaire or valide the modification of 
 			// a previously selected one, USER should not be able modify
 
@@ -103,6 +101,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			// nouvelle entrée, nothing selected in table
 			if( selectedItemInTableNb == -1) {
 				System.out.println("SelectedItem == -1, nouvelle série a enregistrer");
+				resetTextFields();
 				root.getObservable().add(stagiaire);
 			// one was selected, it is a modification
 			} else {
@@ -118,14 +117,14 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 					confirmation = askConfirmationDoublon();
 					if( confirmation == true) {
 						root.getObservable().add( stagiaire );
-						//return;
 					} 
 					return;
 				}
+				resetTextFields();
 				// so it is a modification
 				root.getObservable().set(selectedItemInTableNb, stagiaire);
 			}
-
+	
 		// supprime  
 		} else if( idBt.equals("btDel")) {
 			System.out.println("btDel ");
@@ -188,14 +187,19 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		textDepartement.setText("");
 		textFormation.setText("");
 		textAnnee.setText("");
+		//
+		RootPanel root = (RootPanel) getScene().getRoot();
+		TablePanel tblPan = root.getTablePannel();
+		TableView<Stagiaire> tblV = tblPan.getTableView(); 
+		tblV.getSelectionModel().clearSelection();
 	}
 	 
 	public void setFormWithRights(boolean adminAccess) {
 		if( adminAccess) {
-			btNew.setVisible(true);
+			//btNew.setVisible(true);
 			btDel.setVisible(true);
 		} else {
-			btNew.setVisible(false);
+			//btNew.setVisible(false);
 			btDel.setVisible(false);
 		}
 	}

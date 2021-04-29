@@ -171,9 +171,10 @@ public class RecherchePanel extends GridPane {
 		rechercheBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
+
+				rechercheTxt.requestFocus();
 				// set isRechercheGlobal si "Tout" est présent dans la liste de critère
 				Stagiaire stagiaireTemplate = createTemplateForSearch();
-
 				// voir UML
 				RootPanel root = (RootPanel) getScene().getRoot();
 				StagiaireDAO stageDao = root.getStagiaireDao();

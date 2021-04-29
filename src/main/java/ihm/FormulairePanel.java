@@ -166,11 +166,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		addRow( rowNb, lbl, tf);
 		return tf;
 	}
-	
-	//private void insertStagiaireToObservable(ObservableList<Stagiaire> list, Stagiaire stagiaire) {
-	//	list.sorted()
-	//}
-	
+
 	public void loadAStagiaire(Stagiaire stagiaire, int indexTable) {
 		//this.selectedItemInTableNb = indexTable;
 		textNom.setText( stagiaire.getNom());

@@ -123,6 +123,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 				TableView<Stagiaire> tblV = tblPan.getTableView();*/ 
 				Stagiaire stagiaireSelected = tblV.getSelectionModel().getSelectedItem();
 				if( (stagiaireSelected != null)  && (stagiaire.compareTo(stagiaireSelected ) == 0)) {
+					
 					System.out.println("\n==IT IS A doublon\n");
 					// Ask for confirmation
 					confirmation = askConfirmationDoublon();
@@ -131,10 +132,15 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 					}
 					return;
 				}
+				
+				if( !root.hasAdminRights() ) {
+					alertRights();
+					return;
+				}
 				//resetTextFields();
 				// so it is a modification
 				//root.getObservable().set(selectedItemInTableNb, stagiaire);
-				int index = root.getObservable().indexOf(stagiaireSelected);
+				int index = root.getObservable().indexOf(stagiaireSelected); // index was sometimes modified(table and observable)
 				//System.out.println("Modification: " + index + selectedItemInTableNb);
 				root.getObservable().set(index, stagiaire);
 				//resetTextFields();
@@ -234,6 +240,15 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		    //textFld.requestFocus();
 		}
 		return false;
+	}
+	
+	public void alertRights() {
+		
+		Alert alert = new Alert(AlertType.ERROR);
+	    alert.setTitle("Droits insuffisants");
+	    String s = "Les droits administrateurs sont nécessaires pour modifier un stagiaire";
+	    alert.setContentText(s);
+	    alert.showAndWait();
 	}
 	
 }

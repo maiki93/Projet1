@@ -24,6 +24,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -35,7 +36,7 @@ import javafx.stage.DirectoryChooser;
 import main.java.Stagiaire;
 import main.java.StagiaireDAO;
 
-public class RecherchePanel extends GridPane {
+public class RecherchePanel extends GridPane implements EventHandler<ActionEvent> {
 
 	private Button addNewStagiaireBtn;
 	private Button rechercheBtn;
@@ -233,31 +234,15 @@ public class RecherchePanel extends GridPane {
 		idBoxCritere++;
 		HBox hb = new HBox(150);
 		supprCritereBtn = new Button("supprCritereBtn");
-		supprCritereBtn.setId("X");
+		supprCritereBtn.setId(critere);
 		supprCritereBtn.setPrefSize(5, 5);
+		supprCritereBtn.setOnAction(this);
 		hb.setId("boxcritere" + idBoxCritere);
 		mapCritere.put(critere, value);
 		Label lblCritere = new Label(critere + ":" + value);
 		hb.getChildren().add(lblCritere);
 		hb.getChildren().add(supprCritereBtn);
 		boxCriteriaRecherche.getChildren().add(hb);
-		supprCritereBtn.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				List<javafx.scene.Node> child = boxCriteriaRecherche.getChildren();
-				String idparent = supprCritereBtn.getParent().getId();
-				if (child.size() > 0) {
-
-					for (javafx.scene.Node node : child) {
-						String id = node.getId();
-						if (id.compareTo(idparent) == 0) {
-							child.remove(node);
-						}
-					}
-				}
-			}
-		});
-
 	}
 
 	private Stagiaire createTemplateForSearch() {
@@ -272,9 +257,7 @@ public class RecherchePanel extends GridPane {
 		System.out.println("formation : " + formation);
 		String anneeStr = (mapCritere.get("Année") != null) ? mapCritere.get("Année") : "";
 		int annee;
-		// System.out.println("Nom: " + nom);
-		// System.out.println("Prenom: " + prenom);
-
+		
 		// test for global
 		String demandeGlobale = (mapCritere.get("Tout") != null) ? mapCritere.get("Tout") : "";
 		if (!demandeGlobale.isEmpty()) {
@@ -310,4 +293,35 @@ public class RecherchePanel extends GridPane {
 		this.totalEtudiantLabel = totalEtudiantLabel;
 	}
 
+	@Override
+	public void handle(ActionEvent event) {
+		// TODO Auto-generated method stub
+		Button btnEvent = (Button)event.getSource();
+		String idBt = btnEvent.getId();
+		System.out.println("Bouton DEL crit id: " + idBt);
+		mapCritere.remove(idBt);
+		List<Node> child = boxCriteriaRecherche.getChildren();
+		HBox hboxToDelete = null;
+		if (child.size() > 0) {
+			for (Node node : child) {
+				// hb = (HBox) node;
+				//System.out.println("hb " + hb.getClass());
+				if( node instanceof HBox ) {
+					HBox hb = (HBox) node;
+					for(Node node2 : hb.getChildren()) {
+						if( node2 instanceof Button ) {
+							String id = node2.getId();
+							System.out.println("getID" + id + node2.getClass());
+							if (id.compareTo(idBt) == 0) {
+								hboxToDelete = (HBox) node;
+								//return;
+							}
+						}
+					}
+				}
+			}	
+		}
+		boxCriteriaRecherche.getChildren().remove(hboxToDelete);
+
+	}
 }

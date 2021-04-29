@@ -172,8 +172,9 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 		rechercheBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
+				rechercheBtn.requestFocus();
+				arg0.consume();
 
-				rechercheTxt.requestFocus();
 				// set isRechercheGlobal si "Tout" est présent dans la liste de critère
 				Stagiaire stagiaireTemplate = createTemplateForSearch();
 				// voir UML
@@ -237,9 +238,13 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 		supprCritereBtn.setId(critere);
 		supprCritereBtn.setPrefSize(5, 5);
 		supprCritereBtn.setOnAction(this);
+		//HBox hb = new HBox(50);
+		//supprCritereBtn = new Button("X");
+		//supprCritereBtn.setId("X");
 		hb.setId("boxcritere" + idBoxCritere);
 		mapCritere.put(critere, value);
-		Label lblCritere = new Label(critere + ":" + value);
+		Label lblCritere = new Label(critere + ": " + value);
+		lblCritere.setId("crit");
 		hb.getChildren().add(lblCritere);
 		hb.getChildren().add(supprCritereBtn);
 		boxCriteriaRecherche.getChildren().add(hb);

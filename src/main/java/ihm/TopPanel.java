@@ -103,6 +103,10 @@ public class TopPanel extends HBox {
 		setPadding(new Insets(10));
 		setId("topPannel");
 		getChildren().addAll(topBox, utilisateur, role, adminBtn, documentationBtn);
+		
+		browser = new WebView();
+		webEngine = browser.getEngine();
+		webEngine.load("https://gracious-morse-4690f0.netlify.app/#consultation");
 
 		adminBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -174,9 +178,7 @@ public class TopPanel extends HBox {
 				if (docopen) {
 					System.out.println(docopen);
 					docopen = false;
-					browser = new WebView();
-					webEngine = browser.getEngine();
-					webEngine.load("https://gracious-morse-4690f0.netlify.app/#consultation");
+					
 					// mettre la webview
 					root.setCenter(browser);
 				} else {

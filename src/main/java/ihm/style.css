@@ -131,9 +131,59 @@
 	-fx-alignment: CENTER;
 }
 
-/*--------------- pannel de droite -------------*/
+#x {
+	
+}
+
+#boxcritere1 {
+	-fx-padding: 5 5 5 5;
+	-fx-background-color: -color-secondary;
+	-fx-alignment: CENTER;
+	-fx-text-fill: -bg-color-light;
+}
+
+#boxcritere2 {
+	-fx-padding: 5 5 5 5;
+	-fx-background-color: -color-secondary;
+	-fx-alignment: CENTER;
+	-fx-text-fill: -bg-color-light;
+}
+
+#boxcritere3 {
+	-fx-padding: 5 5 5 5;
+	-fx-background-color: -color-secondary;
+	-fx-alignment: CENTER;
+	-fx-text-fill: -bg-color-light;
+}
+
+#boxcritere4 {
+	-fx-padding: 5 5 5 5;
+	-fx-background-color: -color-secondary;
+	-fx-alignment: CENTER;
+	-fx-text-fill: -bg-color-light;
+}
+
+#boxcritere5 {
+	-fx-padding: 5 5 5 5;
+	-fx-background-color: -color-secondary;
+	-fx-alignment: CENTER;
+	-fx-text-fill: -bg-color-light;
+}
+
+#boxcritere6 {
+	-fx-padding: 5 5 5 5;
+	-fx-background-color: -color-secondary;
+	-fx-alignment: CENTER;
+	-fx-text-fill: -bg-color-light;
+}
+
+#crit {
+	-fx-font: 14px Delicious;
+	
+}
+
 #pannelLeft {
 	-fx-vgap: 20;
-/* 	-fx-alignment: CENTER; */
+	/* 	-fx-alignment: CENTER; */
 	-fx-padding: 40 0 0 50;
 }

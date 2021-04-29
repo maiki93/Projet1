@@ -18,16 +18,16 @@ public class TestArbreBinaire {
 		//list.add( new Stagiaire("Bic", "Ma", "93","AI 109",1967) );
 		list.add( new Stagiaire("Dick", "Jagger", "83", "AL 250", 2021) );
 		// If MICK MA is MICA, tree is correct, duplicates on the left
-		list.add( new Stagiaire("MiCK", "Ma", "93","AI 109", 2021) );
-		//list.add( new Stagiaire("MiCK", "Mab", "93","AI 109", 2021) );
-		//list.add( new Stagiaire("MiCa", "Ma", "93","AI 109", 2021) );
+		//list.add( new Stagiaire("MiCK", "Ma", "93","AI 109", 2021) );
+		list.add( new Stagiaire("MiCK", "Mab", "93","AI 109", 2021) );
+		//list.add( new Stagiaire("MiCK", "Ma", "93","AI 109", 2021) );
 		//list.add( new Stagiaire("MiCK", "Mae", "93","AI 109", 2021) );
 		//list.add( new Stagiaire("MiCk", "Mat", "93","AI 119", 2021) );
 		
 		
 		list.add( new Stagiaire("Rick", "Jagger", "83", "AL 250", 1967) );
-		list.add( new Stagiaire("Rick2", "Jagger", "83", "AL 250", 1967) );
-		list.add( new Stagiaire("Rick3", "Jagger", "83", "AL 250", 1967) );
+		//list.add( new Stagiaire("Rick2", "Jagger", "83", "AL 250", 1967) );
+		//list.add( new Stagiaire("Rick3", "Jagger", "83", "AL 250", 1967) );
 		
 		//Stagiaire Ma = new Stagiaire( "MiCK", "Ma", "93","AI 109", 2021);
 		//Stagiaire Mat = new Stagiaire( "MiCK", "Mat", "93","AI 109", 2021);
@@ -94,7 +94,7 @@ public class TestArbreBinaire {
 		listStag = ab.getStagiaireOrdreAlphabetique();
 		affiche(listStag);
 */	
-
+/*
 		System.out.println("\n==== Remove with Two child =====");
 		//Stagiaire s4 = new Stagiaire("Dick", "Jagger", "83", "AL 250", 2021);
 		//Stagiaire s3 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
@@ -103,8 +103,8 @@ public class TestArbreBinaire {
 		ab.removeStagiaire(s4);
 		listStag = ab.getStagiaireOrdreAlphabetique();
 		affiche(listStag);
-
-		
+*/
+/*	
 		System.out.println("\n==== Remove Root node =====");
 		//Stagiaire s5 = new Stagiaire("MiCk", "Mattt", "93","AI 119", 2021);
 		
@@ -112,8 +112,15 @@ public class TestArbreBinaire {
 		//Stagiaire s5 = new Stagiaire("Dick", "Jagger", "83", "AL 250", 2021);
 		Stagiaire s5 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
 		ab.removeStagiaire(s5);
+*/		
+		System.out.println("\n==== Inser homonyme Root node =====");
+		//Stagiaire s5 = new Stagiaire("MiCK", "Ma", "93","AI 109", 2021);
+		Stagiaire s6 = new Stagiaire("MiCk", "Mat", "93","AI 119", 2021);
+		ab.addStagiaire(s6);
+		
+		
 		listStag = ab.getStagiaireOrdreAlphabetique();
-		affiche(listStag);		
+		affiche(listStag);
 	}
 	
 	public static void affiche(List<Stagiaire> list) {

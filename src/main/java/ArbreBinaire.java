@@ -182,7 +182,7 @@ public class ArbreBinaire {
 		return list;
 	}
 
-	// Case equal go the left child, order of duplicates is inversed in putting to the left
+	// Case equal go the left child, order of duplicates is inversed in output
 	public List<Stagiaire> iterativeSearchByKey(String key, long adressNode) throws IOException {
 
 		List<Stagiaire> listFound = new ArrayList<Stagiaire>();
@@ -292,7 +292,7 @@ public class ArbreBinaire {
 		NodeStagiaire ns = findParentStagiaire(stagiaire, root);
 		return ns;
 	}
-
+	// paul implementation, compare Stagiaire Homonyne are correctly sorted
 	public NodeStagiaire findParentStagiaire(Stagiaire stagiaire, NodeStagiaire root) throws IOException {
 		/*
 		System.out.println("Find parent stagiaire pour ajouter");
@@ -334,6 +334,77 @@ public class ArbreBinaire {
 			reWriteOneNode(stagiaireChildNode, pos);
 			return root;
 		} else if (root.getStagiaire().compareTo(stagiaire) <= 0 && root.getChildRight() == 0) {
+			/*
+			System.out.println("** Arbre de droite pour : " + stagiaire.getNom());
+			System.out.println("taille enregistrement: " + this.tailleEnregistrement);
+			System.out.println("taille header: " + this.tailleHeader);
+			System.out.println("parent du stagiaire: " + root.getStagiaire().getNom());
+			System.out.println("rapport: " + root.getStagiaire().getNom());
+			System.out.println("Positionnement du pointeur: " + raf.getFilePointer());
+			System.out.println("parent position: " + this.ParentPosition);
+			System.out.println("Enfant gauche" + root.getChildLeft());
+			System.out.println("Enfant droite" + root.getChildRight());
+			*/
+
+			long pos = raf.length();
+			//System.out.println("taille du fichier: " + pos);
+			long positionFile = (pos - tailleHeader) / tailleEnregistrement;
+			NodeStagiaire stagiaireParentNode = new NodeStagiaire(root.getStagiaire(), root.getChildLeft(),
+					positionFile);
+			//System.out.println("position file: " + positionFile);
+			reWriteOneNode(stagiaireParentNode, raf.getFilePointer() - this.tailleEnregistrement);
+			NodeStagiaire stagiaireChildNode = new NodeStagiaire(stagiaire, 0L, 0L);
+			System.out.println();
+			//System.out.println("----------------------------- droite");
+			reWriteOneNode(stagiaireChildNode, pos);
+			return root;
+		}/*else {
+			System.out.println("aucun traitement ------------------------");
+		}*/
+		return null;
+	}
+	// michael modification
+	public NodeStagiaire findParentStagiaire_michael(Stagiaire stagiaire, NodeStagiaire root) throws IOException {
+		/*
+		System.out.println("Find parent stagiaire pour ajouter");
+		System.out.println(root.getStagiaire().compareTo(stagiaire));
+		System.out.println(root.getStagiaire());
+		System.out.println("Enfant gauche" + root.getChildLeft());
+		System.out.println("Enfant droite" + root.getChildRight());
+		*/
+		// cas egale a gauche
+		// attention au recalcul de la taille des champs
+
+		if (root.getStagiaire().getNom().toUpperCase().compareTo(stagiaire.getNom().toUpperCase() ) <= 0 && root.getChildRight() != 0) {
+			this.ParentPosition = root.getChildRight();
+			findParentStagiaire(stagiaire, readOneNode(root.getChildRight()));
+		} else if (root.getStagiaire().getNom().toUpperCase().compareTo(stagiaire.getNom().toUpperCase()) > 0 && root.getChildLeft() != 0) {
+			this.ParentPosition = root.getChildLeft();
+			findParentStagiaire(stagiaire, readOneNode(root.getChildLeft()));
+		} else if (root.getStagiaire().getNom().toUpperCase().compareTo(stagiaire.getNom().toUpperCase()) > 0 && root.getChildLeft() == 0) {
+			long pos = raf.length();
+			/*
+			System.out.println("*** Arbre de gauche pour : " + stagiaire.getNom());
+			System.out.println("Taille enregistrement: " + this.tailleEnregistrement);
+			System.out.println("Taille header: " + this.tailleHeader);
+			System.out.println("Taille du fichier: " + pos);
+			System.out.println("Parent de ce stagiaire: " + root.getStagiaire().getNom());
+			System.out.println("Position du pointeur: "+raf.getFilePointer());
+			System.out.println("Parent position: " + this.ParentPosition);
+			System.out.println("Enfant gauche" + root.getChildLeft());
+			System.out.println("Enfant droite" + root.getChildRight());
+			*/
+
+			long positionFile = (pos - tailleHeader) / tailleEnregistrement;
+			NodeStagiaire stagiaireParentNode = new NodeStagiaire(root.getStagiaire(), positionFile,
+					root.getChildRight());
+			//System.out.println("Position file: " + positionFile);
+			reWriteOneNode(stagiaireParentNode, raf.getFilePointer() - this.tailleEnregistrement);
+			NodeStagiaire stagiaireChildNode = new NodeStagiaire(stagiaire, 0L, 0L);
+			//System.out.println("----------------------------- gauche");
+			reWriteOneNode(stagiaireChildNode, pos);
+			return root;
+		} else if (root.getStagiaire().getNom().toUpperCase().compareTo(stagiaire.getNom().toUpperCase()) <= 0 && root.getChildRight() == 0) {
 			/*
 			System.out.println("** Arbre de droite pour : " + stagiaire.getNom());
 			System.out.println("taille enregistrement: " + this.tailleEnregistrement);

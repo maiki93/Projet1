@@ -50,8 +50,6 @@ public class TablePanel extends AnchorPane {
 
 		TableColumn<Stagiaire, Integer> colAnnee = new TableColumn<>("Année");
 		colAnnee.setCellValueFactory(new PropertyValueFactory<>("annee"));
-		
-		//tableView.getSortOr
 
 		tableView.getColumns().addAll(colNom, colPrenom, colDepartement, colFormation, colAnnee);
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -97,22 +95,20 @@ public class TablePanel extends AnchorPane {
 				while(chgStagiaire.next()) {
 					if( chgStagiaire.wasUpdated()) {
 						System.out.println("ChgStagiare was updated()================");
-						break;
+						//break;
 
 					} else if( chgStagiaire.wasReplaced()) {
 						System.out.println("ChgStagiare was replaced()=====================");
 						System.out.println("chgStagiaire: " + chgStagiaire);
 						List<? extends Stagiaire> lstag = chgStagiaire.getAddedSubList();
 						List<? extends Stagiaire> lstag2 = chgStagiaire.getRemoved();
-						//System.out.println("lstag: " + lstag);
-						//System.out.println("lstag2: " + lstag2);
-						//System.out.println(lstag);
+						
 						int posView = ((chgStagiaire.getFrom()-1) >=0) ? (chgStagiaire.getFrom()-1) : 0;
 						tableView.getSelectionModel().select(chgStagiaire.getFrom());
 						tableView.scrollTo(posView);
 						tableView.layout();
 						dao.replaceStagiaire( lstag.get(0), lstag2.get(0) ); 
-						break;
+						//break;
 
 					} else if( chgStagiaire.wasAdded() ) {
 						System.out.println("ChgStagiare was added()");
@@ -126,7 +122,7 @@ public class TablePanel extends AnchorPane {
 						tableView.layout();
 						dao.addAll( (List<Stagiaire>) lstag);
 						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
-						break;
+						root.getFormulairePanel().resetTextFields();
 
 					} else if( chgStagiaire.wasRemoved() ) {
 						System.out.println("ChgStagiaire was removed()");
@@ -135,7 +131,7 @@ public class TablePanel extends AnchorPane {
 						List<? extends Stagiaire> lstag = chgStagiaire.getRemoved();
 						dao.removeAll( (List<Stagiaire>)lstag );
 						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
-						break;
+						//break;
 
 					}/* else {
 						System.err.println("========== Nothing IT IS BAD ! ============");

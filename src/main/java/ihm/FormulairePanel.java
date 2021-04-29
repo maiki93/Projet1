@@ -30,7 +30,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 	private Button btSave;
 	private Button btDel;
 	
-	private int selectedItemInTableNb = -1; // 
+	//private int selectedItemInTableNb = -1; // 
 	
 	//private boolean isAdmin; // should not be in a formulaire !
 	private boolean isNewStagiaire;
@@ -80,15 +80,25 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		Button btnEvent = (Button)event.getSource();
 		String idBt = btnEvent.getId();
 		RootPanel root = (RootPanel) getScene().getRoot();
+		TablePanel tblPan = root.getTablePannel();
+		TableView<Stagiaire> tblV = tblPan.getTableView();
+		
+		int selectedItemInTableNb =  tblV.getSelectionModel().getSelectedIndex();
+		System.out.println("selected " + selectedItemInTableNb );
+		
 		
 		if( idBt.equals("btNew") ) {
 			System.out.println("btNew");
 			resetTextFields(); // TODO unselect entry in table
+			tblV.getSelectionModel().clearSelection();
 			// clearSelection in table, could be a function
+			/*
 			root = (RootPanel) getScene().getRoot();
 			TablePanel tblPan = root.getTablePannel();
 			TableView<Stagiaire> tblV = tblPan.getTableView(); 
-			tblV.getSelectionModel().clearSelection();
+			
+			selectedItemInTableNb = -1;
+			*/
 			// save new stagiaire or valide the modification of 
 			// a previously selected one, USER should not be able modify
 
@@ -101,15 +111,16 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			// nouvelle entrée, nothing selected in table
 			if( selectedItemInTableNb == -1) {
 				System.out.println("SelectedItem == -1, nouvelle série a enregistrer");
-				resetTextFields();
+				//resetTextFields();
 				root.getObservable().add(stagiaire);
 			// one was selected, it is a modification
 			} else {
 				System.out.println("selectedItemNb "+ selectedItemInTableNb);
 				// default true, we make a modification (only admin)
 				boolean confirmation = true;
+				/*
 				TablePanel tblPan = root.getTablePannel();
-				TableView<Stagiaire> tblV = tblPan.getTableView(); 
+				TableView<Stagiaire> tblV = tblPan.getTableView();*/ 
 				Stagiaire stagiaireSelected = tblV.getSelectionModel().getSelectedItem();
 				if( (stagiaireSelected != null)  && (stagiaire.compareTo(stagiaireSelected ) == 0)) {
 					System.out.println("\n==IT IS A doublon\n");
@@ -117,12 +128,16 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 					confirmation = askConfirmationDoublon();
 					if( confirmation == true) {
 						root.getObservable().add( stagiaire );
-					} 
+					}
 					return;
 				}
-				resetTextFields();
+				//resetTextFields();
 				// so it is a modification
-				root.getObservable().set(selectedItemInTableNb, stagiaire);
+				//root.getObservable().set(selectedItemInTableNb, stagiaire);
+				int index = root.getObservable().indexOf(stagiaireSelected);
+				//System.out.println("Modification: " + index + selectedItemInTableNb);
+				root.getObservable().set(index, stagiaire);
+				//resetTextFields();
 			}
 	
 		// supprime  
@@ -157,7 +172,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 	//}
 	
 	public void loadAStagiaire(Stagiaire stagiaire, int indexTable) {
-		this.selectedItemInTableNb = indexTable;
+		//this.selectedItemInTableNb = indexTable;
 		textNom.setText( stagiaire.getNom());
 		textPrenom.setText( stagiaire.getPrenom());
 		textDepartement.setText( stagiaire.getDepartement());
@@ -182,16 +197,20 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 	}
 	
 	public void resetTextFields() {
+		System.out.println("Enrtry resetTextFields");
 		textNom.setText("");
 		textPrenom.setText("");
 		textDepartement.setText("");
 		textFormation.setText("");
 		textAnnee.setText("");
-		//
+		/*
 		RootPanel root = (RootPanel) getScene().getRoot();
 		TablePanel tblPan = root.getTablePannel();
 		TableView<Stagiaire> tblV = tblPan.getTableView(); 
 		tblV.getSelectionModel().clearSelection();
+		selectedItemInTableNb = -1;
+		*/
+		//System.out.println("after resetTextFields " + tblV.getSelectionModel().getSelectedIn);
 	}
 	 
 	public void setFormWithRights(boolean adminAccess) {

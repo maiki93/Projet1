@@ -64,7 +64,8 @@ public class TablePanel extends AnchorPane {
 		AnchorPane.setBottomAnchor(tableView, 5.);
 		
 		TableViewSelectionModel<Stagiaire> selectModel = tableView.getSelectionModel();
-		selectModel.setSelectionMode(SelectionMode.MULTIPLE);
+		// not used
+		//selectModel.setSelectionMode(SelectionMode.MULTIPLE);
 		
 		tableView.getSelectionModel().selectedItemProperty().addListener( new ChangeListener<Stagiaire>() {
 			@Override
@@ -91,6 +92,7 @@ public class TablePanel extends AnchorPane {
 				System.out.println("Observable list has been modified");
 				RootPanel root = (RootPanel) getScene().getRoot();
 				StagiaireDAO dao = root.getStagiaireDao();
+				Stagiaire modifiedStagiaire = null;
 				
 				while(chgStagiaire.next()) {
 					if( chgStagiaire.wasUpdated()) {
@@ -112,6 +114,8 @@ public class TablePanel extends AnchorPane {
 						System.out.println("ChgStagiare was added()");
 						System.out.println("chgStagiaire: " + chgStagiaire);
 						List<? extends Stagiaire> lstag = chgStagiaire.getAddedSubList();
+						modifiedStagiaire = lstag.get(0);
+						tableView.getSelectionModel().select(modifiedStagiaire);
 						dao.addAll( (List<Stagiaire>) lstag);
 						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
 						return;

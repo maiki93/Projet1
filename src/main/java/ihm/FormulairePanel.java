@@ -87,9 +87,9 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			resetTextFields(); // TODO unselect entry in table
 			// clearSelection in table, could be a function
 			root = (RootPanel) getScene().getRoot();
-			//TablePanel tblPan = root.getTablePannel();
-			//TableView<Stagiaire> tblV = tblPan.getTableView(); 
-			//tblV.getSelectionModel().clearSelection();
+			TablePanel tblPan = root.getTablePannel();
+			TableView<Stagiaire> tblV = tblPan.getTableView(); 
+			tblV.getSelectionModel().clearSelection();
 			isNewStagiaire = true;
 			// save new stagiaire or valide the modification of 
 			// a previously selected one, USER should not be able modify
@@ -100,7 +100,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			//System.out.println("stagiare in textfields"+ stagiaire);
 			root = (RootPanel) getScene().getRoot();
 
-			// nouvelle entrée
+			// nouvelle entrée, nothing selected in table
 			if( selectedItemInTableNb == -1) {
 				System.out.println("SelectedItem == -1, nouvelle série a enregistrer");
 				root.getObservable().add(stagiaire);
@@ -112,15 +112,15 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 				TablePanel tblPan = root.getTablePannel();
 				TableView<Stagiaire> tblV = tblPan.getTableView(); 
 				Stagiaire stagiaireSelected = tblV.getSelectionModel().getSelectedItem();
-				if( stagiaire.compareTo(stagiaireSelected ) == 0) {
+				if( (stagiaireSelected != null)  && (stagiaire.compareTo(stagiaireSelected ) == 0)) {
 					System.out.println("\n==IT IS A doublon\n");
 					// Ask for confirmation
 					confirmation = askConfirmationDoublon();
 					if( confirmation == true) {
 						root.getObservable().add( stagiaire );
-						return;
-					} //
-					// else, ...
+						//return;
+					} 
+					return;
 				}
 				// so it is a modification
 				root.getObservable().set(selectedItemInTableNb, stagiaire);

@@ -111,6 +111,21 @@ public class StagiaireDAO {
 		}
 		return false;
 	}
+	// replace : delete and add, really bad algo !!!
+	public boolean replaceStagiaire( Stagiaire stagiaireToAdd, Stagiaire stagiaireToRemove) {
+		System.out.println("DAO: replaceStagiaire, stagiaire");
+		boolean retour;
+		ArbreBinaire ab = new ArbreBinaire();
+		try {
+			retour = ab.removeStagiaire( stagiaireToRemove);
+			ab.addStagiaire(stagiaireToAdd);
+			return retour;
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.out.println("Erreur in suppression");
+		}
+		return false;
+	}
 		
 	public List<Stagiaire> filtreParNom( List<Stagiaire> listeEntree, String nom) {
 		

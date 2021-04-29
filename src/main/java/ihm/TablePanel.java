@@ -70,13 +70,12 @@ public class TablePanel extends AnchorPane {
 			@Override
 			public void changed(ObservableValue<? extends Stagiaire> observable, Stagiaire oldValue, Stagiaire newValue) {
 				System.out.println("On item selected new value "+ newValue + " " + oldValue);
-				System.out.println("ObservableValue" + observable);
 				// often error here, not clear why...
 				if(newValue != null ) {
 					RootPanel root = (RootPanel)getScene().getRoot();
-					root.getFormulairePanel().loadAStagiaire(newValue);
-					// test, in jafafxdemo
-					// formulaire.setFocusedItem(tableView.getSelectionModel().getSelectedIndex(), newValue);
+					int selectedItemNb = tableView.getSelectionModel().getSelectedIndex();
+					// Indicate also the item selected
+					root.getFormulairePanel().loadAStagiaire(newValue, selectedItemNb);
 				} // for test 
 				else {
 					System.out.println("new value is null");
@@ -85,8 +84,8 @@ public class TablePanel extends AnchorPane {
 		
 		// Listener on Observable, when it is modified we can update the dao
 		// both seem working, sorted or direct Observable
-		//sortedObservablesStagiaires.addListener(new ListChangeListener<Stagiaire>() {
-		observablesStagiaires.addListener(new ListChangeListener<Stagiaire>() {
+		sortedObservablesStagiaires.addListener(new ListChangeListener<Stagiaire>() {
+		//observablesStagiaires.addListener(new ListChangeListener<Stagiaire>() {
 			@Override
 			public void onChanged(Change<? extends Stagiaire> chgStagiaire) {
 				System.out.println("Observable list has been modified");
@@ -95,23 +94,37 @@ public class TablePanel extends AnchorPane {
 				
 				while(chgStagiaire.next()) {
 					if( chgStagiaire.wasUpdated()) {
-						System.out.println("ChgStagiare was updated()");
+						System.out.println("ChgStagiare was updated()================");
+						return;
 						
 					} else if( chgStagiaire.wasReplaced()) {
-						System.out.println("ChgStagiare was replaced()");
+							System.out.println("ChgStagiare was replaced()=====================");
+							System.out.println("chgStagiaire: " + chgStagiaire);
+							List<? extends Stagiaire> lstag = chgStagiaire.getAddedSubList();
+							List<? extends Stagiaire> lstag2 = chgStagiaire.getRemoved();
+							//System.out.println("lstag: " + lstag);
+							//System.out.println("lstag2: " + lstag2);
+							System.out.println(lstag);
+							dao.replaceStagiaire( lstag.get(0), lstag2.get(0) ); 
+							return;
 						
 					} else if( chgStagiaire.wasAdded() ) {
 						System.out.println("ChgStagiare was added()");
+						System.out.println("chgStagiaire: " + chgStagiaire);
 						List<? extends Stagiaire> lstag = chgStagiaire.getAddedSubList();
 						dao.addAll( (List<Stagiaire>) lstag);
 						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
+						return;
 						
 					} else if( chgStagiaire.wasRemoved() ) {
 						System.out.println("ChgStagiare was removed()");
 						List<? extends Stagiaire> lstag = chgStagiaire.getRemoved();
 						dao.removeAll( (List<Stagiaire>)lstag );
 						root.getRecherchePanel().getTotalEtudiantLabel().setText("Elément Total: "+Integer.toString(root.getObservable().size()));
-
+						return;
+						
+					} else {
+						System.err.println("========== Nothing IT IS BAD ! ============");
 					}
 				}
 			}

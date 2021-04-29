@@ -1,11 +1,16 @@
 package main.java.ihm;
 
 import java.util.List;
+import java.util.Optional;
+
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -25,6 +30,8 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 	private Button btSave;
 	private Button btDel;
 	
+	private int selectedItemInTableNb = -1; // 
+	
 	//private boolean isAdmin; // should not be in a formulaire !
 	private boolean isNewStagiaire;
 	
@@ -36,7 +43,6 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		// Ecris dans TableView
 	}
 	
-	
 	private void createLayout() {
 
 		textNom = addEntry("Nom", 0);
@@ -46,7 +52,7 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		textAnnee = addEntry("Année",4);
 		
 		// boutons
-		btNew = new Button("Fermer");
+		btNew = new Button("Nouveau");
 		btNew.setId("btNew");
 		btSave = new Button("Sauvegarder");
 		btSave.setId("btSave");
@@ -71,20 +77,19 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 	 */
 	@Override
 	public void handle(ActionEvent event) {
-		System.out.println("Button clicked");
+		//System.out.println("Button clicked");
 		Button btnEvent = (Button)event.getSource();
 		String idBt = btnEvent.getId();
+		RootPanel root = (RootPanel) getScene().getRoot();
 		
 		if( idBt.equals("btNew") ) {
 			System.out.println("btNew");
 			resetTextFields(); // TODO unselect entry in table
-			
 			// clearSelection in table, could be a function
-			RootPanel root = (RootPanel) getScene().getRoot();
-			//TableView<Stagiaire> tblV = ((TablePannel) root.getTablePannel()).getTableView(); ??
-			TablePanel tblPan = root.getTablePannel();
-			TableView<Stagiaire> tblV = tblPan.getTableView(); 
-			tblV.getSelectionModel().clearSelection();
+			root = (RootPanel) getScene().getRoot();
+			//TablePanel tblPan = root.getTablePannel();
+			//TableView<Stagiaire> tblV = tblPan.getTableView(); 
+			//tblV.getSelectionModel().clearSelection();
 			isNewStagiaire = true;
 			// save new stagiaire or valide the modification of 
 			// a previously selected one, USER should not be able modify
@@ -92,22 +97,40 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		} else if( idBt.equals("btSave")) {
 			System.out.println("btSave isNewStagiaire "+ isNewStagiaire);
 			Stagiaire stagiaire = readTextFields();
-			System.out.println("new stagiare "+ stagiaire);
-			RootPanel root = (RootPanel) getScene().getRoot();
-			
-			//SortedList<Stagiaire> sorted = new SortedList<Stagiaire>(root.getObservable());
-			//sorted.add(stagiaire, Comparator.);
-			root.getObservable().add(stagiaire);
-			
-			//root.getObservable().sort(null);
-			//root.getSortedObservable().add(stagiaire);
-			// here more complexe
-			
+			//System.out.println("stagiare in textfields"+ stagiaire);
+			root = (RootPanel) getScene().getRoot();
+
+			// nouvelle entrée
+			if( selectedItemInTableNb == -1) {
+				System.out.println("SelectedItem == -1, nouvelle série a enregistrer");
+				root.getObservable().add(stagiaire);
+			// one was selected, it is a modification
+			} else {
+				System.out.println("selectedItemNb "+ selectedItemInTableNb);
+				// default true, we make a modification (only admin)
+				boolean confirmation = true;
+				TablePanel tblPan = root.getTablePannel();
+				TableView<Stagiaire> tblV = tblPan.getTableView(); 
+				Stagiaire stagiaireSelected = tblV.getSelectionModel().getSelectedItem();
+				if( stagiaire.compareTo(stagiaireSelected ) == 0) {
+					System.out.println("\n==IT IS A doublon\n");
+					// Ask for confirmation
+					confirmation = askConfirmationDoublon();
+					if( confirmation == true) {
+						root.getObservable().add( stagiaire );
+						return;
+					} //
+					// else, ...
+				}
+				// so it is a modification
+				root.getObservable().set(selectedItemInTableNb, stagiaire);
+			}
+
 		// supprime  
 		} else if( idBt.equals("btDel")) {
 			System.out.println("btDel ");
 			Stagiaire stagiaire = readTextFields();
-			RootPanel root = (RootPanel) getScene().getRoot();
+			root = (RootPanel) getScene().getRoot();
 			root.getObservable().remove(stagiaire);
 		}
 	}
@@ -134,7 +157,8 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 	//	list.sorted()
 	//}
 	
-	public void loadAStagiaire(Stagiaire stagiaire) {
+	public void loadAStagiaire(Stagiaire stagiaire, int indexTable) {
+		this.selectedItemInTableNb = indexTable;
 		textNom.setText( stagiaire.getNom());
 		textPrenom.setText( stagiaire.getPrenom());
 		textDepartement.setText( stagiaire.getDepartement());
@@ -175,4 +199,22 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			btDel.setVisible(false);
 		}
 	}
+	
+	public boolean askConfirmationDoublon() {
+		
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Confirmation de la création d'un doublon");
+		String s = "Confirmez pour enregistrer un doublon";
+		alert.setContentText(s);
+		 
+		Optional<ButtonType> result = alert.showAndWait();
+		if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+			return true;
+		    //textFld.setText("");
+		    //actionStatus.setText("An example of Alert Dialogs. Enter some text and save.");
+		    //textFld.requestFocus();
+		}
+		return false;
+	}
+	
 }

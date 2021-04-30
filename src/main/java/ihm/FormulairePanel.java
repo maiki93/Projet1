@@ -63,23 +63,23 @@ class FormulairePanel extends VBox implements EventHandler<ActionEvent> {
 		lblNom.setId("lblDepartement"); // or lbl+string(label)
 		textDepartement = new TextField();
 		textDepartement.setId("tfDepartement");
-		textDepartement.setMaxWidth(50);
+		textDepartement.setMaxWidth(100);
 		gP1.addRow(2, lblDepartement, textDepartement);
 		
-		HBox gP2 = new HBox(10);
+		HBox gP2 = new HBox(50);
 		gP2.setId("gP2");
 		
 		Label lblFormation = new Label("Formation");
 		lblFormation.setId("lblFormation"); // or lbl+string(label)
 		textFormation = new TextField();
 		textFormation.setId("tfFormation");
-		textFormation.setMaxWidth(50);
+		//textFormation.setMaxWidth(50);
 		
 		Label lblAnnee = new Label("Année");
 		lblFormation.setId("lblFormation"); // or lbl+string(label)
 		textAnnee = new TextField();
 		textAnnee.setId("tfAnnee");
-		textAnnee.setMaxWidth(30);
+		//textAnnee.setMaxWidth(30);
 		gP2.getChildren().addAll(lblFormation, textFormation, lblAnnee, textAnnee );
 		
 		this.getChildren().add(gP1);

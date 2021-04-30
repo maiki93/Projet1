@@ -104,7 +104,7 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 		exportPDFBtn.setId("exportPDFBtn");
 		exportPDFBtn.setPrefSize(150, 25);
 
-		addNewStagiaireBtn = new Button("Fermer");
+		addNewStagiaireBtn = new Button("Nouv.Stag.");
 		addNewStagiaireBtn.setId("newStagBtn");
 		addNewStagiaireBtn.setPrefSize(150, 25);
 

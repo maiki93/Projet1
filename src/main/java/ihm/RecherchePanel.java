@@ -233,16 +233,18 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 	private void addCritere(String value, String critere) {
 		Button supprCritereBtn;
 		idBoxCritere++;
-		HBox hb = new HBox(60);
+		HBox hb = new HBox(40);
 		hb.getStyleClass().add("hboxCritere");
 		supprCritereBtn = new Button("X");
+		supprCritereBtn.getStyleClass().add("critereBtn");
 		supprCritereBtn.setId(critere);
 		supprCritereBtn.setPrefSize(5, 5);
 		supprCritereBtn.setOnAction(this);
-		//HBox hb = new HBox(50);
-		//supprCritereBtn = new Button("X");
-		//supprCritereBtn.setId("X");
+		// HBox hb = new HBox(50);
+		// supprCritereBtn = new Button("X");
+		// supprCritereBtn.setId("X");
 		hb.setId("boxcritere" + idBoxCritere);
+		hb.getStyleClass().add("boxCritere");
 		mapCritere.put(critere, value);
 		Label lblCritere = new Label(critere + " : " + value);
 		lblCritere.setId("crit");
@@ -297,7 +299,7 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 	@Override
 	public void handle(ActionEvent event) {
 		// TODO Auto-generated method stub
-		Button btnEvent = (Button)event.getSource();
+		Button btnEvent = (Button) event.getSource();
 		String idBt = btnEvent.getId();
 		System.out.println("Bouton DEL crit id: " + idBt);
 		mapCritere.remove(idBt);
@@ -305,20 +307,20 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 		HBox hboxToDelete = null;
 		if (child.size() > 0) {
 			for (Node node : child) {
-				if( node instanceof HBox ) {
+				if (node instanceof HBox) {
 					HBox hb = (HBox) node;
-					for(Node node2 : hb.getChildren()) {
-						if( node2 instanceof Button ) {
+					for (Node node2 : hb.getChildren()) {
+						if (node2 instanceof Button) {
 							String id = node2.getId();
 							System.out.println("getID" + id + node2.getClass());
 							if (id.compareTo(idBt) == 0) {
 								hboxToDelete = (HBox) node;
-								//return;
+								// return;
 							}
 						}
 					}
 				}
-			}	
+			}
 		}
 		boxCriteriaRecherche.getChildren().remove(hboxToDelete);
 

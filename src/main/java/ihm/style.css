@@ -153,53 +153,21 @@
 	-fx-alignment: CENTER;
 }
 
-/* #critere { */
-/* 			-fx-background-color: -color-danger; */
-
-/* } */
-#boxcritere1 {
+.boxCritere {
 	-fx-padding: 5 5 5 5;
-	-fx-background-color: -color-secondary;
+	-fx-border-color:	-color-secondary;
 	-fx-alignment: CENTER;
-	-fx-text-fill: -bg-color-light;
-}
-
-#boxcritere2 {
-	-fx-padding: 5 5 5 5;
-	-fx-background-color: -color-secondary;
-	-fx-alignment: CENTER;
-	-fx-text-fill: -bg-color-light;
-}
-
-#boxcritere3 {
-	-fx-padding: 5 5 5 5;
-	-fx-background-color: -color-secondary;
-	-fx-alignment: CENTER;
-	-fx-text-fill: -bg-color-light;
-}
-
-#boxcritere4 {
-	-fx-padding: 5 5 5 5;
-	-fx-background-color: -color-secondary;
-	-fx-alignment: CENTER;
-	-fx-text-fill: -bg-color-light;
-}
-
-#boxcritere5 {
-	-fx-padding: 5 5 5 5;
-	-fx-background-color: -color-secondary;
-	-fx-alignment: CENTER;
-	-fx-text-fill: -bg-color-light;
-}
-
-#boxcritere6 {
-	-fx-padding: 5 5 5 5;
-	-fx-background-color: -color-secondary;
-	-fx-alignment: CENTER;
-	-fx-text-fill: -bg-color-light;
+		-fx-border-radius: 5;
+	
 }
 
 #crit {
+	-fx-font: 14px Delicious;
+	-fx-text-fill: -text-color-black;
+}
+
+.critereBtn {
+	-fx-background-color: -color-danger;
 	-fx-font: 14px Delicious;
 }
 
@@ -223,8 +191,7 @@
 #gP2 {
 	-fx-border-insets: 5 0 15 5;
 	-fx-padding: 15 5 15 0; /* top , right, bottom, left */
-		-fx-alignement: center-right;
-	
+	-fx-alignement: center-right;
 }
 /*
 #gP2 .label {

@@ -233,9 +233,9 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 	private void addCritere(String value, String critere) {
 		Button supprCritereBtn;
 		idBoxCritere++;
-		HBox hb = new HBox(150);
+		HBox hb = new HBox(60);
 		hb.getStyleClass().add("hboxCritere");
-		supprCritereBtn = new Button("supprCritereBtn");
+		supprCritereBtn = new Button("X");
 		supprCritereBtn.setId(critere);
 		supprCritereBtn.setPrefSize(5, 5);
 		supprCritereBtn.setOnAction(this);

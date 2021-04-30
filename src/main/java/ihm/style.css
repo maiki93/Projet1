@@ -18,7 +18,7 @@
 
 .label {
 	-fx-text-fill: -text-color-black;
-	_fx-font: 14 Lato;
+	-fx-font: 14 Lato;
 }
 
 .text-field {
@@ -28,7 +28,7 @@
 .button {
 	-fx-background-color: -color-primary;
 	-fx-cursor: hand;
-	_fx-font: 14 Delicious;
+	-fx-font: 14 Delicious;
 	-fx-text-fill: -bg-color-light;
 }
 
@@ -53,7 +53,7 @@
 #adminBtn {
 	-fx-background-color: -color-primary;
 	-fx-cursor: hand;
-	_fx-font: 14 Lato;
+	-fx-font: 14 Lato;
 	-fx-text-fill: -bg-color-light;
 }
 
@@ -71,7 +71,7 @@
 	-fx-cursor: hand;
 	-fx-font-size: 14px;
 	-fx-text-fill: -bg-color-light;
-	_fx-font: 14 Lato;
+	-fx-font: 14 Lato;
 }
 
 #documentationBtn:hover {
@@ -123,7 +123,7 @@
 
 #infosLabel {
 	-fx-font-size: 20px;
-	_fx-font: 22 Lato;
+	-fx-font: 22 Lato;
 }
 
 #boxright {
@@ -184,7 +184,7 @@
 
 #paneLeft {
 	-fx-vgap: 20;
-	/* 	-fx-alignment: CENTER; */
+	-fx-alignment: CENTER; 
 	-fx-padding: 30 30 30 30;
 	padding: 30 30 30 30;
 }
@@ -216,12 +216,7 @@
 	-fx-alignement : center-right;
 	-fx-text-fill : red
 }
-/*
-.hboxCriter {
-	-fx-background-color : yellow;
-	background-color : yellow
-}*/
-
+/* test in formulaire btNew */
 .button1{
     -fx-text-fill: #006464;
     -fx-background-color: #DFB951;
@@ -230,4 +225,5 @@
     -fx-padding: 5;
 }
 
-
+#btDel{
+}

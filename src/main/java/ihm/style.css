@@ -205,42 +205,59 @@
 
 #paneLeft {
 	-fx-vgap: 20;
-	-fx-alignment: CENTER;
-	-fx-padding: 30 30 30 30;
-	padding: 30 30 30 30;
+	-fx-alignment: top-center; /*CENTER;*/
+	-fx-padding: 20 10 20 10;
+	padding: 20 10 20 10;
 }
-
+/*
 .FormulairePanel.gP1 {
 	-fx-padding: 50 50 50 50;
 	padding: 50 50 50 50
 }
-
+*/
 #gP1 {
-	-fx-hgap: 25;
-	-fx-vgap: 10
+	-fx-hgap: 10;
+	-fx-vgap: 15
 }
 
 #gP2 {
-	-fx-border-insets: 5 0 15 5;
-	-fx-padding: 15 5 15 0; /* top , right, bottom, left */
-		-fx-alignement: center-right;
-	
-}
-/*
-#gP2 .label {
-	-fx-padding: 0 20 20 0
-}*/
-#gP2 .text-field {
-	-fx-alignement: center-right;
-	-fx-text-fill: -color-danger;
-	-fx-pref-width: 60px;
+	/*-fx-border-insets: 0 0 0 0;*/
+	-fx-padding: 15 10 30 0; /* top , right, bottom, left */
+	padding: 15 10 30 0;
+	/*-fx-alignement: center-right;*/
 }
 
-#tfAnnee {
-	-fx-alignement: center-right;
-	-fx-text-fill: -color-danger;
-	-fx-pref-width: 60px;
+#gP2 .label {
+	-fx-padding: 0 10 0 10;
+	padding: 0 10 0 10;
+	/*-fx-text-alignement : bottom-left;*/
 }
+
+
+#gP2 .text-field {
+	/*-fx-alignement: bottom-left;*/
+	-fx-pref-width: 70px;
+}
+/*	-fx-padding: 0 0 0 10;
+	padding: 0 0 0 10; */
+
+
+
+#tfAnnee {
+	-fx-alignement: center-left;
+	-fx-pref-width: 70px;
+	/*
+	-fx-border-insets: 0 0 0 0;
+	-fx-padding: 0 0 0 0;
+	padding: 0 0 0 0;*/
+}
+
+#tfFormation {
+	-fx-alignement: center-left;
+	/*-fx-text-fill: -color-danger;*/
+	-fx-pref-width: 70px;
+}
+
 /* test in formulaire btNew */
 .button1 {
 	-fx-text-fill: -bg-color-light;

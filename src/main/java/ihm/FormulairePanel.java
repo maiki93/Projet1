@@ -63,10 +63,10 @@ class FormulairePanel extends VBox implements EventHandler<ActionEvent> {
 		lblNom.setId("lblDepartement"); // or lbl+string(label)
 		textDepartement = new TextField();
 		textDepartement.setId("tfDepartement");
-		textDepartement.setMaxWidth(100);
+		textDepartement.setPrefWidth(100);
 		gP1.addRow(2, lblDepartement, textDepartement);
 		
-		HBox gP2 = new HBox(50);
+		HBox gP2 = new HBox();
 		gP2.setId("gP2");
 		
 		Label lblFormation = new Label("Formation");
@@ -76,7 +76,7 @@ class FormulairePanel extends VBox implements EventHandler<ActionEvent> {
 		//textFormation.setMaxWidth(50);
 		
 		Label lblAnnee = new Label("Année");
-		lblFormation.setId("lblFormation"); // or lbl+string(label)
+		lblAnnee.setId("lblAnnee"); // or lbl+string(label)
 		textAnnee = new TextField();
 		textAnnee.setId("tfAnnee");
 		//textAnnee.setMaxWidth(30);
@@ -84,12 +84,12 @@ class FormulairePanel extends VBox implements EventHandler<ActionEvent> {
 		
 		this.getChildren().add(gP1);
 		this.getChildren().add(gP2);
-		
 		// boutons
 		HBox buttonBox = new HBox(20);
 		btNew = new Button("Nouveau");
 		btNew.setId("btNew");
 		btNew.getStyleClass().add("button1");
+		
 		
 		btSave = new Button("Sauvegarder");
 		btSave.setId("btSave");
@@ -106,7 +106,6 @@ class FormulairePanel extends VBox implements EventHandler<ActionEvent> {
 		btSave.setOnAction(this);
 		btDel.setOnAction(this);
 		this.setId("paneLeft");
-		//this.addRow(5, btNew, btSave, btDel);
 	}
 
 	/** Acts on an ObservableList 

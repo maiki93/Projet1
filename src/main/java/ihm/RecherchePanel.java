@@ -234,6 +234,7 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 		Button supprCritereBtn;
 		idBoxCritere++;
 		HBox hb = new HBox(150);
+		hb.getStyleClass().add("hboxCritere");
 		supprCritereBtn = new Button("supprCritereBtn");
 		supprCritereBtn.setId(critere);
 		supprCritereBtn.setPrefSize(5, 5);
@@ -243,7 +244,7 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 		//supprCritereBtn.setId("X");
 		hb.setId("boxcritere" + idBoxCritere);
 		mapCritere.put(critere, value);
-		Label lblCritere = new Label(critere + ": " + value);
+		Label lblCritere = new Label(critere + " : " + value);
 		lblCritere.setId("crit");
 		hb.getChildren().add(lblCritere);
 		hb.getChildren().add(supprCritereBtn);
@@ -251,10 +252,6 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 	}
 
 	private Stagiaire createTemplateForSearch() {
-		// Read the text fields available
-		// String text = rechercheTxt.getText();
-		// String textCb = rechercheCb.getSelectionModel().getSelectedItem();
-		// System.out.println("createTemplate "+ text + " " + textCb);
 		String nom = (mapCritere.get("Nom") != null) ? mapCritere.get("Nom") : "";
 		String prenom = (mapCritere.get("Prénom") != null) ? mapCritere.get("Prénom") : "";
 		String departement = (mapCritere.get("Département") != null) ? mapCritere.get("Département") : "";
@@ -262,7 +259,6 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 		System.out.println("formation : " + formation);
 		String anneeStr = (mapCritere.get("Année") != null) ? mapCritere.get("Année") : "";
 		int annee;
-		
 		// test for global
 		String demandeGlobale = (mapCritere.get("Tout") != null) ? mapCritere.get("Tout") : "";
 		if (!demandeGlobale.isEmpty()) {
@@ -309,8 +305,6 @@ public class RecherchePanel extends GridPane implements EventHandler<ActionEvent
 		HBox hboxToDelete = null;
 		if (child.size() > 0) {
 			for (Node node : child) {
-				// hb = (HBox) node;
-				//System.out.println("hb " + hb.getClass());
 				if( node instanceof HBox ) {
 					HBox hb = (HBox) node;
 					for(Node node2 : hb.getChildren()) {

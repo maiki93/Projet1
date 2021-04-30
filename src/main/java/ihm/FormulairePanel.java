@@ -1,10 +1,6 @@
 package main.java.ihm;
 
-import java.util.List;
 import java.util.Optional;
-
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
@@ -15,59 +11,102 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import main.java.Stagiaire;
 
-class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
+class FormulairePanel extends VBox implements EventHandler<ActionEvent> {
 	
 	private TextField textNom;
 	private TextField textPrenom;
 	private TextField textDepartement;
 	private TextField textFormation;
 	private TextField textAnnee;
-	
 	//  or to retrieve id could try TableView tb = (TableView) scene.lookup("#history");
 	private Button btNew;
 	private Button btSave;
 	private Button btDel;
-	
-	//private int selectedItemInTableNb = -1; // 
-	
-	//private boolean isAdmin; // should not be in a formulaire !
+	//private int selectedItemInTableNb = -1; // dangerous with listener, better to check in function 
 	private boolean isNewStagiaire;
 	
 	FormulairePanel() {
 		super();
 		createLayout();
-		// Afficher l'entrée sélectionnée dans le tableau
-		// ou le premier par défaut, celui qui provient de la recherche
-		// Ecris dans TableView
 	}
 	
 	private void createLayout() {
 
-		textNom = addEntry("Nom", 0);
-		textPrenom = addEntry("Prenom",1);
-		textDepartement = addEntry("Departement", 2);
-		textFormation = addEntry("Formation",3);
-		textAnnee = addEntry("Année",4);
+		GridPane gP1 = new GridPane();
+		gP1.setPrefWidth(200);
+		gP1.setId("gP1");
+		//HBox entryNom = new HBox(20);
+		Label lblNom = new Label("Nom");
+		lblNom.setId("lblNom"); // or lbl+string(label)
+		//lbl.setPrefWidth(200);
+		//lbl.setTextAlignment(TextAlignment );
+		//lbl.setAlignment(Pos.CENTER_LEFT);
+		textNom = new TextField();
+		textNom.setId("tfNom");
+		textNom.setPrefWidth(100);
+		//entryNom.getChildren().addAll(lblNom,textNom);
+		gP1.addRow(0, lblNom, textNom);
+		
+		//HBox entryPrenom = new HBox(20);
+		Label lblPrenom = new Label("Prenom");
+		lblNom.setId("lblPrenom"); // or lbl+string(label)
+		textPrenom = new TextField();
+		textPrenom.setId("tfPrenom");
+		textPrenom.setPrefWidth(100);
+		gP1.addRow(1, lblPrenom, textPrenom);
+		
+		Label lblDepartement = new Label("Département");
+		lblNom.setId("lblDepartement"); // or lbl+string(label)
+		textDepartement = new TextField();
+		textDepartement.setId("tfDepartement");
+		textDepartement.setMaxWidth(50);
+		gP1.addRow(2, lblDepartement, textDepartement);
+		
+		HBox gP2 = new HBox(10);
+		gP2.setId("gP2");
+		
+		Label lblFormation = new Label("Formation");
+		lblFormation.setId("lblFormation"); // or lbl+string(label)
+		textFormation = new TextField();
+		textFormation.setId("tfFormation");
+		textFormation.setMaxWidth(50);
+		
+		Label lblAnnee = new Label("Année");
+		lblFormation.setId("lblFormation"); // or lbl+string(label)
+		textAnnee = new TextField();
+		textAnnee.setId("tfAnnee");
+		textAnnee.setMaxWidth(30);
+		gP2.getChildren().addAll(lblFormation, textFormation, lblAnnee, textAnnee );
+		
+		this.getChildren().add(gP1);
+		this.getChildren().add(gP2);
 		
 		// boutons
+		HBox buttonBox = new HBox(20);
 		btNew = new Button("Nouveau");
 		btNew.setId("btNew");
+		btNew.getStyleClass().add("button1");
+		
 		btSave = new Button("Sauvegarder");
 		btSave.setId("btSave");
 		// binds expects an ObservableValue (could be ObservableAdmin ?) here not need yet just for layout
-		btSave.managedProperty().bind(visibleProperty());
+		//btSave.managedProperty().bind(visibleProperty());
 		btDel = new Button("Supprimer");
 		btDel.setId("btDel");
 		btDel.managedProperty().bind(visibleProperty());
+		buttonBox.getChildren().addAll(btNew, btSave, btDel);
+		this.getChildren().add(buttonBox);
 		// button states in this function
 		//setAdmin(isAdmin);
 		btNew.setOnAction(this);
 		btSave.setOnAction(this);
 		btDel.setOnAction(this);
-		this.setId("pannelLeft");
-		this.addRow(5, btNew, btSave, btDel);
+		this.setId("paneLeft");
+		//this.addRow(5, btNew, btSave, btDel);
 	}
 
 	/** Acts on an ObservableList 
@@ -82,26 +121,15 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		RootPanel root = (RootPanel) getScene().getRoot();
 		TablePanel tblPan = root.getTablePannel();
 		TableView<Stagiaire> tblV = tblPan.getTableView();
-		
 		int selectedItemInTableNb =  tblV.getSelectionModel().getSelectedIndex();
 		System.out.println("selected " + selectedItemInTableNb );
-		
 		
 		if( idBt.equals("btNew") ) {
 			System.out.println("btNew");
 			resetTextFields(); // TODO unselect entry in table
 			tblV.getSelectionModel().clearSelection();
-			// clearSelection in table, could be a function
-			/*
-			root = (RootPanel) getScene().getRoot();
-			TablePanel tblPan = root.getTablePannel();
-			TableView<Stagiaire> tblV = tblPan.getTableView(); 
-			
-			selectedItemInTableNb = -1;
-			*/
-			// save new stagiaire or valide the modification of 
-			// a previously selected one, USER should not be able modify
-
+		// save new stagiaire or valide the modification of 
+		// a previously selected one, USER should not be able modify
 		} else if( idBt.equals("btSave")) {
 			System.out.println("btSave isNewStagiaire "+ isNewStagiaire);
 			Stagiaire stagiaire = readTextFields();
@@ -117,13 +145,9 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 			} else {
 				System.out.println("selectedItemNb "+ selectedItemInTableNb);
 				// default true, we make a modification (only admin)
-				boolean confirmation = true;
-				/*
-				TablePanel tblPan = root.getTablePannel();
-				TableView<Stagiaire> tblV = tblPan.getTableView();*/ 
+				boolean confirmation = true; 
 				Stagiaire stagiaireSelected = tblV.getSelectionModel().getSelectedItem();
 				if( (stagiaireSelected != null)  && (stagiaire.compareTo(stagiaireSelected ) == 0)) {
-					
 					System.out.println("\n==IT IS A doublon\n");
 					// Ask for confirmation
 					confirmation = askConfirmationDoublon();
@@ -132,20 +156,16 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 					}
 					return;
 				}
-				
+				// check admin because it is a modification
 				if( !root.hasAdminRights() ) {
 					alertRights();
 					return;
 				}
-				//resetTextFields();
 				// so it is a modification
-				//root.getObservable().set(selectedItemInTableNb, stagiaire);
 				int index = root.getObservable().indexOf(stagiaireSelected); // index was sometimes modified(table and observable)
-				//System.out.println("Modification: " + index + selectedItemInTableNb);
 				root.getObservable().set(index, stagiaire);
-				//resetTextFields();
+				//resetTextFields(); was causing bug if selction was changedfrom here
 			}
-	
 		// supprime  
 		} else if( idBt.equals("btDel")) {
 			System.out.println("btDel ");
@@ -155,8 +175,9 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		}
 	}
 	
-	private TextField addEntry(String label, int rowNb) {
-		//HBox oneEntry = new HBox(20);
+	private TextField addEntry(String label, int width) {
+		HBox oneEntry = new HBox(20);
+		oneEntry.setId("Entry");
 		//oneEntry.setPrefWidth(500.);
 		//oneEntry.setAlignment(Pos.CENTER_LEFT);
 		Label lbl = new Label(label);
@@ -166,10 +187,12 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		//lbl.setAlignment(Pos.CENTER_LEFT);
 		TextField tf = new TextField();
 		tf.setId("tf"+label);
+		tf.setPrefWidth(20);
 		//tf.setAlignment(Pos.CENTER_RIGHT);
 		//oneEntry.getChildren().addAll(lbl, tf);
 		//this.getChildren().add(oneEntry);
-		addRow( rowNb, lbl, tf);
+		oneEntry.getChildren().addAll(lbl, tf);
+		this.getChildren().add(oneEntry);
 		return tf;
 	}
 
@@ -205,22 +228,18 @@ class FormulairePanel extends GridPane implements EventHandler<ActionEvent> {
 		textDepartement.setText("");
 		textFormation.setText("");
 		textAnnee.setText("");
-		/*
+		/* observable acts with a delay as asynchronous function, danngerous to modiffy the selection
 		RootPanel root = (RootPanel) getScene().getRoot();
 		TablePanel tblPan = root.getTablePannel();
 		TableView<Stagiaire> tblV = tblPan.getTableView(); 
 		tblV.getSelectionModel().clearSelection();
-		selectedItemInTableNb = -1;
-		*/
-		//System.out.println("after resetTextFields " + tblV.getSelectionModel().getSelectedIn);
+		selectedItemInTableNb = -1; */
 	}
 	 
 	public void setFormWithRights(boolean adminAccess) {
 		if( adminAccess) {
-			//btNew.setVisible(true);
 			btDel.setVisible(true);
 		} else {
-			//btNew.setVisible(false);
 			btDel.setVisible(false);
 		}
 	}

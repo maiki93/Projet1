@@ -28,9 +28,6 @@ public class RootPanel extends BorderPane {
 		super();
 		// defaut at start-up,  get the full list of stagiaires
 		observablesStagiaires = FXCollections.observableArrayList(dao.getStagiaireListFromArbre());
-		//observablesStagiaires = FXCollections.observableList(dao.getStagiaireListFromArbre());
-		//sortedObservablesStagiaires = new SortedList<Stagiaire>(observablesStagiaires);
-		
 		System.out.println("Size of observablesStagiaires: " + observablesStagiaires.size());
 		// send both, hopefully one to delete, or create the second in the file
 		tablePannel = new TablePanel(observablesStagiaires); //sortedObservablesStagiaires);
@@ -46,6 +43,7 @@ public class RootPanel extends BorderPane {
 		//formPanel.setVisible( false );
 		formPanel.setFormWithRights(false);
 		formPanel.managedProperty().bind(formPanel.visibleProperty());
+		formPanel.setVisible( false );
 	}
 	
 	// resultat d'une nouvelle recherche (panel de droite) => ObservableList => tableView
